@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Joostit.NeuralNerd.NnLib.Networking
+namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 {
     public class HiddenNeuron : CalculatedNeuron
     {
@@ -12,8 +12,8 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 
         }
 
-        public HiddenNeuron(string id)
-            :base(id)
+        public HiddenNeuron(int layerIndex, int rowIndex)
+            :base(layerIndex, rowIndex)
         {
 
         }

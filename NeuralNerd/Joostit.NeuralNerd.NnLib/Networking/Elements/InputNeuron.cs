@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Joostit.NeuralNerd.NnLib.Networking
+namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 {
     public class InputNeuron : Neuron
     {
@@ -24,8 +24,8 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 
         }
 
-        public InputNeuron(string id)
-            :base(id)
+        public InputNeuron(int layerIndex, int rowIndex)
+            :base(layerIndex, rowIndex)
         {
 
         }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Joostit.NeuralNerd.NnLib.Networking
-{
+namespace Joostit.NeuralNerd.NnLib.Networking.Elements
+{ 
     public abstract class CalculatedNeuron : Neuron
     {
 
@@ -16,8 +16,8 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 
         }
 
-        public CalculatedNeuron(string id)
-            : base(id)
+        public CalculatedNeuron(int layerIndex, int rowIndex)
+            : base(layerIndex, rowIndex)
         {
 
         }

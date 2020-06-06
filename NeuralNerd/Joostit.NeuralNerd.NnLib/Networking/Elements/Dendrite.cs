@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Joostit.NeuralNerd.NnLib.Networking
+namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 {
     [Serializable]
     public class Dendrite

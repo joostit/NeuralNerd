@@ -1,4 +1,6 @@
 ﻿using Joostit.NeuralNerd.NnLib.Networking;
+using Joostit.NeuralNerd.NnLib.Networking.Elements;
+using Joostit.NeuralNerd.NnLib.Networking.Structure;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,16 +28,25 @@ namespace Joostit.NeuralNerd.NnLib.Construction
 
         private void CreateNeurons(NetworkParameters parameters)
         {
+            // Create Neuron objects
             CreateInputNeurons(parameters);
             CreateHiddenNeurons(parameters);
             CreateOutputNeurons(parameters);
+
+            // Create dendrite objects
+            CreateDendrites();
+        }
+
+        private void CreateDendrites()
+        {
+            
         }
 
         private void CreateOutputNeurons(NetworkParameters parameters)
         {
             for (int rowId = 0; rowId < parameters.OutputNeuronCount; rowId++)
             {
-                OutputNeuron neuron = new OutputNeuron(GetId(rowId));
+                OutputNeuron neuron = new OutputNeuron(layerCounter, rowId);
                 network.OutputLayer.Add(neuron);
             }
             layerCounter++;
@@ -48,7 +59,7 @@ namespace Joostit.NeuralNerd.NnLib.Construction
                 HiddenLayer layer = new HiddenLayer();
                 for (int rowId = 0; rowId < parameters.HiddenLayerNeuronCount; rowId++)
                 {
-                    HiddenNeuron neuron = new HiddenNeuron(GetId(rowId));
+                    HiddenNeuron neuron = new HiddenNeuron(layerCounter, rowId);
                     layer.Add(neuron);
                 }
                 network.HiddenLayers.Add(layer);
@@ -60,15 +71,11 @@ namespace Joostit.NeuralNerd.NnLib.Construction
         {
             for (int rowId = 0; rowId < parameters.InputNeuronCount; rowId++)
             {
-                InputNeuron neuron = new InputNeuron(GetId(rowId));
+                InputNeuron neuron = new InputNeuron(layerCounter, rowId);
                 network.InputLayer.Add(neuron);
             }
             layerCounter++;
         }
 
-        private string GetId(int rowId)
-        {
-            return $"{layerCounter}, {rowId}";
-        }
     }
 }

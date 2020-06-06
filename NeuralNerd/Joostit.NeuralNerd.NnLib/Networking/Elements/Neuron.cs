@@ -1,30 +1,30 @@
 ﻿using System;
 
-namespace Joostit.NeuralNerd.NnLib
+namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 {
     public abstract class Neuron
     {
 
-        public string Id { get; set; }
+        public NeuronCoordinate Coordinate { get; set; }
 
         public double Activation { get; protected set; }
 
         public Neuron()
-           : this(null)
+           : this(-1, -1)
         {
         }
 
-        public Neuron(string id)
+        public Neuron(int layerIndex, int rowIndex)
         {
-            this.Id = id;
+            this.Coordinate = new NeuronCoordinate(layerIndex, rowIndex);
         }
 
 
         public override string ToString()
         {
-            if (!String.IsNullOrWhiteSpace(Id))
+            if (Coordinate != null)
             {
-                return $"{this.GetType().Name} [{Id}]";
+                return $"{this.GetType().Name} [{Coordinate.ToString()}]";
             }
             else
             {
