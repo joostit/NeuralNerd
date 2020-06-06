@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
-    public interface INeuronColumn : IEnumerable<Neuron>
+    public class HiddenLayers : List<HiddenLayer>
     {
     }
 }

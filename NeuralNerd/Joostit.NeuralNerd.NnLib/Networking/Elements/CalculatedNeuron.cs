@@ -11,5 +11,16 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 
         public double Bias { get; set; }
 
+        public CalculatedNeuron()
+        {
+
+        }
+
+        public CalculatedNeuron(string id)
+            : base(id)
+        {
+
+        }
+
     }
 }

@@ -6,5 +6,17 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 {
     public class OutputNeuron : CalculatedNeuron
     {
+
+        public OutputNeuron()
+        {
+
+        }
+
+        public OutputNeuron(string id)
+            : base(id)
+        {
+
+        }
+
     }
 }

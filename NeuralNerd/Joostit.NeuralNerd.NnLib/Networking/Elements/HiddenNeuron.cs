@@ -6,5 +6,17 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 {
     public class HiddenNeuron : CalculatedNeuron
     {
+
+        public HiddenNeuron()
+        {
+
+        }
+
+        public HiddenNeuron(string id)
+            :base(id)
+        {
+
+        }
+
     }
 }

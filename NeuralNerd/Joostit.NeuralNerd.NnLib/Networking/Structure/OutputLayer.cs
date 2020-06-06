@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Networking
 {
-    public class InputColumn : List<InputNeuron>, INeuronColumn
+    public class OutputLayer : List<OutputNeuron>, ICalculatableNeuronLayer
     {
         IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
         {

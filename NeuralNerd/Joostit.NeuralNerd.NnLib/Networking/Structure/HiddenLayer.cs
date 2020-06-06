@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Networking
 {
-    public class HiddenColumn : List<HiddenNeuron>, ICalculatableNeuronColumn
+    public class HiddenLayer : List<HiddenNeuron>, ICalculatableNeuronLayer
     {
         IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
         {

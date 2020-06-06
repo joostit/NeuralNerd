@@ -8,11 +8,11 @@ namespace Joostit.NeuralNerd.NnLib.Networking
     public class NeuralNetwork
     {
 
-        public InputColumn InputColumn { get; set; } = new InputColumn();
+        public InputLayer InputLayer { get; set; } = new InputLayer();
 
-        public HiddenColumns HiddenColumns { get; set; } = new HiddenColumns();
+        public HiddenLayers HiddenLayers { get; set; } = new HiddenLayers();
 
-        public OutputColumn OutputColumn { get; set; } = new OutputColumn();
+        public OutputLayer OutputLayer { get; set; } = new OutputLayer();
 
     }
 }
