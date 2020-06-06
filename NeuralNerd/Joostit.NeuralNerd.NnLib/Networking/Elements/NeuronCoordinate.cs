@@ -85,5 +85,9 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
         }
 
 
+        public NeuronCoordinate Clone()
+        {
+            return new NeuronCoordinate(Layer, Row);
+        }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Construction
 {
-    public class NetworkBuilder
+    public class NewNetworkBuilder
     {
 
         NeuralNetwork network = null;
@@ -23,23 +23,56 @@ namespace Joostit.NeuralNerd.NnLib.Construction
 
             CreateNeurons(parameters);
 
+            // Create dendrite objects
+            CreateHiddenLayerDendrites();
+            CreateOutputLayerDendrites();
+
+            NeuralNetworkLinker linker = new NeuralNetworkLinker();
+            linker.Link(network);
+
             return network;
         }
 
         private void CreateNeurons(NetworkParameters parameters)
         {
-            // Create Neuron objects
             CreateInputNeurons(parameters);
             CreateHiddenNeurons(parameters);
             CreateOutputNeurons(parameters);
-
-            // Create dendrite objects
-            CreateDendrites();
         }
 
-        private void CreateDendrites()
+        private void CreateOutputLayerDendrites()
         {
-            
+            CreateDendritesForLayer(network.OutputLayer, network.HiddenLayers[network.HiddenLayers.Count-1]);
+        }
+
+        private void CreateHiddenLayerDendrites()
+        {
+            for(int hiddenLayerI = 0; hiddenLayerI < network.HiddenLayers.Count; hiddenLayerI++)
+            {
+                INeuronLayer precedingLayer;
+                if(hiddenLayerI == 0)
+                {
+                    precedingLayer = network.InputLayer;
+                }
+                else
+                {
+                    precedingLayer = network.HiddenLayers[hiddenLayerI - 1];
+                }
+                CreateDendritesForLayer(network.HiddenLayers[hiddenLayerI], precedingLayer);
+            }
+        }
+
+        private void CreateDendritesForLayer(ICalculatableNeuronLayer layer, INeuronLayer precedingLayer)
+        {
+            foreach(CalculatedNeuron targetNeuron in layer)
+            {
+                foreach(Neuron inputNeuron in precedingLayer)
+                {
+                    Dendrite dendrite = new Dendrite();
+                    dendrite.InputNeuronCoordinate = inputNeuron.Coordinate.Clone();
+                    targetNeuron.Dendrites.Add(dendrite);
+                }
+            }
         }
 
         private void CreateOutputNeurons(NetworkParameters parameters)

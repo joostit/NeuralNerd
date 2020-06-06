@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 {
@@ -7,6 +8,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 
         public NeuronCoordinate Coordinate { get; set; }
 
+        [XmlIgnore]
         public double Activation { get; protected set; }
 
         public Neuron()
@@ -24,7 +26,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
         {
             if (Coordinate != null)
             {
-                return $"{this.GetType().Name} [{Coordinate.ToString()}]";
+                return $"{this.GetType().Name} [{Coordinate.ToString()}]. Activation: {Activation}";
             }
             else
             {

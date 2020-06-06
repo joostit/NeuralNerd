@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Joostit.NeuralNerd.NnLib.Un
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{1A016B22-0D6F-4944-84CF-7714FE4B6378}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{2CD37009-3387-4C4A-A401-D54520D03085}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2CD37009-3387-4C4A-A401-D54520D03085}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

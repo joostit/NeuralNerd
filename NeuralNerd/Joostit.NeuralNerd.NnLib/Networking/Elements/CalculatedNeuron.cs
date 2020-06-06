@@ -7,7 +7,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
     public abstract class CalculatedNeuron : Neuron
     {
 
-        public List<Dendrite> Dendrites { get; set; }
+        public List<Dendrite> Dendrites { get; set; } = new List<Dendrite>();
 
         public double Bias { get; set; }
 
