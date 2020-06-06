@@ -6,4 +6,8 @@
     <AssemblyName>nnCmd</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Joostit.NeuralNerd.NnLib\Joostit.NeuralNerd.NnLib.csproj" />
+  </ItemGroup>
+
 </Project>

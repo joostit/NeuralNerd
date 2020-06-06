@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Joostit.NeuralNerd.NnCmd\Joostit.NeuralNerd.NnCmd.csproj" />
-  </ItemGroup>
-
 </Project>
