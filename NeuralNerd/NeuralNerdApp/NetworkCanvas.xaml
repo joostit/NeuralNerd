@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NeuralNerdApp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Canvas x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Canvas x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
             
     </Canvas>
 </UserControl>

@@ -27,10 +27,11 @@ namespace NeuralNerdApp
         public NeuronControl(Neuron neuron)
             :this()
         {
-
+            this.Neuron = neuron;
+            Update();
         }
 
-        public NeuronControl()
+        private NeuronControl()
         {
             InitializeComponent();
         }

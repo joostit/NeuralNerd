@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:NeuralNerdApp"
              mc:Ignorable="d" 
              d:DesignHeight="{x:Static local:NeuronControl.Size}" d:DesignWidth="{x:Static local:NeuronControl.Size}">
-    <Canvas Width="{x:Static local:NeuronControl.Size}" Height="{x:Static local:NeuronControl.Size}">
+    <Grid Width="{x:Static local:NeuronControl.Size}" Height="{x:Static local:NeuronControl.Size}" Background="Transparent">
         <Border 
+            x:Name="neuronIcon"
             CornerRadius="30"
             Width="{x:Static local:NeuronControl.Size}"
             Height="{x:Static local:NeuronControl.Size}"
@@ -21,5 +22,5 @@
                     x:Name="activationLabel"
                     FontSize="11"/>
         </Border>
-    </Canvas>
+    </Grid>
 </UserControl>

@@ -23,6 +23,7 @@ namespace NeuralNerdApp
     public partial class NetworkCanvas : UserControl
     {
 
+        private const double LayerWidth = NeuronControl.Size * 3;
 
         private NetworkConfiguration Network { get; set; }
 
@@ -32,7 +33,6 @@ namespace NeuralNerdApp
         {
             InitializeComponent();
         }
-
 
         public void Clear()
         {
@@ -59,20 +59,94 @@ namespace NeuralNerdApp
 
         private void DrawNetwork()
         {
-            int y = 10;
+            double y = 10;
 
+            DrawInputColumn(Network.Network.InputLayer, y);
+            y += LayerWidth;
 
-            DrawColumn(Network.Network.InputLayer, y);
+            foreach (var hiddenLayer in Network.Network.HiddenLayers)
+            {
+                DrawHiddenLayer(hiddenLayer, y);
+                y += LayerWidth;
+            }
 
+            DrawOutputLayer(Network.Network.OutputLayer, y);
+
+            DrawDendritesBehindNeurons();
 
         }
 
-        private void DrawColumn(InputLayer layer, int y)
+        private void DrawDendritesBehindNeurons()
+        {
+            foreach(UIElement child in canvas.Children)
+            {
+                if(child is NeuronControl)
+                {
+                    Panel.SetZIndex(child, 99999999);
+                }
+            }
+            canvas.UpdateLayout();
+        }
+
+        private void DrawOutputLayer(OutputLayer outputLayer, double y)
         {
             double x = 10;
-            foreach(Neuron neuron in layer)
+            foreach (CalculatedNeuron calculatedNeuron in outputLayer)
             {
-                NeuronControl ctrl = new NeuronControl(neuron);
+                DrawCalculatedNeuron(calculatedNeuron, x, y);
+                x += NeuronControl.Size + 5;
+            }
+        }
+
+        private void DrawHiddenLayer(HiddenLayer hiddenLayer, double y)
+        {
+            double x = 10;
+            foreach (CalculatedNeuron neuron in hiddenLayer)
+            {
+                DrawCalculatedNeuron(neuron, x, y);
+                x += NeuronControl.Size + 5;
+            }
+        }
+
+
+        private void DrawCalculatedNeuron(CalculatedNeuron neuron, double x, double y)
+        {
+            NeuronControl ctrl = new NeuronControl(neuron);
+
+            Canvas.SetLeft(ctrl, y);
+            Canvas.SetTop(ctrl, x);
+            neurons.Add(neuron.Coordinate, ctrl);
+            canvas.Children.Add(ctrl);
+
+            DrawDendrites(neuron, ctrl);
+        }
+
+
+        private void DrawDendrites(CalculatedNeuron targetNeuron, NeuronControl targetNeuronCtrl)
+        {
+            foreach(Dendrite dendrite in targetNeuron.Dendrites)
+            {
+                NeuronControl sourceNeuron = neurons[dendrite.InputNeuronCoordinate];
+                DendriteControl dendriteCtrl = new DendriteControl(dendrite, sourceNeuron.Neuron, targetNeuron);
+
+                dendriteCtrl.X1 = Canvas.GetLeft(sourceNeuron) + (NeuronControl.Size / 2);
+                dendriteCtrl.Y1 = Canvas.GetTop(sourceNeuron) + (NeuronControl.Size / 2);
+
+                dendriteCtrl.X2 = Canvas.GetLeft(targetNeuronCtrl) + (NeuronControl.Size / 2);
+                dendriteCtrl.Y2 = Canvas.GetTop(targetNeuronCtrl) + (NeuronControl.Size / 2);
+
+                canvas.Children.Add(dendriteCtrl);
+                
+            }
+        }
+
+
+        private void DrawInputColumn(InputLayer layer, double y)
+        {
+            double x = 10;
+            foreach(InputNeuron neuron in layer)
+            {
+                InputNeuronControl ctrl = new InputNeuronControl(neuron);
                 
                 Canvas.SetLeft(ctrl, y);
                 Canvas.SetTop(ctrl, x);

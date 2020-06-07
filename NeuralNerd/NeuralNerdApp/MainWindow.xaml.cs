@@ -3,6 +3,7 @@ using Joostit.NeuralNerd.NnLib.Construction;
 using Joostit.NeuralNerd.NnLib.Networking;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -25,6 +27,13 @@ namespace NeuralNerdApp
     {
         public MainWindow()
         {
+
+            var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+            var ci = new CultureInfo(currentCulture) { NumberFormat = { NumberDecimalSeparator = "." } };
+            System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
             InitializeComponent();
         }
 
