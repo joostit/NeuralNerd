@@ -9,6 +9,8 @@ namespace NeuralNerdApp
     public class InputNeuronControl : NeuronControl
     {
 
+        public event EventHandler ActivationChanged;
+
         public new InputNeuron Neuron
         {
             get
@@ -33,9 +35,26 @@ namespace NeuralNerdApp
 
             if (result != null)
             {
-                Neuron.Activation = result.Value;
+                if (result.Value != Neuron.Activation)
+                {
+                    Neuron.Activation = result.Value;
+                    Update();
+                    RaiseActivationChanged();
+                }
             }
-            Update();
+            
+        }
+
+        private void RaiseActivationChanged()
+        {
+            ActivationChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        internal override void Clear()
+        {
+            base.Clear();
+
+            ActivationChanged = null;
         }
 
     }

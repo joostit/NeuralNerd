@@ -24,10 +24,10 @@ namespace NeuralNerdApp
     {
 
         private const double LayerWidth = NeuronControl.Size * 3;
-
         private NetworkConfiguration Network { get; set; }
-
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
+
+
 
         public NetworkCanvas()
         {
@@ -41,7 +41,6 @@ namespace NeuralNerdApp
                 neuron.Clear();
             }
             neurons.Clear();
-
             canvas.Children.Clear();
             Network = null;
         }
@@ -147,13 +146,19 @@ namespace NeuralNerdApp
             foreach(InputNeuron neuron in layer)
             {
                 InputNeuronControl ctrl = new InputNeuronControl(neuron);
-                
+                ctrl.ActivationChanged += InputNeuron_ActivationChanged;
                 Canvas.SetLeft(ctrl, y);
                 Canvas.SetTop(ctrl, x);
                 neurons.Add(neuron.Coordinate, ctrl);
                 canvas.Children.Add(ctrl);
                 x += NeuronControl.Size + 5;
             }
+        }
+
+
+        private void InputNeuron_ActivationChanged(object sender, EventArgs e)
+        {
+            // ToDo: Recalculate the network
         }
     }
 }

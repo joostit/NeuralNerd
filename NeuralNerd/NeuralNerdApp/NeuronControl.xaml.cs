@@ -46,7 +46,7 @@ namespace NeuralNerdApp
         }
 
 
-        internal void Clear()
+        internal virtual void Clear()
         {
             this.Neuron = null;
         }
