@@ -24,9 +24,6 @@ namespace Joostit.NeuralNerd.NnCmd
 
 
 
-
-
-
             NetworkConfiguration config = new NetworkConfiguration();
             config.Network = network;
 
