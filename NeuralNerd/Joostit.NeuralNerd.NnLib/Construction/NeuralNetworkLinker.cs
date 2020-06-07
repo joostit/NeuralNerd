@@ -59,7 +59,7 @@ namespace Joostit.NeuralNerd.NnLib.Construction
         {
             Dictionary<NeuronCoordinate, Neuron> neuronDictionary = new Dictionary<NeuronCoordinate, Neuron>();
 
-            foreach (INeuronLayer layer in network.Layers)
+            foreach (INeuronLayer layer in network.GetAllLayers())
             {
                 foreach (Neuron neuron in layer)
                 {

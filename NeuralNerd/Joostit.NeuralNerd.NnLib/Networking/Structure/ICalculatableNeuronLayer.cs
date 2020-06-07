@@ -6,5 +6,6 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public interface ICalculatableNeuronLayer : INeuronLayer
     {
+        void Calculate();
     }
 }

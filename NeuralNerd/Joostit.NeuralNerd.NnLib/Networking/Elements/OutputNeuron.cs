@@ -7,6 +7,8 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
     public class OutputNeuron : CalculatedNeuron
     {
 
+        public string Name { get; set; } = "";
+
         public OutputNeuron()
         {
 

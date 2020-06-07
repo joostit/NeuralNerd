@@ -8,6 +8,14 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public class OutputLayer : List<OutputNeuron>, ICalculatableNeuronLayer
     {
+        public void Calculate()
+        {
+            foreach(CalculatedNeuron neuron in this)
+            {
+                neuron.CalculateActivation();
+            }
+        }
+
         IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
         {
             foreach (Neuron item in this)

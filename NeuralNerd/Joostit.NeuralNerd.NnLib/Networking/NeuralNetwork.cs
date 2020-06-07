@@ -15,17 +15,20 @@ namespace Joostit.NeuralNerd.NnLib.Networking
 
         public OutputLayer OutputLayer { get; set; } = new OutputLayer();
 
-        [XmlIgnore]
-        public List<INeuronLayer> Layers
+        public List<INeuronLayer> GetAllLayers()
         {
-            get
-            {
-                List<INeuronLayer> retVal = new List<INeuronLayer>();
-                retVal.Add(InputLayer);
-                retVal.AddRange(HiddenLayers);
-                retVal.Add(OutputLayer);
-                return retVal;
-            }
+            List<INeuronLayer> retVal = new List<INeuronLayer>();
+            retVal.Add(InputLayer);
+            retVal.AddRange(HiddenLayers);
+            retVal.Add(OutputLayer);
+            return retVal;
+        }
+
+
+        public void Calculate()
+        {
+            HiddenLayers.Calculate();
+            OutputLayer.Calculate();
         }
 
     }

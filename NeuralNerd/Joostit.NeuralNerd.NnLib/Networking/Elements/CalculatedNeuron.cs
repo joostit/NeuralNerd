@@ -22,5 +22,19 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 
         }
 
+        public void CalculateActivation()
+        {
+            double weightedSum = 0.0;
+
+            foreach (var dendrite in Dendrites)
+            {
+                weightedSum += dendrite.Weight * dendrite.Input.Activation;
+            }
+
+            weightedSum += Bias;
+
+            Activation = Calc.Sigmoid(weightedSum);
+        }
+
     }
 }
