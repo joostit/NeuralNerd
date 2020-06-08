@@ -56,18 +56,13 @@ namespace NeuralNerdApp
 
         private void NeuronIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            double? result = NumericInputWindow.Show(0, 1, Neuron.Activation);
+            bool changed = InputNeuronEditWindow.Show(Neuron);
 
-            if (result != null)
+            if (changed)
             {
-                if (result.Value != Neuron.Activation)
-                {
-                    Neuron.Activation = result.Value;
-                    Update();
-                    RaiseActivationChanged();
-                }
+                Update();
+                RaiseActivationChanged();
             }
-            
         }
 
         private void RaiseActivationChanged()

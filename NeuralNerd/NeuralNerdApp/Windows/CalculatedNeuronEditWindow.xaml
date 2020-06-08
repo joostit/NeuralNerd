@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Neuron properties" 
         Height="400" Width="300"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
