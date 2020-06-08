@@ -27,12 +27,156 @@ namespace NeuralNerdApp
         private NetworkConfiguration Network { get; set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
 
+        private double maxX = 0;
+        private double maxY = 0;
 
 
         public NetworkCanvas()
         {
             InitializeComponent();
         }
+
+
+        #region Zooming and panning
+
+        /// <summary>
+        /// The point that was clicked relative to the ZoomAndPanControl.
+        /// </summary>
+        private Point origZoomAndPanControlMouseDownPoint;
+
+        /// <summary>
+        /// The point that was clicked relative to the content that is contained within the ZoomAndPanControl.
+        /// </summary>
+        private Point origContentMouseDownPoint;
+
+        /// <summary>
+        /// Records which mouse button clicked during mouse dragging.
+        /// </summary>
+        private MouseButton mouseButtonDown;
+
+        /// <summary>
+        /// Specifies the current state of the mouse handling logic.
+        /// </summary>
+        private MouseHandlingMode mouseHandlingMode = MouseHandlingMode.None;
+
+        /// <summary>
+        /// Event raised on mouse down in the ZoomAndPanControl.
+        /// </summary>
+        private void zoomAndPanControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            Keyboard.Focus(canvas);
+
+            mouseButtonDown = e.ChangedButton;
+            origZoomAndPanControlMouseDownPoint = e.GetPosition(zoomAndPanControl);
+            origContentMouseDownPoint = e.GetPosition(canvas);
+
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0 &&
+                (e.ChangedButton == MouseButton.Left ||
+                 e.ChangedButton == MouseButton.Right))
+            {
+                // Shift + left- or right-down initiates zooming mode.
+                mouseHandlingMode = MouseHandlingMode.Zooming;
+            }
+            else if (mouseButtonDown == MouseButton.Left)
+            {
+                // Just a plain old left-down initiates panning mode.
+                mouseHandlingMode = MouseHandlingMode.Panning;
+            }
+
+            if (mouseHandlingMode != MouseHandlingMode.None)
+            {
+                // Capture the mouse so that we eventually receive the mouse up event.
+                zoomAndPanControl.CaptureMouse();
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Event raised on mouse up in the ZoomAndPanControl.
+        /// </summary>
+        private void zoomAndPanControl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (mouseHandlingMode != MouseHandlingMode.None)
+            {
+                if (mouseHandlingMode == MouseHandlingMode.Zooming)
+                {
+                    if (mouseButtonDown == MouseButton.Left)
+                    {
+                        // Shift + left-click zooms in on the content.
+                        ZoomIn();
+                    }
+                    else if (mouseButtonDown == MouseButton.Right)
+                    {
+                        // Shift + left-click zooms out from the content.
+                        ZoomOut();
+                    }
+                }
+
+                zoomAndPanControl.ReleaseMouseCapture();
+                mouseHandlingMode = MouseHandlingMode.None;
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Event raised on mouse move in the ZoomAndPanControl.
+        /// </summary>
+        private void zoomAndPanControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mouseHandlingMode == MouseHandlingMode.Panning)
+            {
+                //
+                // The user is left-dragging the mouse.
+                // Pan the viewport by the appropriate amount.
+                //
+                Point curContentMousePoint = e.GetPosition(canvas);
+                Vector dragOffset = curContentMousePoint - origContentMouseDownPoint;
+
+                zoomAndPanControl.ContentOffsetX -= dragOffset.X;
+                zoomAndPanControl.ContentOffsetY -= dragOffset.Y;
+
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Event raised by rotating the mouse wheel
+        /// </summary>
+        private void zoomAndPanControl_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+
+            if (e.Delta > 0)
+            {
+                ZoomIn();
+            }
+            else if (e.Delta < 0)
+            {
+                ZoomOut();
+            }
+        }
+
+
+        /// <summary>
+        /// Zoom the viewport out by a small increment.
+        /// </summary>
+        private void ZoomOut()
+        {
+            zoomAndPanControl.ContentScale -= 0.1;
+        }
+
+        /// <summary>
+        /// Zoom the viewport in by a small increment.
+        /// </summary>
+        private void ZoomIn()
+        {
+            zoomAndPanControl.ContentScale += 0.1;
+        }
+
+        #endregion
+
+
 
         public void Clear()
         {
@@ -58,24 +202,30 @@ namespace NeuralNerdApp
 
         private void DrawNetwork()
         {
-            double y = 10;
+            maxX = 0;
+            maxY = 0;
 
-            DrawInputColumn(Network.Network.InputLayer, y);
-            y += LayerWidth;
+            double x = 10;
+            DrawInputColumn(Network.Network.InputLayer, ref x);
 
             foreach (var hiddenLayer in Network.Network.HiddenLayers)
             {
-                DrawHiddenLayer(hiddenLayer, y);
-                y += LayerWidth;
+                DrawHiddenLayer(hiddenLayer, ref x);
             }
 
-            DrawOutputLayer(Network.Network.OutputLayer, y);
+            DrawOutputLayer(Network.Network.OutputLayer, ref x);
+            MoveDendritesBehindNeurons();
 
-            DrawDendritesBehindNeurons();
-
+            ResizeCanvas();
         }
 
-        private void DrawDendritesBehindNeurons()
+        private void ResizeCanvas()
+        {
+            canvas.Width = maxX + 50;
+            canvas.Height = maxY + 50;
+        }
+
+        private void MoveDendritesBehindNeurons()
         {
             foreach(UIElement child in canvas.Children)
             {
@@ -87,33 +237,41 @@ namespace NeuralNerdApp
             canvas.UpdateLayout();
         }
 
-        private void DrawOutputLayer(OutputLayer outputLayer, double y)
+        private void DrawOutputLayer(OutputLayer outputLayer, ref double x)
         {
-            double x = 10;
+            double y = 10;
             foreach (CalculatedNeuron calculatedNeuron in outputLayer)
             {
                 DrawCalculatedNeuron(calculatedNeuron, x, y);
-                x += NeuronControl.Size + 5;
+                y += NeuronControl.Size + 5;
             }
+            x += LayerWidth;
+
+            // ToDo: Determine if the new Y should be larger if we're adding a name to output neurons
+
+            UpdateMaxSize(x,y);
         }
 
-        private void DrawHiddenLayer(HiddenLayer hiddenLayer, double y)
+        private void DrawHiddenLayer(HiddenLayer hiddenLayer, ref double x)
         {
-            double x = 10;
+            double y = 10;
             foreach (CalculatedNeuron neuron in hiddenLayer)
             {
                 DrawCalculatedNeuron(neuron, x, y);
-                x += NeuronControl.Size + 5;
+                y += NeuronControl.Size + 5;
             }
+            x += LayerWidth;
+
+            UpdateMaxSize(x, y);
         }
 
 
         private void DrawCalculatedNeuron(CalculatedNeuron neuron, double x, double y)
         {
-            NeuronControl ctrl = new NeuronControl(neuron);
+            CalculatedNeuronControl ctrl = new CalculatedNeuronControl(neuron);
 
-            Canvas.SetLeft(ctrl, y);
-            Canvas.SetTop(ctrl, x);
+            Canvas.SetLeft(ctrl, x);
+            Canvas.SetTop(ctrl, y);
             neurons.Add(neuron.Coordinate, ctrl);
             canvas.Children.Add(ctrl);
 
@@ -140,25 +298,45 @@ namespace NeuralNerdApp
         }
 
 
-        private void DrawInputColumn(InputLayer layer, double y)
+        private void DrawInputColumn(InputLayer layer, ref double x)
         {
-            double x = 10;
+            double y = 10;
             foreach(InputNeuron neuron in layer)
             {
                 InputNeuronControl ctrl = new InputNeuronControl(neuron);
                 ctrl.ActivationChanged += InputNeuron_ActivationChanged;
-                Canvas.SetLeft(ctrl, y);
-                Canvas.SetTop(ctrl, x);
+                Canvas.SetLeft(ctrl, x);
+                Canvas.SetTop(ctrl, y);
                 neurons.Add(neuron.Coordinate, ctrl);
                 canvas.Children.Add(ctrl);
-                x += NeuronControl.Size + 5;
+                y += NeuronControl.Size + 5;
             }
+            x += LayerWidth;
+
+            UpdateMaxSize(x, y);
         }
 
+        private void UpdateMaxSize(double x, double y)
+        {
+            if (x > maxX)
+            {
+                maxX = x;
+            }
+
+            if(y > maxY)
+            {
+                maxY = y;
+            }
+        }
 
         private void InputNeuron_ActivationChanged(object sender, EventArgs e)
         {
             // ToDo: Recalculate the network
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

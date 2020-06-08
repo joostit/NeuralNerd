@@ -1,0 +1,488 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WpfControls</name>
+    </assembly>
+    <members>
+        <member name="T:WpfControls.AnimationHelper">
+            <summary>
+            A helper class to simplify animation.
+            </summary>
+        </member>
+        <member name="M:WpfControls.AnimationHelper.StartAnimation(System.Windows.UIElement,System.Windows.DependencyProperty,System.Double,System.Double)">
+            <summary>
+            Starts an animation to a particular value on the specified dependency property.
+            </summary>
+        </member>
+        <member name="M:WpfControls.AnimationHelper.StartAnimation(System.Windows.UIElement,System.Windows.DependencyProperty,System.Double,System.Double,System.EventHandler)">
+            <summary>
+            Starts an animation to a particular value on the specified dependency property.
+            You can pass in an event handler to call when the animation has completed.
+            </summary>
+        </member>
+        <member name="M:WpfControls.AnimationHelper.CancelAnimation(System.Windows.UIElement,System.Windows.DependencyProperty)">
+            <summary>
+            Cancel any animations that are running on the specified dependency property.
+            </summary>
+        </member>
+        <member name="T:WpfControls.ZoomAndPanControl">
+            <summary>
+            A class that wraps up zooming and panning of it's content.
+            </summary>
+            <summary>
+            This is an extension to the ZoomAndPanControol class that implements
+            the IScrollInfo interface properties and functions.
+            
+            IScrollInfo is implemented to allow ZoomAndPanControl to be wrapped (in XAML)
+            in a ScrollViewer.  IScrollInfo allows the ScrollViewer and ZoomAndPanControl to 
+            communicate important information such as the horizontal and vertical scrollbar offsets.
+            
+            There is a good series of articles showing how to implement IScrollInfo starting here:
+                http://blogs.msdn.com/bencon/archive/2006/01/05/509991.aspx
+                
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.content">
+            <summary>
+            Reference to the underlying content, which is named PART_Content in the template.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.contentScaleTransform">
+            <summary>
+            The transform that is applied to the content to scale it by 'ContentScale'.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.contentOffsetTransform">
+            <summary>
+            The transform that is applied to the content to offset it by 'ContentOffsetX' and 'ContentOffsetY'.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.enableContentOffsetUpdateFromScale">
+            <summary>
+            Enable the update of the content offset as the content scale changes.
+            This enabled for zooming about a point (google-maps style zooming) and zooming to a rect.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.disableScrollOffsetSync">
+            <summary>
+            Used to disable syncronization between IScrollInfo interface and ContentOffsetX/ContentOffsetY.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.disableContentFocusSync">
+            <summary>
+            Normally when content offsets changes the content focus is automatically updated.
+            This syncronization is disabled when 'disableContentFocusSync' is set to 'true'.
+            When we are zooming in or out we 'disableContentFocusSync' is set to 'true' because 
+            we are zooming in or out relative to the content focus we don't want to update the focus.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.constrainedContentViewportWidth">
+            <summary>
+            The width of the viewport in content coordinates, clamped to the width of the content.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.constrainedContentViewportHeight">
+            <summary>
+            The height of the viewport in content coordinates, clamped to the height of the content.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.canVerticallyScroll">
+            <summary>
+            Set to 'true' when the vertical scrollbar is enabled.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.canHorizontallyScroll">
+            <summary>
+            Set to 'true' when the vertical scrollbar is enabled.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.unScaledExtent">
+            <summary>
+            Records the unscaled extent of the content.
+            This is calculated during the measure and arrange.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.viewport">
+            <summary>
+            Records the size of the viewport (in viewport coordinates) onto the content.
+            This is calculated during the measure and arrange.
+            </summary>
+        </member>
+        <member name="F:WpfControls.ZoomAndPanControl.scrollOwner">
+            <summary>
+            Reference to the ScrollViewer that is wrapped (in XAML) around the ZoomAndPanControl.
+            Or set to null if there is no ScrollViewer.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentOffsetX">
+            <summary>
+            Get/set the X offset (in content coordinates) of the view on the content.
+            </summary>
+        </member>
+        <member name="E:WpfControls.ZoomAndPanControl.ContentOffsetXChanged">
+            <summary>
+            Event raised when the ContentOffsetX property has changed.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentOffsetY">
+            <summary>
+            Get/set the Y offset (in content coordinates) of the view on the content.
+            </summary>
+        </member>
+        <member name="E:WpfControls.ZoomAndPanControl.ContentOffsetYChanged">
+            <summary>
+            Event raised when the ContentOffsetY property has changed.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentScale">
+            <summary>
+            Get/set the current scale (or zoom factor) of the content.
+            </summary>
+        </member>
+        <member name="E:WpfControls.ZoomAndPanControl.ContentScaleChanged">
+            <summary>
+            Event raised when the ContentScale property has changed.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.MinContentScale">
+            <summary>
+            Get/set the minimum value for 'ContentScale'.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.MaxContentScale">
+            <summary>
+            Get/set the maximum value for 'ContentScale'.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentZoomFocusX">
+            <summary>
+            The X coordinate of the content focus, this is the point that we are focusing on when zooming.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentZoomFocusY">
+            <summary>
+            The Y coordinate of the content focus, this is the point that we are focusing on when zooming.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ViewportZoomFocusX">
+            <summary>
+            The X coordinate of the viewport focus, this is the point in the viewport (in viewport coordinates) 
+            that the content focus point is locked to while zooming in.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ViewportZoomFocusY">
+            <summary>
+            The Y coordinate of the viewport focus, this is the point in the viewport (in viewport coordinates) 
+            that the content focus point is locked to while zooming in.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.AnimationDuration">
+            <summary>
+            The duration of the animations (in seconds) started by calling AnimatedZoomTo and the other animation methods.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentViewportWidth">
+            <summary>
+            Get the viewport width, in content coordinates.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ContentViewportHeight">
+            <summary>
+            Get the viewport height, in content coordinates.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.IsMouseWheelScrollingEnabled">
+            <summary>
+            Set to 'true' to enable the mouse wheel to scroll the zoom and pan control.
+            This is set to 'false' by default.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedZoomTo(System.Double,System.Windows.Rect)">
+            <summary>
+            Do an animated zoom to view a specific scale and rectangle (in content coordinates).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedZoomTo(System.Windows.Rect)">
+            <summary>
+            Do an animated zoom to the specified rectangle (in content coordinates).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ZoomTo(System.Windows.Rect)">
+            <summary>
+            Instantly zoom to the specified rectangle (in content coordinates).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.SnapContentOffsetTo(System.Windows.Point)">
+            <summary>
+            Instantly center the view on the specified point (in content coordinates).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.SnapTo(System.Windows.Point)">
+            <summary>
+            Instantly center the view on the specified point (in content coordinates).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedSnapTo(System.Windows.Point)">
+            <summary>
+            Use animation to center the view on the specified point (in content coordinates).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedZoomAboutPoint(System.Double,System.Windows.Point)">
+            <summary>
+            Zoom in/out centered on the specified point (in content coordinates).
+            The focus point is kept locked to it's on screen position (ala google maps).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ZoomAboutPoint(System.Double,System.Windows.Point)">
+            <summary>
+            Zoom in/out centered on the specified point (in content coordinates).
+            The focus point is kept locked to it's on screen position (ala google maps).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedZoomTo(System.Double)">
+            <summary>
+            Zoom in/out centered on the viewport center.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ZoomTo(System.Double)">
+            <summary>
+            Zoom in/out centered on the viewport center.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedScaleToFit">
+            <summary>
+            Do animation that scales the content so that it fits completely in the control.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ScaleToFit">
+            <summary>
+            Instantly scale the content so that it fits completely in the control.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.#cctor">
+            <summary>
+            Static constructor to define metadata for the control (and link it to the style in Generic.xaml).
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.OnApplyTemplate">
+            <summary>
+            Called when a template has been applied to the control.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.AnimatedZoomPointToViewportCenter(System.Double,System.Windows.Point,System.EventHandler)">
+            <summary>
+            Zoom to the specified scale and move the specified focus point to the center of the viewport.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ZoomPointToViewportCenter(System.Double,System.Windows.Point)">
+            <summary>
+            Zoom to the specified scale and move the specified focus point to the center of the viewport.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ContentScale_PropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Event raised when the 'ContentScale' property has changed value.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ContentScale_Coerce(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Method called to clamp the 'ContentScale' value to its valid range.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MinOrMaxContentScale_PropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Event raised 'MinContentScale' or 'MaxContentScale' has changed.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ContentOffsetX_PropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Event raised when the 'ContentOffsetX' property has changed value.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ContentOffsetX_Coerce(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Method called to clamp the 'ContentOffsetX' value to its valid range.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ContentOffsetY_PropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Event raised when the 'ContentOffsetY' property has changed value.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ContentOffsetY_Coerce(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Method called to clamp the 'ContentOffsetY' value to its valid range.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ResetViewportZoomFocus">
+            <summary>
+            Reset the viewport zoom focus to the center of the viewport.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.UpdateViewportSize(System.Windows.Size)">
+            <summary>
+            Update the viewport size from the specified size.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.UpdateContentViewportSize">
+            <summary>
+            Update the size of the viewport in content coordinates after the viewport size or 'ContentScale' has changed.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.UpdateTranslationX">
+            <summary>
+            Update the X coordinate of the translation transformation.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.UpdateTranslationY">
+            <summary>
+            Update the Y coordinate of the translation transformation.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.UpdateContentZoomFocusX">
+            <summary>
+            Update the X coordinate of the zoom focus point in content coordinates.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.UpdateContentZoomFocusY">
+            <summary>
+            Update the Y coordinate of the zoom focus point in content coordinates.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MeasureOverride(System.Windows.Size)">
+            <summary>
+            Measure the control and it's children.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.ArrangeOverride(System.Windows.Size)">
+            <summary>
+            Arrange the control and it's children.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.CanVerticallyScroll">
+            <summary>
+            Set to 'true' when the vertical scrollbar is enabled.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.CanHorizontallyScroll">
+            <summary>
+            Set to 'true' when the vertical scrollbar is enabled.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ExtentWidth">
+            <summary>
+            The width of the content (with 'ContentScale' applied).
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ExtentHeight">
+            <summary>
+            The height of the content (with 'ContentScale' applied).
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ViewportWidth">
+            <summary>
+            Get the width of the viewport onto the content.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ViewportHeight">
+            <summary>
+            Get the height of the viewport onto the content.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.ScrollOwner">
+            <summary>
+            Reference to the ScrollViewer that is wrapped (in XAML) around the ZoomAndPanControl.
+            Or set to null if there is no ScrollViewer.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.HorizontalOffset">
+            <summary>
+            The offset of the horizontal scrollbar.
+            </summary>
+        </member>
+        <member name="P:WpfControls.ZoomAndPanControl.VerticalOffset">
+            <summary>
+            The offset of the vertical scrollbar.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.SetHorizontalOffset(System.Double)">
+            <summary>
+            Called when the offset of the horizontal scrollbar has been set.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.SetVerticalOffset(System.Double)">
+            <summary>
+            Called when the offset of the vertical scrollbar has been set.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.LineUp">
+            <summary>
+            Shift the content offset one line up.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.LineDown">
+            <summary>
+            Shift the content offset one line down.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.LineLeft">
+            <summary>
+            Shift the content offset one line left.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.LineRight">
+            <summary>
+            Shift the content offset one line right.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.PageUp">
+            <summary>
+            Shift the content offset one page up.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.PageDown">
+            <summary>
+            Shift the content offset one page down.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.PageLeft">
+            <summary>
+            Shift the content offset one page left.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.PageRight">
+            <summary>
+            Shift the content offset one page right.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MouseWheelDown">
+            <summary>
+            Don't handle mouse wheel input from the ScrollViewer, the mouse wheel is
+            used for zooming in and out, not for manipulating the scrollbars.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MouseWheelLeft">
+            <summary>
+            Don't handle mouse wheel input from the ScrollViewer, the mouse wheel is
+            used for zooming in and out, not for manipulating the scrollbars.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MouseWheelRight">
+            <summary>
+            Don't handle mouse wheel input from the ScrollViewer, the mouse wheel is
+            used for zooming in and out, not for manipulating the scrollbars.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MouseWheelUp">
+            <summary>
+            Don't handle mouse wheel input from the ScrollViewer, the mouse wheel is
+            used for zooming in and out, not for manipulating the scrollbars.
+            </summary>
+        </member>
+        <member name="M:WpfControls.ZoomAndPanControl.MakeVisible(System.Windows.Media.Visual,System.Windows.Rect)">
+            <summary>
+            Bring the specified rectangle to view.
+            </summary>
+        </member>
+    </members>
+</doc>

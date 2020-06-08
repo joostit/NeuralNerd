@@ -10,4 +10,10 @@
     <ProjectReference Include="..\Joostit.NeuralNerd.NnLib\Joostit.NeuralNerd.NnLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="WpfControls">
+      <HintPath>..\..\Libs\WpfControls.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

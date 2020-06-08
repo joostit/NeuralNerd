@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace NeuralNerdApp
 {
-    public class DendriteControl : Arrow
+    public sealed class DendriteControl : Arrow
     {
 
         public CalculatedNeuron Target { get; set; }
@@ -26,6 +26,8 @@ namespace NeuralNerdApp
             this.HeadWidth = 3;
             this.Stroke = Brushes.Black;
             this.StrokeThickness = .5;
+
+            base.HasArrowHead = false;
         }
 
 

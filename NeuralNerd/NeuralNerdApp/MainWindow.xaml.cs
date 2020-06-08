@@ -1,9 +1,11 @@
 ﻿using Joostit.NeuralNerd.NnLib.Configuration;
 using Joostit.NeuralNerd.NnLib.Construction;
 using Joostit.NeuralNerd.NnLib.Networking;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,10 +45,10 @@ namespace NeuralNerdApp
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
             {
-                InputNeuronCount = 6,
+                InputNeuronCount = 748,
                 HiddenLayerCount = 2,
-                HiddenLayerNeuronCount = 4,
-                OutputNeuronCount = 3
+                HiddenLayerNeuronCount = 16,
+                OutputNeuronCount = 10
             });
 
 
@@ -55,6 +57,59 @@ namespace NeuralNerdApp
             config.Network = network;
 
             networkCanvas.SetNetwork(config);
+        }
+
+        private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = getOpenFilePath();
+
+            if (filePath != null)
+            {
+                LoadNeuralNetwork(filePath);
+            }
+        }
+
+        private void LoadNeuralNetwork(string filePath)
+        {
+            try
+            {
+                ConfigurationFileHandler fileHandler = new ConfigurationFileHandler();
+                NetworkConfiguration config = fileHandler.Load(filePath);
+                networkCanvas.SetNetwork(config);
+
+            }catch(Exception e)
+            {
+                MessageBox.Show($"Error while loading neural network.\n\n{e}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
+        private string getOpenFilePath()
+        {
+            string result = null;
+
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.Filter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
+            diag.CheckFileExists = true;
+            diag.Title = "Select Neural network to open";
+            diag.Multiselect = false;
+
+            if (diag.ShowDialog() == true)
+            {
+                result = diag.FileName;
+            }
+
+            return result;
         }
     }
 }

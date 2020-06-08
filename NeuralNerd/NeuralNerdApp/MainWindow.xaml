@@ -11,13 +11,15 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New"/>
-                <MenuItem Header="_Open"/>
-                <MenuItem Header="_Save as"/>
+                <MenuItem Header="_New" IsEnabled="false"/>
+                <MenuItem Header="_Open" Click="OpenMenuItem_Click"/>
+                <MenuItem Header="_Save as" Click="SaveMenuItem_Click"/>
                 <Separator/>
-                <MenuItem Header="E_xit"/>
+                <MenuItem Header="E_xit" Click="ExitMenuItem_Click"/>
             </MenuItem>
         </Menu>
-        <local:NetworkCanvas x:Name="networkCanvas"/>
+        
+            <local:NetworkCanvas x:Name="networkCanvas"/>
+        
     </DockPanel>
 </Window>
