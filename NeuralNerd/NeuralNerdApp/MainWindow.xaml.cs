@@ -30,11 +30,11 @@ namespace NeuralNerdApp
         public MainWindow()
         {
 
-            var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-            var ci = new CultureInfo(currentCulture) { NumberFormat = { NumberDecimalSeparator = "." } };
-            System.Threading.Thread.CurrentThread.CurrentCulture = ci;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
-            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+            //var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+            //var ci = new CultureInfo(currentCulture) { NumberFormat = { NumberDecimalSeparator = "." } };
+            //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
+            //FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
             InitializeComponent();
         }

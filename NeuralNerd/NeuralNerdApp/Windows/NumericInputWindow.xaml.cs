@@ -109,10 +109,6 @@ namespace NeuralNerdApp.Forms
             }
         }
 
-        private void ReplaceDecimalSeparator()
-        {
-            
-        }
 
     }
 }

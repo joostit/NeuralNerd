@@ -35,7 +35,8 @@ namespace NeuralNerdApp
 
             if (hasChanged)
             {
-                
+                Update();
+                RaiseConfigurationChanged();
             }
 
         }
