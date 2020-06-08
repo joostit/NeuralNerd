@@ -41,6 +41,7 @@ namespace NeuralNerdApp
             if (Neuron != null)
             {
                 activationLabel.Text = Math.Round(Neuron.Activation, 2).ToString();
+                SetBackColor();
             }
             contentCanvas.UpdateLayout();
         }
@@ -67,6 +68,24 @@ namespace NeuralNerdApp
         {
             return Size / 2;
         } 
+
+
+        private void SetBackColor()
+        {
+            byte v = (byte) Math.Round(Neuron.Activation * 255);
+            Brush backBrush = new SolidColorBrush(Color.FromRgb(v, v, v));
+            neuronIcon.Background = backBrush;
+
+            if (v > 128)
+            {
+                activationLabel.Foreground = Brushes.Black;
+            }
+            else
+            {
+                activationLabel.Foreground = Brushes.LightGray;
+            }
+        }
+
 
     }
 }

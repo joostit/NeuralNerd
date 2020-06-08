@@ -49,16 +49,27 @@ namespace NeuralNerdApp
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
             {
-                InputNeuronCount = 4,
+                InputNeuronCount = 11,
                 HiddenLayerCount = 2,
-                HiddenLayerNeuronCount = 4,
-                OutputNeuronCount = 3
+                HiddenLayerNeuronCount = 16,
+                OutputNeuronCount = 8
             });
 
 
 
             NetworkConfiguration config = new NetworkConfiguration();
             config.Network = network;
+            network.InputLayer[0].Activation = 0;
+            network.InputLayer[1].Activation = .1;
+            network.InputLayer[2].Activation = .2;
+            network.InputLayer[3].Activation = .3;
+            network.InputLayer[4].Activation = .4;
+            network.InputLayer[5].Activation = .5;
+            network.InputLayer[6].Activation = .6;
+            network.InputLayer[7].Activation = .7;
+            network.InputLayer[8].Activation = .8;
+            network.InputLayer[9].Activation = .9;
+            network.InputLayer[10].Activation = 1;
 
             networkCanvas.SetNetwork(config);
         }

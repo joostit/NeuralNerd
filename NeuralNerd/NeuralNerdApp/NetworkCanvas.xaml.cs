@@ -27,6 +27,8 @@ namespace NeuralNerdApp
         private const double HiddenLayerWidth = NeuronControl.Size * 4;
         private const double OutputLayerWidth = OutputNeuronControl.OutputNeuronWidth + NeuronControl.Size * 4;
 
+        private const double NeuronSpacing = 10;
+
         public NetworkConfiguration Network { get; private set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
 
@@ -247,7 +249,7 @@ namespace NeuralNerdApp
             foreach (OutputNeuron outputNeuron in outputLayer)
             {
                 DrawOutputNeuron(outputNeuron, x, y);
-                y += NeuronControl.Size + 5;
+                y += NeuronControl.Size + NeuronSpacing;
             }
             x += OutputLayerWidth;
 
@@ -262,7 +264,7 @@ namespace NeuralNerdApp
             foreach (CalculatedNeuron neuron in hiddenLayer)
             {
                 DrawCalculatedNeuron(neuron, x, y);
-                y += NeuronControl.Size + 5;
+                y += NeuronControl.Size + NeuronSpacing;
             }
             x += HiddenLayerWidth;
 
@@ -327,7 +329,7 @@ namespace NeuralNerdApp
                 Canvas.SetTop(ctrl, y);
                 neurons.Add(neuron.Coordinate, ctrl);
                 canvas.Children.Add(ctrl);
-                y += NeuronControl.Size + 5;
+                y += NeuronControl.Size + NeuronSpacing;
             }
             x += InputLayerWidth;
 

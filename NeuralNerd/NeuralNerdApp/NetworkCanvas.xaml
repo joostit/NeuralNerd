@@ -17,7 +17,7 @@
         HorizontalScrollBarVisibility="Visible">
             <WpfControls:ZoomAndPanControl    
             x:Name="zoomAndPanControl"
-            Background="LightGray"
+            Background="AliceBlue"
             MouseDown="zoomAndPanControl_MouseDown"
             MouseUp="zoomAndPanControl_MouseUp"
             MouseMove="zoomAndPanControl_MouseMove"
