@@ -27,6 +27,10 @@ namespace NeuralNerdApp
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
+        private const string FileFilter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
+
         public MainWindow()
         {
 
@@ -87,7 +91,42 @@ namespace NeuralNerdApp
 
         private void SaveMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            string path = GetSaveAsFilePath();
 
+            if (path != null)
+            {
+                SaveNeuralNetwork(path);
+            }
+        }
+
+        private string GetSaveAsFilePath()
+        {
+            string retVal = null;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = FileFilter;
+            saveFileDialog.DefaultExt = "*.nn.xml";
+            saveFileDialog.Title = "Save Neural Network as";
+            saveFileDialog.FileName = "Neural Network.nn.xml";
+            saveFileDialog.OverwritePrompt = true;
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                retVal = saveFileDialog.FileName;
+            }
+
+            return retVal;
+        }
+
+        private void SaveNeuralNetwork(string path)
+        {
+            try
+            {
+                ConfigurationFileHandler fileHandler = new ConfigurationFileHandler();
+                fileHandler.Save(networkCanvas.Network, path);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error while saving neural network.\n\n{e}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
@@ -101,7 +140,7 @@ namespace NeuralNerdApp
             string result = null;
 
             OpenFileDialog diag = new OpenFileDialog();
-            diag.Filter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
+            diag.Filter = FileFilter;
             diag.CheckFileExists = true;
             diag.Title = "Select Neural network to open";
             diag.Multiselect = false;

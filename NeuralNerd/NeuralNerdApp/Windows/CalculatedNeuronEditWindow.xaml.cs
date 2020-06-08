@@ -134,14 +134,21 @@ namespace NeuralNerdApp.Windows
                 return false;
             }
 
-            var dataGridErrors = (from c in
-                  (from object i in dendriteData.ItemsSource
-                   select dendriteData.ItemContainerGenerator.ContainerFromItem(i))
-                          where c != null
-                          select Validation.GetHasError(c))
-             .FirstOrDefault(x => x);
+            if (dendriteData.ItemsSource != null)
+            {
+                var dataGridErrors = (from c in
+                      (from object i in dendriteData.ItemsSource
+                       select dendriteData.ItemContainerGenerator.ContainerFromItem(i))
+                                      where c != null
+                                      select Validation.GetHasError(c))
+                 .FirstOrDefault(x => x);
 
-            return !dataGridErrors;
+                return !dataGridErrors;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void dendriteData_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -150,6 +157,11 @@ namespace NeuralNerdApp.Windows
             {
                 UpdateButtonState();
             }
+        }
+
+        private void biasBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateButtonState();
         }
     }
 }

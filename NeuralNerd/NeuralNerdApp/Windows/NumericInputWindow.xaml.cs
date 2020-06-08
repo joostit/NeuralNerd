@@ -71,6 +71,8 @@ namespace NeuralNerdApp.Forms
                 inputBox.Text = Value.Value.ToString();
             }
             UpdateButtonState();
+            inputBox.Focus();
+            inputBox.SelectAll();
         }
 
         private void inputBox_TextChanged(object sender, TextChangedEventArgs e)

@@ -24,7 +24,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Bias: " HorizontalAlignment="Right"/>
-        <TextBox x:Name="biasBox" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="3,3,3,3"/>
+        <TextBox x:Name="biasBox" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Margin="3,3,3,3" TextChanged="biasBox_TextChanged"/>
 
         <GroupBox Header="Dendrites" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
             <DataGrid x:Name="dendriteData" CellEditEnding="dendriteData_CellEditEnding"/>

@@ -24,7 +24,7 @@ namespace NeuralNerdApp
     {
 
         private const double LayerWidth = NeuronControl.Size * 3;
-        private NetworkConfiguration Network { get; set; }
+        public NetworkConfiguration Network { get; private set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
 
         private double maxX = 0;
