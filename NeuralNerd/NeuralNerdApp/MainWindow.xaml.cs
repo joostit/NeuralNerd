@@ -45,10 +45,10 @@ namespace NeuralNerdApp
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
             {
-                InputNeuronCount = 748,
+                InputNeuronCount = 4,
                 HiddenLayerCount = 2,
-                HiddenLayerNeuronCount = 16,
-                OutputNeuronCount = 10
+                HiddenLayerNeuronCount = 4,
+                OutputNeuronCount = 3
             });
 
 
@@ -75,6 +75,8 @@ namespace NeuralNerdApp
             {
                 ConfigurationFileHandler fileHandler = new ConfigurationFileHandler();
                 NetworkConfiguration config = fileHandler.Load(filePath);
+                NeuralNetworkLinker linker = new NeuralNetworkLinker();
+                linker.Link(config.Network);
                 networkCanvas.SetNetwork(config);
 
             }catch(Exception e)

@@ -16,20 +16,85 @@ namespace Joostit.NeuralNerd.NnCmd
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
             {
-                InputNeuronCount = 6,
+                InputNeuronCount = 4,
                 HiddenLayerCount = 2,
                 HiddenLayerNeuronCount = 4,
                 OutputNeuronCount = 3
             });
 
-
-
             NetworkConfiguration config = new NetworkConfiguration();
             config.Network = network;
 
+            network.HiddenLayers[0][0].Bias = -3;
+            network.HiddenLayers[0][0].Dendrites[0].Weight = 2;
+            network.HiddenLayers[0][0].Dendrites[1].Weight = 2;
+            network.HiddenLayers[0][0].Dendrites[2].Weight = -1;
+            network.HiddenLayers[0][0].Dendrites[3].Weight = 1;
+
+            network.HiddenLayers[0][1].Bias = -3;
+            network.HiddenLayers[0][1].Dendrites[0].Weight = 2;
+            network.HiddenLayers[0][1].Dendrites[1].Weight = -1;
+            network.HiddenLayers[0][1].Dendrites[2].Weight = 2;
+            network.HiddenLayers[0][1].Dendrites[3].Weight = -1;
+
+            network.HiddenLayers[0][2].Bias = -3;
+            network.HiddenLayers[0][2].Dendrites[0].Weight = -1;
+            network.HiddenLayers[0][2].Dendrites[1].Weight = 2;
+            network.HiddenLayers[0][2].Dendrites[2].Weight = -1;
+            network.HiddenLayers[0][2].Dendrites[3].Weight = 2;
+
+            network.HiddenLayers[0][3].Bias = -3;
+            network.HiddenLayers[0][3].Dendrites[0].Weight = -1;
+            network.HiddenLayers[0][3].Dendrites[1].Weight = -1;
+            network.HiddenLayers[0][3].Dendrites[2].Weight = 2;
+            network.HiddenLayers[0][3].Dendrites[3].Weight = 2;
+
+
+            network.HiddenLayers[1][0].Bias = -1;
+            network.HiddenLayers[1][0].Dendrites[0].Weight = 1;
+            network.HiddenLayers[1][0].Dendrites[1].Weight = 1;
+            network.HiddenLayers[1][0].Dendrites[2].Weight = -1;
+            network.HiddenLayers[1][0].Dendrites[3].Weight = -1;
+
+            network.HiddenLayers[1][1].Bias = -1;
+            network.HiddenLayers[1][1].Dendrites[0].Weight = 1;
+            network.HiddenLayers[1][1].Dendrites[1].Weight = -1;
+            network.HiddenLayers[1][1].Dendrites[2].Weight = 1;
+            network.HiddenLayers[1][1].Dendrites[3].Weight = -1;
+
+            network.HiddenLayers[1][2].Bias = -1;
+            network.HiddenLayers[1][2].Dendrites[0].Weight = 1;
+            network.HiddenLayers[1][2].Dendrites[1].Weight = -1;
+            network.HiddenLayers[1][2].Dendrites[2].Weight = -1;
+            network.HiddenLayers[1][2].Dendrites[3].Weight = -2;
+
+            network.HiddenLayers[1][3].Bias = -1;
+            network.HiddenLayers[1][3].Dendrites[0].Weight = 0;
+            network.HiddenLayers[1][3].Dendrites[1].Weight = 0;
+            network.HiddenLayers[1][3].Dendrites[2].Weight = 0;
+            network.HiddenLayers[1][3].Dendrites[3].Weight = 2;
+
+            network.OutputLayer[0].Bias = -2;
+            network.OutputLayer[0].Dendrites[0].Weight = 2;
+            network.OutputLayer[0].Dendrites[1].Weight = 1;
+            network.OutputLayer[0].Dendrites[2].Weight = 1;
+            network.OutputLayer[0].Dendrites[3].Weight = 1;
+
+            network.OutputLayer[1].Bias = -2;
+            network.OutputLayer[1].Dendrites[0].Weight = 1;
+            network.OutputLayer[1].Dendrites[1].Weight = 2;
+            network.OutputLayer[1].Dendrites[2].Weight = 1;
+            network.OutputLayer[1].Dendrites[3].Weight = 1;
+
+            network.OutputLayer[2].Bias = -2;
+            network.OutputLayer[2].Dendrites[0].Weight = 1;
+            network.OutputLayer[2].Dendrites[1].Weight = 1;
+            network.OutputLayer[2].Dendrites[2].Weight = 2;
+            network.OutputLayer[2].Dendrites[3].Weight = -1;
+
 
             ConfigurationFileHandler handler = new ConfigurationFileHandler();
-            handler.Save(config, "SimpleNetwork.xml");
+            handler.Save(config, "SimpleNetwork.nn.xml");
 
             NetworkConfiguration loadedConfig = handler.Load("SimpleNetwork.xml");
 

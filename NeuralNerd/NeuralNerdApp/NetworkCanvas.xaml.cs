@@ -198,6 +198,7 @@ namespace NeuralNerdApp
 
             this.Network = network;
             DrawNetwork();
+            CalculateNetwork();
         }
 
         private void DrawNetwork()
@@ -269,7 +270,7 @@ namespace NeuralNerdApp
         private void DrawCalculatedNeuron(CalculatedNeuron neuron, double x, double y)
         {
             CalculatedNeuronControl ctrl = new CalculatedNeuronControl(neuron);
-
+            ctrl.ConfigurationChanged += Ctrl_ConfigurationChanged;
             Canvas.SetLeft(ctrl, x);
             Canvas.SetTop(ctrl, y);
             neurons.Add(neuron.Coordinate, ctrl);
@@ -331,7 +332,23 @@ namespace NeuralNerdApp
 
         private void InputNeuron_ActivationChanged(object sender, EventArgs e)
         {
+            CalculateNetwork();
+        }
+
+        private void Ctrl_ConfigurationChanged(object sender, EventArgs e)
+        {
             // ToDo: Recalculate the network
+            CalculateNetwork();
+        }
+
+        private void CalculateNetwork()
+        {
+            Network.Network.Calculate();
+
+            foreach (NeuronControl ctrl in neurons.Values)
+            {
+                ctrl.Update();
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
