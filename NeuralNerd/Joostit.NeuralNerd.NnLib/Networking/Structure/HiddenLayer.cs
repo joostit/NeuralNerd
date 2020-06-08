@@ -12,7 +12,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
         {
             foreach (CalculatedNeuron neuron in this)
             {
-                neuron.CalculateActivation();
+                neuron.Calculate();
             }
         }
 

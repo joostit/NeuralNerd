@@ -20,6 +20,8 @@ namespace NeuralNerdApp.Windows
     public partial class CalculatedNeuronEditWindow : Window
     {
 
+        private OutputNeuron outputNeuron = null;
+
         private List<Dendrite> dendriteEditList = new List<Dendrite>();
 
         public CalculatedNeuron Neuron { get; set; }
@@ -96,6 +98,11 @@ namespace NeuralNerdApp.Windows
 
         private void SaveData()
         {
+            if(outputNeuron != null)
+            {
+                outputNeuron.Name = nameBox.Text.Trim();
+            }
+
             for(int i = 0; i < dendriteEditList.Count; i++)
             {
                 Neuron.Dendrites[i].Weight = dendriteEditList[i].Weight;
@@ -113,6 +120,24 @@ namespace NeuralNerdApp.Windows
 
             biasBox.Text = Neuron.Bias.ToString();
             PopulateDatagrid();
+
+            outputNeuron = Neuron as OutputNeuron;
+            if (outputNeuron != null)
+            {
+                nameLabel.Visibility = Visibility.Visible;
+                nameBox.Visibility = Visibility.Visible;
+                nameBox.Text = outputNeuron.Name;
+                nameBox.Focus();
+                nameBox.SelectAll();
+            }
+            else
+            {
+                nameLabel.Visibility = Visibility.Collapsed;
+                nameBox.Visibility = Visibility.Collapsed;
+                biasBox.Focus();
+                biasBox.SelectAll();
+            }
+
             UpdateButtonState();
         }
 

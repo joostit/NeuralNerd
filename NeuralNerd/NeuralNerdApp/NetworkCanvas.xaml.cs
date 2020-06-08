@@ -23,7 +23,10 @@ namespace NeuralNerdApp
     public partial class NetworkCanvas : UserControl
     {
 
-        private const double LayerWidth = NeuronControl.Size * 3;
+        private const double InputLayerWidth = InputNeuronControl.InputNeuronWidth + NeuronControl.Size * 3;
+        private const double HiddenLayerWidth = NeuronControl.Size * 4;
+        private const double OutputLayerWidth = OutputNeuronControl.OutputNeuronWidth + NeuronControl.Size * 4;
+
         public NetworkConfiguration Network { get; private set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
 
@@ -241,14 +244,14 @@ namespace NeuralNerdApp
         private void DrawOutputLayer(OutputLayer outputLayer, ref double x)
         {
             double y = 10;
-            foreach (CalculatedNeuron calculatedNeuron in outputLayer)
+            foreach (OutputNeuron outputNeuron in outputLayer)
             {
-                DrawCalculatedNeuron(calculatedNeuron, x, y);
+                DrawOutputNeuron(outputNeuron, x, y);
                 y += NeuronControl.Size + 5;
             }
-            x += LayerWidth;
+            x += OutputLayerWidth;
 
-            // ToDo: Determine if the new Y should be larger if we're adding a name to output neurons
+            // ToDo: Determine if the new X should be larger if we're adding a name to output neurons
 
             UpdateMaxSize(x,y);
         }
@@ -261,15 +264,29 @@ namespace NeuralNerdApp
                 DrawCalculatedNeuron(neuron, x, y);
                 y += NeuronControl.Size + 5;
             }
-            x += LayerWidth;
+            x += HiddenLayerWidth;
 
             UpdateMaxSize(x, y);
         }
 
 
+
         private void DrawCalculatedNeuron(CalculatedNeuron neuron, double x, double y)
         {
             CalculatedNeuronControl ctrl = new CalculatedNeuronControl(neuron);
+            ctrl.ConfigurationChanged += Ctrl_ConfigurationChanged;
+            Canvas.SetLeft(ctrl, x);
+            Canvas.SetTop(ctrl, y);
+            neurons.Add(neuron.Coordinate, ctrl);
+            canvas.Children.Add(ctrl);
+
+            DrawDendrites(neuron, ctrl);
+        }
+
+
+        private void DrawOutputNeuron(OutputNeuron neuron, double x, double y)
+        {
+            OutputNeuronControl ctrl = new OutputNeuronControl(neuron);
             ctrl.ConfigurationChanged += Ctrl_ConfigurationChanged;
             Canvas.SetLeft(ctrl, x);
             Canvas.SetTop(ctrl, y);
@@ -287,11 +304,11 @@ namespace NeuralNerdApp
                 NeuronControl sourceNeuron = neurons[dendrite.InputNeuronCoordinate];
                 DendriteControl dendriteCtrl = new DendriteControl(dendrite, sourceNeuron.Neuron, targetNeuron);
 
-                dendriteCtrl.X1 = Canvas.GetLeft(sourceNeuron) + (NeuronControl.Size / 2);
-                dendriteCtrl.Y1 = Canvas.GetTop(sourceNeuron) + (NeuronControl.Size / 2);
+                dendriteCtrl.X1 = Canvas.GetLeft(sourceNeuron) + sourceNeuron.GetCenterX();
+                dendriteCtrl.Y1 = Canvas.GetTop(sourceNeuron) + sourceNeuron.GetCenterY();
 
-                dendriteCtrl.X2 = Canvas.GetLeft(targetNeuronCtrl) + (NeuronControl.Size / 2);
-                dendriteCtrl.Y2 = Canvas.GetTop(targetNeuronCtrl) + (NeuronControl.Size / 2);
+                dendriteCtrl.X2 = Canvas.GetLeft(targetNeuronCtrl) + targetNeuronCtrl.GetCenterX();
+                dendriteCtrl.Y2 = Canvas.GetTop(targetNeuronCtrl) + targetNeuronCtrl.GetCenterY();
 
                 canvas.Children.Add(dendriteCtrl);
                 
@@ -312,7 +329,7 @@ namespace NeuralNerdApp
                 canvas.Children.Add(ctrl);
                 y += NeuronControl.Size + 5;
             }
-            x += LayerWidth;
+            x += InputLayerWidth;
 
             UpdateMaxSize(x, y);
         }

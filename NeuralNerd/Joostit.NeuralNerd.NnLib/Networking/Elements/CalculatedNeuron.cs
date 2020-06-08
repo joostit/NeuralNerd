@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Joostit.NeuralNerd.NnLib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,7 +23,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 
         }
 
-        public void CalculateActivation()
+        public void Calculate()
         {
             double weightedSum = 0.0;
 

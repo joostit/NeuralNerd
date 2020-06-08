@@ -2,12 +2,18 @@
 using NeuralNerdApp.Forms;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace NeuralNerdApp
 {
     public class InputNeuronControl : NeuronControl
     {
+        private TextBlock nameLabel;
+
+        public const double InputNeuronWidth = 200;
 
         public event EventHandler ActivationChanged;
 
@@ -27,6 +33,25 @@ namespace NeuralNerdApp
             :base(neuron)
         {
             neuronIcon.MouseDown += NeuronIcon_MouseDown;
+            this.Width = InputNeuronWidth;
+
+            Canvas.SetRight(neuronIcon, 0);
+
+            CreateNameLabel();
+            contentCanvas.Width = InputNeuronWidth;
+        }
+
+        private void CreateNameLabel()
+        {
+            nameLabel = new TextBlock();
+            nameLabel.TextAlignment = TextAlignment.Right;
+            nameLabel.FontSize = 11;
+            nameLabel.FontWeight = FontWeights.Bold;
+            Canvas.SetLeft(nameLabel, 5);
+            Canvas.SetTop(nameLabel, (Size / 2) - 8);
+
+            nameLabel.Width = InputNeuronWidth - Size - 10;
+            contentCanvas.Children.Add(nameLabel);
         }
 
         private void NeuronIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -57,5 +82,16 @@ namespace NeuralNerdApp
             ActivationChanged = null;
         }
 
+
+        public override double GetCenterX()
+        {
+            return InputNeuronWidth - base.GetCenterX();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            nameLabel.Text = Neuron.Name;
+        }
     }
 }

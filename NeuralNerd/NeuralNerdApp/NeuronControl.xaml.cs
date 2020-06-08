@@ -28,7 +28,6 @@ namespace NeuralNerdApp
             :this()
         {
             this.Neuron = neuron;
-            Update();
         }
 
         private NeuronControl()
@@ -37,12 +36,13 @@ namespace NeuralNerdApp
         }
 
 
-        public void Update()
+        public virtual void Update()
         {
             if (Neuron != null)
             {
                 activationLabel.Text = Math.Round(Neuron.Activation, 2).ToString();
             }
+            contentCanvas.UpdateLayout();
         }
 
 
@@ -51,6 +51,22 @@ namespace NeuralNerdApp
             this.Neuron = null;
         }
 
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Update();
+            UpdateLayout();
+        }
+
+
+        public virtual double GetCenterX()
+        {
+            return Size / 2;
+        }
+
+        public virtual double GetCenterY()
+        {
+            return Size / 2;
+        } 
 
     }
 }

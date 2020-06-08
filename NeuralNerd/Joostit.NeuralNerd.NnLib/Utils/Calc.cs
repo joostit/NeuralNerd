@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Joostit.NeuralNerd.NnLib
+namespace Joostit.NeuralNerd.NnLib.Utils
 {
     public static class Calc
     {

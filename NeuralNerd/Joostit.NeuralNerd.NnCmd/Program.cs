@@ -25,6 +25,11 @@ namespace Joostit.NeuralNerd.NnCmd
             NetworkConfiguration config = new NetworkConfiguration();
             config.Network = network;
 
+            network.InputLayer[0].Name = "Pixel [0, 0]";
+            network.InputLayer[1].Name = "Pixel [1, 0]";
+            network.InputLayer[2].Name = "Pixel [1, 0]";
+            network.InputLayer[3].Name = "Pixel [1, 1]";
+
             network.HiddenLayers[0][0].Bias = -3;
             network.HiddenLayers[0][0].Dendrites[0].Weight = 2;
             network.HiddenLayers[0][0].Dendrites[1].Weight = 2;
@@ -75,18 +80,21 @@ namespace Joostit.NeuralNerd.NnCmd
             network.HiddenLayers[1][3].Dendrites[3].Weight = 2;
 
             network.OutputLayer[0].Bias = -2;
+            network.OutputLayer[0].Name = "Go right";
             network.OutputLayer[0].Dendrites[0].Weight = 2;
             network.OutputLayer[0].Dendrites[1].Weight = 1;
             network.OutputLayer[0].Dendrites[2].Weight = 1;
             network.OutputLayer[0].Dendrites[3].Weight = 1;
 
             network.OutputLayer[1].Bias = -2;
+            network.OutputLayer[1].Name = "Go left";
             network.OutputLayer[1].Dendrites[0].Weight = 1;
             network.OutputLayer[1].Dendrites[1].Weight = 2;
             network.OutputLayer[1].Dendrites[2].Weight = 1;
             network.OutputLayer[1].Dendrites[3].Weight = 1;
 
             network.OutputLayer[2].Bias = -2;
+            network.OutputLayer[2].Name = "Stop";
             network.OutputLayer[2].Dendrites[0].Weight = 1;
             network.OutputLayer[2].Dendrites[1].Weight = 1;
             network.OutputLayer[2].Dendrites[2].Weight = 2;
@@ -96,7 +104,7 @@ namespace Joostit.NeuralNerd.NnCmd
             ConfigurationFileHandler handler = new ConfigurationFileHandler();
             handler.Save(config, "SimpleNetwork.nn.xml");
 
-            NetworkConfiguration loadedConfig = handler.Load("SimpleNetwork.xml");
+            NetworkConfiguration loadedConfig = handler.Load("SimpleNetwork.nn.xml");
 
             GC.KeepAlive(loadedConfig);
 

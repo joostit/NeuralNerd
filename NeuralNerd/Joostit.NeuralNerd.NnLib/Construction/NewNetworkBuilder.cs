@@ -80,6 +80,7 @@ namespace Joostit.NeuralNerd.NnLib.Construction
             for (int rowId = 0; rowId < parameters.OutputNeuronCount; rowId++)
             {
                 OutputNeuron neuron = new OutputNeuron(layerCounter, rowId);
+                neuron.Name = $"Output {rowId}";
                 network.OutputLayer.Add(neuron);
             }
             layerCounter++;
@@ -105,6 +106,7 @@ namespace Joostit.NeuralNerd.NnLib.Construction
             for (int rowId = 0; rowId < parameters.InputNeuronCount; rowId++)
             {
                 InputNeuron neuron = new InputNeuron(layerCounter, rowId);
+                neuron.Name = $"Input {rowId}";
                 network.InputLayer.Add(neuron);
             }
             layerCounter++;
