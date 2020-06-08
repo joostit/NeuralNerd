@@ -12,12 +12,12 @@
             Width="{x:Static local:NeuronControl.Size}"
             Height="{x:Static local:NeuronControl.Size}"
             Padding="0,6,0,0"
-            Background="Aquamarine"
+            Background="Gray"
             BorderBrush="Black"
             BorderThickness="1">
                 <TextBlock 
                     HorizontalAlignment="Center"
-                    Text="x.yy" 
+                    Text="" 
                     x:Name="activationLabel"
                     FontSize="11"/>
         </Border>

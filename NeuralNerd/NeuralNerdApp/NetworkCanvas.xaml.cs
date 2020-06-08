@@ -5,6 +5,7 @@ using Joostit.NeuralNerd.NnLib.Networking.Structure;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -28,6 +29,8 @@ namespace NeuralNerdApp
         private const double OutputLayerWidth = OutputNeuronControl.OutputNeuronWidth + NeuronControl.Size * 4;
 
         private const double NeuronSpacing = 10;
+
+        private const int MaxDendritesPerLayer = 512;
 
         public NetworkConfiguration Network { get; private set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
@@ -194,7 +197,7 @@ namespace NeuralNerdApp
             Network = null;
         }
 
-        public void SetNetwork(NetworkConfiguration network)
+        public async void SetNetwork(NetworkConfiguration network)
         {
             if(this.Network != null)
             {
@@ -203,20 +206,27 @@ namespace NeuralNerdApp
 
             this.Network = network;
             DrawNetwork();
-            CalculateNetwork();
+            await Calculate();
         }
 
         private void DrawNetwork()
         {
             maxX = 0;
             maxY = 0;
-
+            INeuronLayer leftLayer = Network.Network.InputLayer;
             double x = 10;
             DrawInputColumn(Network.Network.InputLayer, ref x);
 
             foreach (var hiddenLayer in Network.Network.HiddenLayers)
             {
-                DrawHiddenLayer(hiddenLayer, ref x);
+                bool drawDendrites = GetDendriteCount(hiddenLayer) <= MaxDendritesPerLayer;
+                DrawHiddenLayer(hiddenLayer, ref x, drawDendrites);
+
+                if (!drawDendrites)
+                {
+                    DrawCommonDendriteIndicator(leftLayer, hiddenLayer);
+                }
+                leftLayer = hiddenLayer;
             }
 
             DrawOutputLayer(Network.Network.OutputLayer, ref x);
@@ -245,35 +255,40 @@ namespace NeuralNerdApp
 
         private void DrawOutputLayer(OutputLayer outputLayer, ref double x)
         {
+            bool drawDendrites = GetDendriteCount(outputLayer) <= MaxDendritesPerLayer;
             double y = 10;
             foreach (OutputNeuron outputNeuron in outputLayer)
             {
-                DrawOutputNeuron(outputNeuron, x, y);
+                DrawOutputNeuron(outputNeuron, x, y, drawDendrites);
                 y += NeuronControl.Size + NeuronSpacing;
             }
-            x += OutputLayerWidth;
-
-            // ToDo: Determine if the new X should be larger if we're adding a name to output neurons
+            x += OutputLayerWidth + OutputNeuronControl.OutputNeuronWidth;
 
             UpdateMaxSize(x,y);
+
+            if (!drawDendrites)
+            {
+                INeuronLayer lastHiddenLayer = Network.Network.HiddenLayers[Network.Network.HiddenLayers.Count - 1];
+                DrawCommonDendriteIndicator(lastHiddenLayer, outputLayer);
+            }
         }
 
-        private void DrawHiddenLayer(HiddenLayer hiddenLayer, ref double x)
+        private void DrawHiddenLayer(HiddenLayer hiddenLayer, ref double x, bool drawDendrites)
         {
             double y = 10;
             foreach (CalculatedNeuron neuron in hiddenLayer)
             {
-                DrawCalculatedNeuron(neuron, x, y);
+                DrawCalculatedNeuron(neuron, x, y, drawDendrites);
                 y += NeuronControl.Size + NeuronSpacing;
             }
             x += HiddenLayerWidth;
 
             UpdateMaxSize(x, y);
+
         }
 
 
-
-        private void DrawCalculatedNeuron(CalculatedNeuron neuron, double x, double y)
+        private void DrawCalculatedNeuron(CalculatedNeuron neuron, double x, double y, bool drawDendrites)
         {
             CalculatedNeuronControl ctrl = new CalculatedNeuronControl(neuron);
             ctrl.ConfigurationChanged += Ctrl_ConfigurationChanged;
@@ -282,11 +297,14 @@ namespace NeuralNerdApp
             neurons.Add(neuron.Coordinate, ctrl);
             canvas.Children.Add(ctrl);
 
-            DrawDendrites(neuron, ctrl);
+            if (drawDendrites)
+            {
+                DrawDendrites(neuron, ctrl);
+            }
         }
 
 
-        private void DrawOutputNeuron(OutputNeuron neuron, double x, double y)
+        private void DrawOutputNeuron(OutputNeuron neuron, double x, double y, bool drawDendrites)
         {
             OutputNeuronControl ctrl = new OutputNeuronControl(neuron);
             ctrl.ConfigurationChanged += Ctrl_ConfigurationChanged;
@@ -295,7 +313,10 @@ namespace NeuralNerdApp
             neurons.Add(neuron.Coordinate, ctrl);
             canvas.Children.Add(ctrl);
 
-            DrawDendrites(neuron, ctrl);
+            if (drawDendrites)
+            {
+                DrawDendrites(neuron, ctrl);
+            }
         }
 
 
@@ -313,7 +334,6 @@ namespace NeuralNerdApp
                 dendriteCtrl.Y2 = Canvas.GetTop(targetNeuronCtrl) + targetNeuronCtrl.GetCenterY();
 
                 canvas.Children.Add(dendriteCtrl);
-                
             }
         }
 
@@ -336,6 +356,19 @@ namespace NeuralNerdApp
             UpdateMaxSize(x, y);
         }
 
+
+        private int GetDendriteCount(ICalculatableNeuronLayer layer)
+        {
+            int count = 0;
+
+            foreach (CalculatedNeuron neuron in layer)
+            {
+                count += neuron.Dendrites.Count;
+            }
+
+            return count;
+        }
+
         private void UpdateMaxSize(double x, double y)
         {
             if (x > maxX)
@@ -349,20 +382,28 @@ namespace NeuralNerdApp
             }
         }
 
-        private void InputNeuron_ActivationChanged(object sender, EventArgs e)
+        private async void InputNeuron_ActivationChanged(object sender, EventArgs e)
         {
-            CalculateNetwork();
+            await Calculate();
         }
 
-        private void Ctrl_ConfigurationChanged(object sender, EventArgs e)
+        private async void Ctrl_ConfigurationChanged(object sender, EventArgs e)
         {
             // ToDo: Recalculate the network
-            CalculateNetwork();
+            await Calculate();
         }
 
-        private void CalculateNetwork()
+        public async Task Calculate()
         {
-            Network.Network.Calculate();
+            await CalculateNetwork();
+        }
+
+        private async Task CalculateNetwork()
+        {
+            await Task.Run(() =>
+            {
+                Network.Network.Calculate();
+            });
 
             foreach (NeuronControl ctrl in neurons.Values)
             {
@@ -374,5 +415,50 @@ namespace NeuralNerdApp
         {
 
         }
+
+
+        private void DrawCommonDendriteIndicator(INeuronLayer leftLayer, INeuronLayer rightLayer)
+        {
+            double x;
+            double y;
+            PointCollection points = new PointCollection();
+
+            NeuronControl LeftUpper = neurons[leftLayer[0].Coordinate];
+            NeuronControl LeftLower = neurons[leftLayer[leftLayer.Count-1].Coordinate];
+
+            NeuronControl rightUpper = neurons[rightLayer[0].Coordinate];
+            NeuronControl rightLower = neurons[rightLayer[rightLayer.Count - 1].Coordinate];
+
+            x = Canvas.GetLeft(LeftUpper) + LeftUpper.GetCenterX();
+            y = Canvas.GetTop(LeftUpper) + LeftUpper.GetCenterY();
+            Point leftUpperPoint = new Point(x, y);
+            points.Add(new Point(x, y));
+
+            x = Canvas.GetLeft(rightUpper) + rightUpper.GetCenterX();
+            y = Canvas.GetTop(rightUpper) + rightUpper.GetCenterY();
+            Point rightUpperPoint = new Point(x, y);
+            points.Add(new Point(x, y));
+
+            x = Canvas.GetLeft(rightLower) + rightLower.GetCenterX();
+            y = Canvas.GetTop(rightLower) + rightLower.GetCenterY();
+            Point rightLowerPoint = new Point(x, y);
+            points.Add(new Point(x, y));
+
+            x = Canvas.GetLeft(LeftLower) + LeftLower.GetCenterX();
+            y = Canvas.GetTop(LeftLower) + LeftLower.GetCenterY();
+            Point leftLowerPoint = new Point(x, y);
+            points.Add(new Point(x, y));
+
+
+            Polygon dendritesShape = new Polygon();
+            dendritesShape.Points = points;
+            dendritesShape.Fill = Brushes.LightGray;
+            dendritesShape.Stroke = Brushes.Black;
+            dendritesShape.StrokeThickness = 2;
+
+            canvas.Children.Add(dendritesShape);
+
+        }
+
     }
 }

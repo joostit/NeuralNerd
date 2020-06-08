@@ -7,5 +7,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public interface INeuronLayer : IEnumerable<Neuron>
     {
+        Neuron this[int index] { get; }
+        int Count { get; }
     }
 }

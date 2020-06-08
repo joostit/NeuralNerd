@@ -20,6 +20,8 @@ namespace NeuralNerdApp
     public partial class NeuronControl : UserControl
     {
 
+        private double previousActivation = -1;
+
         public const double Size = 30;
 
         public Neuron Neuron { get; set; }
@@ -40,10 +42,13 @@ namespace NeuralNerdApp
         {
             if (Neuron != null)
             {
-                activationLabel.Text = Math.Round(Neuron.Activation, 2).ToString();
-                SetBackColor();
+                if (Neuron.Activation != previousActivation)
+                {
+                    activationLabel.Text = Math.Round(Neuron.Activation, 2).ToString();
+                    SetBackColor();
+                    previousActivation = Neuron.Activation;
+                }
             }
-            contentCanvas.UpdateLayout();
         }
 
 
@@ -54,8 +59,7 @@ namespace NeuralNerdApp
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Update();
-            UpdateLayout();
+            
         }
 
 
@@ -73,7 +77,7 @@ namespace NeuralNerdApp
         private void SetBackColor()
         {
             byte v = (byte) Math.Round(Neuron.Activation * 255);
-            Brush backBrush = new SolidColorBrush(Color.FromRgb(v, v, v));
+            Brush backBrush = GrayScaleBrushes.Get(v);
             neuronIcon.Background = backBrush;
 
             if (v > 128)

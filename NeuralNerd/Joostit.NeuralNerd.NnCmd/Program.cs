@@ -2,6 +2,7 @@
 using Joostit.NeuralNerd.NnLib.Construction;
 using Joostit.NeuralNerd.NnLib.Networking;
 using System;
+using System.Diagnostics;
 
 namespace Joostit.NeuralNerd.NnCmd
 {
@@ -11,7 +12,33 @@ namespace Joostit.NeuralNerd.NnCmd
         {
             Console.WriteLine("Running");
 
+            NewNetworkBuilder builder = new NewNetworkBuilder();
 
+            NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
+            {
+                InputNeuronCount = 784,
+                HiddenLayerCount = 2,
+                HiddenLayerNeuronCount = 16,
+                OutputNeuronCount = 10
+            });
+
+            NetworkConfiguration config = new NetworkConfiguration();
+            config.Network = network;
+
+            network.Calculate();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            network.Calculate();
+            sw.Stop();
+
+            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine("Ended");
+            Console.ReadKey();
+        }
+
+        private static void CreateTestNetwork()
+        {
             NewNetworkBuilder builder = new NewNetworkBuilder();
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
@@ -107,13 +134,6 @@ namespace Joostit.NeuralNerd.NnCmd
             NetworkConfiguration loadedConfig = handler.Load("SimpleNetwork.nn.xml");
 
             GC.KeepAlive(loadedConfig);
-
-
-
-
-
-
-            Console.WriteLine("Ended");
         }
     }
 }

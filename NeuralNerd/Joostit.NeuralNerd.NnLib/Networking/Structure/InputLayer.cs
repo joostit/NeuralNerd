@@ -8,6 +8,14 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public class InputLayer : List<InputNeuron>, INeuronLayer
     {
+        Neuron INeuronLayer.this[int index]
+        {
+            get
+            {
+                return this[index];
+            }
+        }
+
         IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
         {
             foreach (Neuron item in this)

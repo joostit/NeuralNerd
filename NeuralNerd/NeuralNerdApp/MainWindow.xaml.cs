@@ -28,7 +28,6 @@ namespace NeuralNerdApp
     public partial class MainWindow : Window
     {
 
-
         private const string FileFilter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
 
         public MainWindow()
@@ -49,12 +48,11 @@ namespace NeuralNerdApp
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
             {
-                InputNeuronCount = 11,
+                InputNeuronCount = 784,
                 HiddenLayerCount = 2,
                 HiddenLayerNeuronCount = 16,
                 OutputNeuronCount = 8
             });
-
 
 
             NetworkConfiguration config = new NetworkConfiguration();
