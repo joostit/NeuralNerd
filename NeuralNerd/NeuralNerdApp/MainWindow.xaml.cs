@@ -2,6 +2,7 @@
 using Joostit.NeuralNerd.NnLib.Construction;
 using Joostit.NeuralNerd.NnLib.Networking;
 using Microsoft.Win32;
+using NeuralNerdApp.Windows;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -160,6 +161,26 @@ namespace NeuralNerdApp
             }
 
             return result;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            NetworkParameters parameters = NewNetworkWindow.GetNewNetwork();
+
+            if (parameters != null)
+            {
+                NewNetworkBuilder builder = new NewNetworkBuilder();
+                NeuralNetwork network = builder.BuildNetwork(parameters);
+
+                NeuralNetworkLinker linker = new NeuralNetworkLinker();
+                linker.Link(network);
+
+                NetworkConfiguration config = new NetworkConfiguration()
+                {
+                    Network = network
+                };
+                networkCanvas.SetNetwork(config);
+            }
         }
     }
 }
