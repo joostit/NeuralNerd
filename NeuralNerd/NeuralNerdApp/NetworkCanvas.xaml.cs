@@ -279,9 +279,9 @@ namespace NeuralNerdApp
         private void DrawHiddenLayer(HiddenLayer hiddenLayer, ref double x, DendriteDrawModes dendriteMode)
         {
             double y = 10;
-            for(int i = 0; i < hiddenLayer.Count; i++)
+            for(int i = 0; i < hiddenLayer.Neurons.Length; i++)
             {
-                CalculatedNeuron neuron = hiddenLayer[i];
+                CalculatedNeuron neuron = hiddenLayer.Neurons[i];
                 DrawHiddenNeuron(neuron, x, y, dendriteMode);
                 y += NeuronControl.Size + NeuronSpacing;
             }
@@ -398,16 +398,17 @@ namespace NeuralNerdApp
 
         public async Task Calculate()
         {
-            await CalculateNetwork();
-        }
-
-        private async Task CalculateNetwork()
-        {
             await Task.Run(() =>
             {
                 Network.Network.Calculate();
             });
 
+            UpdateNeurons();
+        }
+
+
+        public void UpdateNeurons()
+        {
             foreach (NeuronControl ctrl in neurons.Values)
             {
                 ctrl.Update();

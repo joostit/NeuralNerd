@@ -77,11 +77,12 @@ namespace Joostit.NeuralNerd.NnLib.Construction
 
         private void CreateOutputNeurons(NetworkParameters parameters)
         {
+            network.OutputLayer = new OutputLayer(parameters.OutputNeuronCount);
             for (int rowId = 0; rowId < parameters.OutputNeuronCount; rowId++)
             {
                 OutputNeuron neuron = new OutputNeuron(layerCounter, rowId);
                 neuron.Name = $"Output {rowId}";
-                network.OutputLayer.Add(neuron);
+                network.OutputLayer.Neurons[rowId] = neuron;
             }
             layerCounter++;
         }
@@ -90,11 +91,11 @@ namespace Joostit.NeuralNerd.NnLib.Construction
         {
             for (int hiddenLayerId = 0; hiddenLayerId < parameters.HiddenLayerCount; hiddenLayerId++)
             {
-                HiddenLayer layer = new HiddenLayer();
+                HiddenLayer layer = new HiddenLayer(parameters.HiddenLayerNeuronCount);
                 for (int rowId = 0; rowId < parameters.HiddenLayerNeuronCount; rowId++)
                 {
                     HiddenNeuron neuron = new HiddenNeuron(layerCounter, rowId);
-                    layer.Add(neuron);
+                    layer.Neurons[rowId] = neuron;
                 }
                 network.HiddenLayers.Add(layer);
                 layerCounter++;
@@ -103,11 +104,12 @@ namespace Joostit.NeuralNerd.NnLib.Construction
 
         private void CreateInputNeurons(NetworkParameters parameters)
         {
+            network.InputLayer = new InputLayer(parameters.InputNeuronCount);
             for (int rowId = 0; rowId < parameters.InputNeuronCount; rowId++)
             {
                 InputNeuron neuron = new InputNeuron(layerCounter, rowId);
                 neuron.Name = $"Input {rowId}";
-                network.InputLayer.Add(neuron);
+                network.InputLayer.Neurons[rowId] = neuron;
             }
             layerCounter++;
         }

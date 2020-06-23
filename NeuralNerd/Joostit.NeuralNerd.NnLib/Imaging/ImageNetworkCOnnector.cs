@@ -30,7 +30,7 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 
             for (int i = 0; i < Network.InputLayer.Count; i++)
             {
-                Network.InputLayer[i].Activation = stimulus.inputStimuli[i];
+                Network.InputLayer.Neurons[i].Activation = stimulus.inputStimuli[i];
             }
         }
 

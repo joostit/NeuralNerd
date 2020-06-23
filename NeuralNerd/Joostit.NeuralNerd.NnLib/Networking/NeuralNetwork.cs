@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking
@@ -9,11 +10,11 @@ namespace Joostit.NeuralNerd.NnLib.Networking
     public class NeuralNetwork
     {
 
-        public InputLayer InputLayer { get; set; } = new InputLayer();
+        public InputLayer InputLayer { get; set; }
 
         public HiddenLayers HiddenLayers { get; set; } = new HiddenLayers();
 
-        public OutputLayer OutputLayer { get; set; } = new OutputLayer();
+        public OutputLayer OutputLayer { get; set; }
 
         public List<INeuronLayer> GetAllLayers()
         {
