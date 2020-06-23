@@ -90,6 +90,14 @@ namespace NeuralNerdApp
             }
         }
 
+        private void neuronIcon_MouseEnter(object sender, MouseEventArgs e)
+        {
+            neuronIcon.BorderThickness = new Thickness(2);
+        }
 
+        private void neuronIcon_MouseLeave(object sender, MouseEventArgs e)
+        {
+            neuronIcon.BorderThickness = new Thickness(1);
+        }
     }
 }

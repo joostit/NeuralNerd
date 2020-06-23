@@ -49,10 +49,10 @@ namespace NeuralNerdApp
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
             {
-                InputNeuronCount = 784,
+                InputNeuronCount = 16,
                 HiddenLayerCount = 2,
-                HiddenLayerNeuronCount = 16,
-                OutputNeuronCount = 8
+                HiddenLayerNeuronCount = 8,
+                OutputNeuronCount = 6
             });
 
 

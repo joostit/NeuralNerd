@@ -71,12 +71,12 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
         {
             NeuronCoordinate otherCoord = other as NeuronCoordinate;
 
-            if(other == null)
+            if(otherCoord == null)
             {
                 return false;
             }
 
-            return (other.GetHashCode() == this.GetHashCode());
+            return (otherCoord.GetHashCode() == this.GetHashCode());
         }
 
         public override int GetHashCode()

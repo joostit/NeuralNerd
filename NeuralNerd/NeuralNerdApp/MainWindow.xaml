@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NeuralNerdApp"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="450" Width="800"
+        Height="800" Width="1100"
         Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top">

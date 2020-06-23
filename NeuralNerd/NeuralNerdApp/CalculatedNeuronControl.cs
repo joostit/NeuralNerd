@@ -38,7 +38,6 @@ namespace NeuralNerdApp
                 Update();
                 RaiseConfigurationChanged();
             }
-
         }
 
         private void RaiseConfigurationChanged()
