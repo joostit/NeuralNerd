@@ -1,5 +1,6 @@
 ﻿using Joostit.NeuralNerd.NnLib.Configuration;
 using Joostit.NeuralNerd.NnLib.Construction;
+using Joostit.NeuralNerd.NnLib.Imaging;
 using Joostit.NeuralNerd.NnLib.Networking;
 using System;
 using System.Diagnostics;
@@ -27,12 +28,29 @@ namespace Joostit.NeuralNerd.NnCmd
 
             network.Calculate();
 
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            network.Calculate();
+            LearningStimuliLoader stimuliLoader = new LearningStimuliLoader();
+            stimuliLoader.LoadImages(@"C:\Joost\Projects\MNIST_Dataset\mnist_png\training");
             sw.Stop();
+            Console.WriteLine($"Loading images: {sw.ElapsedMilliseconds}ms");
 
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds}ms");
+            sw.Reset();
+
+            ImageNetworkConnector connector = new ImageNetworkConnector();
+            connector.Network = network;
+
+            sw.Start();
+            foreach (var stimulus in stimuliLoader.Stimuli.Cache)
+            {
+                connector.SetInputNeurons(stimulus);
+                network.Calculate();
+            }
+            sw.Stop();
+            Console.WriteLine($"Calculating all image stimuli once: {sw.ElapsedMilliseconds}");
+            
+
             Console.WriteLine("Ended");
             Console.ReadKey();
         }
