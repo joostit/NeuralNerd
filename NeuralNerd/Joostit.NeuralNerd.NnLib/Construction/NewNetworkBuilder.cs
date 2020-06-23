@@ -64,9 +64,9 @@ namespace Joostit.NeuralNerd.NnLib.Construction
 
         private void CreateDendritesForLayer(ICalculatableNeuronLayer layer, INeuronLayer precedingLayer)
         {
-            foreach(CalculatedNeuron targetNeuron in layer)
+            foreach(CalculatedNeuron targetNeuron in layer.Neurons)
             {
-                foreach(Neuron inputNeuron in precedingLayer)
+                foreach(Neuron inputNeuron in precedingLayer.Neurons)
                 {
                     Dendrite dendrite = new Dendrite();
                     dendrite.InputNeuronCoordinate = inputNeuron.Coordinate.Clone();

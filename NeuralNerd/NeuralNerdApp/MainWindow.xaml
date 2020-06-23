@@ -17,6 +17,10 @@
                 <Separator/>
                 <MenuItem Header="E_xit" Click="ExitMenuItem_Click"/>
             </MenuItem>
+            <MenuItem Header="_Learning">
+                <MenuItem Header="_Randimize Weights" Click="RandomizeLearning_Click"/>
+                <MenuItem Header="_Learn" Click="Learn_Click"/>
+            </MenuItem>
         </Menu>
         
             <local:NetworkCanvas x:Name="networkCanvas"/>

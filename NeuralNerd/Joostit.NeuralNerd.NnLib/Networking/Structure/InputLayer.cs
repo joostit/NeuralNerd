@@ -4,19 +4,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public class InputLayer : INeuronLayer
     {
 
-        public InputNeuron[] Neurons { get; private set; }
+        public InputNeuron[] Neurons { get; set; }
 
+        [XmlIgnore]
         public int Count
         {
             get
             {
                 return Neurons.Length;
+            }
+        }
+
+        [XmlIgnore]
+        Neuron[] INeuronLayer.Neurons
+        {
+            get
+            {
+                return Neurons;
             }
         }
 
@@ -28,25 +39,16 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
             }
         }
 
+        [Obsolete("This constructor is only for XML serialization")]
+        public InputLayer()
+        {
+
+        }
+
         public InputLayer(int size)
         {
             Neurons = new InputNeuron[size];
         }
 
-        IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
-        {
-            foreach (Neuron item in Neurons)
-            {
-                yield return item;
-            }
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            foreach (Neuron item in Neurons)
-            {
-                yield return item;
-            }
-        }
     }
 }

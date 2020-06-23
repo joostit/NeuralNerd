@@ -5,19 +5,39 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public class OutputLayer : ICalculatableNeuronLayer
     {
 
-        public OutputNeuron[] Neurons { get; private set; }
+        public OutputNeuron[] Neurons { get; set; }
 
+        [XmlIgnore]
         public int Count
         {
             get
             {
                 return Neurons.Length;
+            }
+        }
+
+        [XmlIgnore]
+        Neuron[] INeuronLayer.Neurons
+        {
+            get
+            {
+                return Neurons;
+            }
+        }
+
+        [XmlIgnore]
+        CalculatedNeuron[] ICalculatableNeuronLayer.Neurons
+        {
+            get
+            {
+                return Neurons;
             }
         }
 
@@ -29,6 +49,11 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
             }
         }
 
+        [Obsolete("This constructor is only for XML serialization")]
+        public OutputLayer()
+        {
+
+        }
 
         public OutputLayer(int size)
         {
@@ -48,20 +73,5 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
             //});
         }
 
-        IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
-        {
-            foreach (Neuron item in Neurons)
-            {
-                yield return item;
-            }
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            foreach (Neuron item in Neurons)
-            {
-                yield return item;
-            }
-        }
     }
 }

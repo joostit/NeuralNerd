@@ -35,11 +35,12 @@ namespace Joostit.NeuralNerd.NnCmd
             Console.WriteLine($"Loading images: {sw.ElapsedMilliseconds}ms");
 
             sw.Reset();
-            ImageLearner learner = new ImageLearner()
+            ImageLearner learner = new ImageLearner(network)
             {
-                Network = network,
                 Stimuli = stimuliLoader.Stimuli
             };
+
+            learner.InitializeNew();
 
             sw.Start();
             learner.Learn();

@@ -6,14 +6,16 @@ using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
     public class HiddenLayer : ICalculatableNeuronLayer
     {
 
-        public HiddenNeuron[] Neurons { get; private set; }
+        public HiddenNeuron[] Neurons { get; set; }
 
+        [XmlIgnore]
         public int Count
         {
             get
@@ -22,10 +24,25 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
             }
         }
 
-        public HiddenLayer(int size)
+        [XmlIgnore]
+        Neuron[] INeuronLayer.Neurons
         {
-            Neurons = new HiddenNeuron[size];
+            get
+            {
+                return Neurons;
+            }
         }
+
+        [XmlIgnore]
+        CalculatedNeuron[] ICalculatableNeuronLayer.Neurons
+        {
+            get
+            {
+                return Neurons;
+            }
+        }
+
+
 
         public Neuron this[int index]
         {
@@ -36,6 +53,18 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
         }
 
 
+        [Obsolete("This constructor is only for XML serialization")]
+        public HiddenLayer()
+        {
+
+        }
+
+        public HiddenLayer(int size)
+        {
+            Neurons = new HiddenNeuron[size];
+        }
+
+
         public void Calculate()
         {
             for(int i = 0; i < Neurons.Length; i++)
@@ -43,27 +72,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
                 Neurons[i].Calculate();
             }
 
-
-            //Parallel.ForEach<CalculatedNeuron>(Neurons, (neuron) =>
-            //{
-            //    neuron.Calculate();
-            //});
         }
-
-        public IEnumerator GetEnumerator()
-        {
-            foreach (Neuron item in Neurons)
-            {
-                yield return item;
-            }
-        }
-
-        IEnumerator<Neuron> IEnumerable<Neuron>.GetEnumerator()
-        {
-            foreach (Neuron item in Neurons)
-            {
-                yield return item;
-            }
-        }
+      
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Joostit.NeuralNerd.NnLib.Configuration;
 using Joostit.NeuralNerd.NnLib.Construction;
+using Joostit.NeuralNerd.NnLib.Imaging;
 using Joostit.NeuralNerd.NnLib.Networking;
 using Microsoft.Win32;
 using NeuralNerdApp.Windows;
+using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -180,6 +182,21 @@ namespace NeuralNerdApp
                     Network = network
                 };
                 networkCanvas.SetNetwork(config);
+            }
+        }
+
+        private async void RandomizeLearning_Click(object sender, RoutedEventArgs e)
+        {
+            await networkCanvas.InitializeLearning();
+        }
+
+        private void Learn_Click(object sender, RoutedEventArgs e)
+        {
+            var diag = new VistaFolderBrowserDialog();
+            diag.Description = "Select stimuli root folder";
+            if (diag.ShowDialog() == true)
+            {
+                networkCanvas.Learn(diag.SelectedPath);
             }
         }
     }

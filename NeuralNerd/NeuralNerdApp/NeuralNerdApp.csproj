@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ookii.Dialogs" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Joostit.NeuralNerd.NnLib\Joostit.NeuralNerd.NnLib.csproj" />
   </ItemGroup>
 

@@ -26,13 +26,13 @@ namespace Joostit.NeuralNerd.NnLib.Construction
         {
             foreach(INeuronLayer hiddenLayer in network.HiddenLayers)
             {
-                foreach (CalculatedNeuron neuron in hiddenLayer)
+                foreach (CalculatedNeuron neuron in hiddenLayer.Neurons)
                 {
                     CreateDendriteObjectReferences(neuron, neuronDictionary);
                 }
             }
 
-            foreach (CalculatedNeuron neuron in network.OutputLayer)
+            foreach (CalculatedNeuron neuron in network.OutputLayer.Neurons)
             {
                 CreateDendriteObjectReferences(neuron, neuronDictionary);
             }
@@ -61,7 +61,7 @@ namespace Joostit.NeuralNerd.NnLib.Construction
 
             foreach (INeuronLayer layer in network.GetAllLayers())
             {
-                foreach (Neuron neuron in layer)
+                foreach (Neuron neuron in layer.Neurons)
                 {
                     try
                     {

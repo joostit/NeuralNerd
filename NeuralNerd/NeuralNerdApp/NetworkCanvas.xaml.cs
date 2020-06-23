@@ -1,4 +1,5 @@
 ﻿using Joostit.NeuralNerd.NnLib.Configuration;
+using Joostit.NeuralNerd.NnLib.Learning;
 using Joostit.NeuralNerd.NnLib.Networking;
 using Joostit.NeuralNerd.NnLib.Networking.Elements;
 using Joostit.NeuralNerd.NnLib.Networking.Structure;
@@ -24,6 +25,7 @@ namespace NeuralNerdApp
     public partial class NetworkCanvas : UserControl
     {
 
+        
         private const double InputLayerWidth = InputNeuronControl.InputNeuronWidth + NeuronControl.Size * 3;
         private const double HiddenLayerWidth = NeuronControl.Size * 4;
         private const double OutputLayerWidth = OutputNeuronControl.OutputNeuronWidth + NeuronControl.Size * 4;
@@ -38,12 +40,13 @@ namespace NeuralNerdApp
         private double maxX = 0;
         private double maxY = 0;
 
+        public ImageLearner Learner { get; private set; }
 
         public NetworkCanvas()
         {
             InitializeComponent();
-            canvas.Width = 1000000000;
-            canvas.Height = 1000000000;
+            canvas.Width = 100000000;
+            canvas.Height = 100000000;
         }
 
 
@@ -199,6 +202,17 @@ namespace NeuralNerdApp
             Network = null;
         }
 
+        public async Task InitializeLearning()
+        {
+            Learner.InitializeNew();
+            await Calculate();
+        }
+
+        internal void Learn(string stimulibasePath)
+        {
+            Learner.Initialize(stimulibasePath);
+        }
+
         public async void SetNetwork(NetworkConfiguration network)
         {
             if(this.Network != null)
@@ -207,6 +221,7 @@ namespace NeuralNerdApp
             }
 
             this.Network = network;
+            Learner = new ImageLearner(network.Network);
             DrawNetwork();
             await Calculate();
         }
@@ -260,7 +275,7 @@ namespace NeuralNerdApp
         {
             DendriteDrawModes dendriteMode = (GetDendriteCount(outputLayer) <= MaxDendritesPerLayer) ? DendriteDrawModes.All : DendriteDrawModes.None;
             double y = 10;
-            foreach (OutputNeuron outputNeuron in outputLayer)
+            foreach (OutputNeuron outputNeuron in outputLayer.Neurons)
             {
                 DrawOutputNeuron(outputNeuron, x, y, dendriteMode);
                 y += NeuronControl.Size + NeuronSpacing;
@@ -344,7 +359,7 @@ namespace NeuralNerdApp
         private void DrawInputColumn(InputLayer layer, ref double x)
         {
             double y = 10;
-            foreach(InputNeuron neuron in layer)
+            foreach(InputNeuron neuron in layer.Neurons)
             {
                 InputNeuronControl ctrl = new InputNeuronControl(neuron);
                 ctrl.ActivationChanged += InputNeuron_ActivationChanged;
@@ -364,7 +379,7 @@ namespace NeuralNerdApp
         {
             int count = 0;
 
-            foreach (CalculatedNeuron neuron in layer)
+            foreach (CalculatedNeuron neuron in layer.Neurons)
             {
                 count += neuron.Dendrites.Count;
             }
@@ -403,11 +418,11 @@ namespace NeuralNerdApp
                 Network.Network.Calculate();
             });
 
-            UpdateNeurons();
+            UpdateView();
         }
 
 
-        public void UpdateNeurons()
+        public void UpdateView()
         {
             foreach (NeuronControl ctrl in neurons.Values)
             {

@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
-    public interface INeuronLayer : IEnumerable<Neuron>
+    public interface INeuronLayer
     {
+        Neuron[] Neurons { get; }
         Neuron this[int index] { get; }
         int Count { get; }
     }
