@@ -75,16 +75,26 @@ namespace NeuralNerdApp
             if (snapshot?.Pass != null)
             {
                 ShowImage(snapshot);
+                UpdateValues(snapshot);
             }
             else
             {
-                ClearImage();
+                ClearImageAndValues();
             }
         }
 
-        private void ClearImage()
+        private void UpdateValues(NetworkSnapshot snapshot)
+        {
+            averageCostBox.Text = Math.Round(snapshot.AverageCostSoFar, 3).ToString();
+            currentCostBox.Text = Math.Round(snapshot.Pass.Cost, 3).ToString();
+        }
+
+        private void ClearImageAndValues()
         {
             imageBox.Source = null;
+
+            averageCostBox.Text = "";
+            currentCostBox.Text = "";
         }
 
         private void ShowImage(NetworkSnapshot snapshot)

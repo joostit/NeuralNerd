@@ -20,6 +20,8 @@ namespace NeuralNerdApp
     public partial class NeuronControl : UserControl
     {
 
+        protected bool IsEditable { get; private set; }
+
         private double previousActivation = -1;
 
         public const double Size = 30;
@@ -44,11 +46,17 @@ namespace NeuralNerdApp
             {
                 if (Neuron.Activation != previousActivation)
                 {
-                    activationLabel.Text = Math.Round(Neuron.Activation, 2).ToString();
-                    SetBackColor();
-                    previousActivation = Neuron.Activation;
+                    UpdateActivation(Neuron.Activation);
                 }
             }
+        }
+
+
+        protected void UpdateActivation(double activation)
+        {
+            activationLabel.Text = Math.Round(activation, 2).ToString();
+            SetBackColor(activation);
+            previousActivation = activation;
         }
 
 
@@ -74,9 +82,9 @@ namespace NeuralNerdApp
         } 
 
 
-        private void SetBackColor()
+        private void SetBackColor(double activation)
         {
-            byte v = (byte) Math.Round(Neuron.Activation * 255);
+            byte v = (byte) Math.Round(activation * 255);
             Brush backBrush = GrayScaleBrushes.Get(v);
             neuronIcon.Background = backBrush;
 
@@ -92,12 +100,27 @@ namespace NeuralNerdApp
 
         private void neuronIcon_MouseEnter(object sender, MouseEventArgs e)
         {
-            neuronIcon.BorderThickness = new Thickness(2);
+            if (IsEditable)
+            {
+                neuronIcon.BorderThickness = new Thickness(2);
+            }
         }
 
         private void neuronIcon_MouseLeave(object sender, MouseEventArgs e)
         {
             neuronIcon.BorderThickness = new Thickness(1);
+        }
+
+        internal void SetEditMode()
+        {
+            IsEditable = true;
+            UpdateActivation(Neuron.Activation);
+        }
+
+        public void SetLearningActivationState(double activation)
+        {
+            IsEditable = false;
+            UpdateActivation(activation);
         }
     }
 }

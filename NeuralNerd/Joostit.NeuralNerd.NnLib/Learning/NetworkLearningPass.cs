@@ -26,17 +26,18 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private void CopyStateFromNetwork(NeuralNetwork network)
         {
-            NetworkState state = new NetworkState();
-            state.InputLayerActivations = CopyNeuronActivation(network.InputLayer);
+            State = new NetworkState();
+            State.InputLayerActivations = CopyNeuronActivation(network.InputLayer);
 
-            state.HiddenLayersActivations = new double[network.HiddenLayers.Count][];
+            State.HiddenLayersActivations = new double[network.HiddenLayers.Count][];
 
             for(int i = 0; i < network.HiddenLayers.Count; i++)
             {
-                state.HiddenLayersActivations[i] = CopyNeuronActivation(network.HiddenLayers[i]);
+                State.HiddenLayersActivations[i] = CopyNeuronActivation(network.HiddenLayers[i]);
             }
 
-            state.OutputLayerActivations = CopyNeuronActivation(network.OutputLayer);
+            State.OutputLayerActivations = CopyNeuronActivation(network.OutputLayer);
+
         }
 
 

@@ -230,6 +230,55 @@ namespace NeuralNerdApp
             await Calculate();
         }
 
+
+        internal void UpdateLearningState(NetworkSnapshot snapshot)
+        {
+            if(snapshot != null && snapshot.Pass != null)
+            {
+                UpdateNeuronLearningState(snapshot);
+            }
+            else
+            {
+                SetIdleMode();
+            }
+        }
+
+
+        private void UpdateNeuronLearningState(NetworkSnapshot snapshot)
+        {
+            int layerIndex = 0;
+
+            for(int row = 0; row < snapshot.Pass.State.InputLayerActivations.Length; row++)
+            {
+                neurons[new NeuronCoordinate(layerIndex, row)].SetLearningActivationState(snapshot.Pass.State.InputLayerActivations[row]);
+            }
+            layerIndex++;
+
+            foreach (var hiddenLayer in snapshot.Pass.State.HiddenLayersActivations)
+            {
+                for (int row = 0; row < hiddenLayer.Length; row++)
+                {
+                    neurons[new NeuronCoordinate(layerIndex, row)].SetLearningActivationState(hiddenLayer[row]);
+                }
+                layerIndex++;
+            }
+
+            for (int row = 0; row < snapshot.Pass.State.OutputLayerActivations.Length; row++)
+            {
+                neurons[new NeuronCoordinate(layerIndex, row)].SetLearningActivationState(snapshot.Pass.State.OutputLayerActivations[row]);
+            }
+            
+        }
+
+
+        private void SetIdleMode()
+        {
+            foreach(var neuron in neurons.Values)
+            {
+                neuron.SetEditMode();
+            }
+        }
+
         private void DrawNetwork()
         {
             maxX = 0;
@@ -257,10 +306,6 @@ namespace NeuralNerdApp
             ResizeCanvas();
         }
 
-        internal void UpdateLearningState(NetworkSnapshot pass)
-        {
-
-        }
 
         private void ResizeCanvas()
         {

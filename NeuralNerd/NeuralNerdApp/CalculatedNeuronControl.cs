@@ -31,12 +31,15 @@ namespace NeuralNerdApp
 
         private void NeuronIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            bool hasChanged = CalculatedNeuronEditWindow.Show(Neuron);
-
-            if (hasChanged)
+            if (IsEditable)
             {
-                Update();
-                RaiseConfigurationChanged();
+                bool hasChanged = CalculatedNeuronEditWindow.Show(Neuron);
+
+                if (hasChanged)
+                {
+                    Update();
+                    RaiseConfigurationChanged();
+                }
             }
         }
 

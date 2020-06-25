@@ -77,6 +77,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public void Learn()
         {
             learningPasses = new NetworkLearningPass[Stimuli.Cache.Count];
+            learningPassesIndex = 0;
 
             ImageNetworkConnector connector = new ImageNetworkConnector();
             connector.Network = Network;
