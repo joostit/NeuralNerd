@@ -165,7 +165,7 @@ namespace NeuralNerdApp
             return result;
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void NewMenuItem_Click(object sender, RoutedEventArgs e)
         {
             NetworkParameters parameters = NewNetworkWindow.GetNewNetwork();
 

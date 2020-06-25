@@ -23,9 +23,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             this.Network = Network;
         }
 
-        public void Initialize(string imagePath)
+        public void LoadStimuli(string imagePath)
         {
-            LearningStimuliLoader loader = new LearningStimuliLoader();
+            LearningStimuliLoader loader = new LearningStimuliLoader(Network);
             loader.LoadImages(imagePath);
             Stimuli = loader.Stimuli;
 
@@ -40,13 +40,12 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             {
                 connector.SetInputNeurons(stimulus);
                 Network.Calculate();
+                CalculateCost(stimulus);
             });
         }
 
-        /// <summary>
-        /// Initializes a new learning cycle
-        /// </summary>
-        public void InitializeNew()
+
+        public void RandomizeNeuronParameters()
         {
             RandomizeParameters();
         }
@@ -84,6 +83,26 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         private double GetRandomBias()
         {
             return randomizer.Next(-10000, 10000) / 1000.0;
+        }
+
+
+
+        private double CalculateCost(ImageStimulus currentStimulus)
+        {
+            double total = 0;
+            double currentCost;
+            double distance;
+            for(int rowIndex = 0; rowIndex < Network.OutputLayer.Neurons.Length; rowIndex++)
+            {
+                double realOutcome = Network.OutputLayer.Neurons[rowIndex].Activation;
+                double expected = currentStimulus.ExpectedOutcomes[rowIndex];
+
+                distance = realOutcome - expected;
+                currentCost = distance * distance;
+                total += currentCost;
+            }
+
+            return total / Network.OutputLayer.Neurons.Length;
         }
 
     }

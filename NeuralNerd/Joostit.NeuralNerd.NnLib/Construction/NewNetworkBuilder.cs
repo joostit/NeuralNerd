@@ -81,7 +81,7 @@ namespace Joostit.NeuralNerd.NnLib.Construction
             for (int rowId = 0; rowId < parameters.OutputNeuronCount; rowId++)
             {
                 OutputNeuron neuron = new OutputNeuron(layerCounter, rowId);
-                neuron.Name = $"Output {rowId}";
+                neuron.Name = $"{rowId}";
                 network.OutputLayer.Neurons[rowId] = neuron;
             }
             layerCounter++;

@@ -9,12 +9,12 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
     public class ImageStimulus
     {
           
-        public List<double> ExpectedOutcomes { get; set; } = new List<double>();
+        public double[] ExpectedOutcomes { get; set; }
 
         public LockBitmap Image { get; private set; }
 
 
-        public List<double> inputStimuli { get; private set; } = new List<double>();
+        public double[] inputStimuli { get; private set; }
 
 
         public ImageStimulus(string imagePath)
@@ -27,10 +27,12 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 
         private void DefineInputStimuli()
         {
-
+            Image.LockBits();
+            inputStimuli = new double[Image.Width * Image.Height];
+            int inputStimulusIndex = 0;
             double pixelLuminocity = 0;
             Color pixelValue;
-            Image.LockBits();
+            
 
             for (int y = 0; y < Image.Height; y++)
             {
@@ -38,8 +40,8 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
                 {
                     pixelValue = Image.GetPixel(x, y);
                     pixelLuminocity = pixelValue.GetBrightness();
-                    inputStimuli.Add(pixelLuminocity);
-
+                    inputStimuli[inputStimulusIndex] = pixelLuminocity;
+                    inputStimulusIndex++;
                 }
             }
 

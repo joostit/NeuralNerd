@@ -204,13 +204,13 @@ namespace NeuralNerdApp
 
         public async Task InitializeLearning()
         {
-            Learner.InitializeNew();
+            Learner.RandomizeNeuronParameters();
             await Calculate();
         }
 
         internal void Learn(string stimulibasePath)
         {
-            Learner.Initialize(stimulibasePath);
+            Learner.LoadStimuli(stimulibasePath);
         }
 
         public async void SetNetwork(NetworkConfiguration network)

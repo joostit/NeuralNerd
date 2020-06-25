@@ -11,7 +11,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" Click="MenuItem_Click"/>
+                <MenuItem Header="_New" Click="NewMenuItem_Click"/>
                 <MenuItem Header="_Open" Click="OpenMenuItem_Click"/>
                 <MenuItem Header="_Save as" Click="SaveMenuItem_Click"/>
                 <Separator/>
@@ -22,8 +22,8 @@
                 <MenuItem Header="_Learn" Click="Learn_Click"/>
             </MenuItem>
         </Menu>
-        
-            <local:NetworkCanvas x:Name="networkCanvas"/>
+        <local:NetworkPerformanceControl x:Name="networkPerformanceControl"/>
+        <local:NetworkCanvas x:Name="networkCanvas"/>
         
     </DockPanel>
 </Window>

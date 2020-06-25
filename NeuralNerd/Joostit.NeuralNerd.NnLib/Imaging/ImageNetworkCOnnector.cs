@@ -23,7 +23,7 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 
         public void SetInputNeurons(ImageStimulus stimulus)
         {
-            if (stimulus.inputStimuli.Count != Network.InputLayer.Count)
+            if (stimulus.inputStimuli.Length != Network.InputLayer.Count)
             {
                 throw new InvalidOperationException("The number of input stimuli should be equal to the input layer neuron count");
             }

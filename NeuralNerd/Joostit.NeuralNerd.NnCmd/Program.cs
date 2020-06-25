@@ -13,7 +13,7 @@ namespace Joostit.NeuralNerd.NnCmd
         static void Main(string[] args)
         {
             Console.WriteLine("Running");
-
+            Stopwatch sw = new Stopwatch();
             NewNetworkBuilder builder = new NewNetworkBuilder();
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
@@ -27,26 +27,34 @@ namespace Joostit.NeuralNerd.NnCmd
             NetworkConfiguration config = new NetworkConfiguration();
             config.Network = network;
 
-            Stopwatch sw = new Stopwatch();
+            
+            
+            Console.WriteLine("Creating learner and randomizing network parameters...");
             sw.Start();
-            LearningStimuliLoader stimuliLoader = new LearningStimuliLoader();
-            stimuliLoader.LoadImages(@"C:\Joost\Projects\MNIST_Dataset\mnist_png\training");
+            ImageLearner learner = new ImageLearner(network);
+            learner.RandomizeNeuronParameters();
             sw.Stop();
-            Console.WriteLine($"Loading images: {sw.ElapsedMilliseconds}ms");
-
+            Console.WriteLine($"Took: {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine("");
             sw.Reset();
-            ImageLearner learner = new ImageLearner(network)
-            {
-                Stimuli = stimuliLoader.Stimuli
-            };
 
-            learner.InitializeNew();
 
+            Console.WriteLine("Loading stimuli...");
+            sw.Start();
+            learner.LoadStimuli(@"C:\Joost\Projects\MNIST_Dataset\mnist_png\training");
+            sw.Stop();
+            Console.WriteLine($"Took: {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine("");
+            sw.Reset();
+
+            Console.WriteLine("Running the learn method...");
             sw.Start();
             learner.Learn();
             sw.Stop();
-            Console.WriteLine($"Calculating all image stimuli once: {sw.ElapsedMilliseconds}");
-            
+            Console.WriteLine($"Took: {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine("");
+            sw.Reset();
+
 
             Console.WriteLine("Ended");
             Console.ReadKey();

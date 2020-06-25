@@ -10,7 +10,7 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 
         public List<ImageStimulus> Cache { get; private set; } = new List<ImageStimulus>();
 
-        public void AddNewStimulus(string filePath, List<double> expectedOutcome)
+        public void AddNewStimulus(string filePath, double[] expectedOutcome)
         {
             ImageStimulus stimulus = new ImageStimulus(filePath);
 
