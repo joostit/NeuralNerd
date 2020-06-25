@@ -37,7 +37,8 @@ namespace NeuralNerdApp
 
         private NetworkUiContext networkContext;
 
-        private const string FileFilter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
+        private const string NeuralNetworkFileFilter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
+        private const string ImageFileFilter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
 
         public MainWindow()
         {
@@ -128,7 +129,7 @@ namespace NeuralNerdApp
         {
             string retVal = null;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = FileFilter;
+            saveFileDialog.Filter = NeuralNetworkFileFilter;
             saveFileDialog.DefaultExt = "*.nn.xml";
             saveFileDialog.Title = "Save Neural Network as";
             saveFileDialog.FileName = "Neural Network.nn.xml";
@@ -165,7 +166,7 @@ namespace NeuralNerdApp
             string result = null;
 
             OpenFileDialog diag = new OpenFileDialog();
-            diag.Filter = FileFilter;
+            diag.Filter = NeuralNetworkFileFilter;
             diag.CheckFileExists = true;
             diag.Title = "Select Neural network to open";
             diag.Multiselect = false;
@@ -229,5 +230,37 @@ namespace NeuralNerdApp
             }
         }
 
+        private void OpenStimulus_Click(object sender, RoutedEventArgs e)
+        {
+            string path = getSingleStimulusFilePath();
+
+            if(path != null)
+            {
+                networkCanvas.LoadSingleStimulus(path);
+
+                NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
+                networkPerformanceControl.UpdateLearningState(pass);
+                networkCanvas.UpdateLearningState(pass);
+                networkCanvas.SetIdleMode();
+            }
+        }
+
+        private string getSingleStimulusFilePath()
+        {
+            string result = null;
+
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.Filter = ImageFileFilter;
+            diag.CheckFileExists = true;
+            diag.Title = "Select image";
+            diag.Multiselect = false;
+
+            if (diag.ShowDialog() == true)
+            {
+                result = diag.FileName;
+            }
+
+            return result;
+        }
     }
 }

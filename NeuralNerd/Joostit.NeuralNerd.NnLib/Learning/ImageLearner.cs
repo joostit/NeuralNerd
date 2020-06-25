@@ -78,6 +78,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         {
             learningPasses = new NetworkLearningPass[Stimuli.Cache.Count];
             learningPassesIndex = 0;
+            costSum = 0;
 
             ImageNetworkConnector connector = new ImageNetworkConnector();
             connector.Network = Network;
@@ -184,8 +185,17 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 total += currentCost;
             }
 
-            return total / Network.OutputLayer.Neurons.Length;
+            return total;// / Network.OutputLayer.Neurons.Length;
         }
 
+
+        public void LoadSingleStimulus(string path)
+        {
+            LearningStimuliLoader loader = new LearningStimuliLoader(Network);
+            loader.LoadSingleStimulus(path);
+            Stimuli = loader.Stimuli;
+
+            Learn();
+        }
     }
 }

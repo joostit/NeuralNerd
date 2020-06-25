@@ -20,6 +20,7 @@
             <MenuItem Header="_Learning">
                 <MenuItem Header="_Randimize Weights" Click="RandomizeLearning_Click"/>
                 <MenuItem Header="_Learn" Click="Learn_Click"/>
+                <MenuItem Header="Open _Stimulus" Click="OpenStimulus_Click"/>
             </MenuItem>
         </Menu>
         <local:NetworkPerformanceControl x:Name="networkPerformanceControl"/>

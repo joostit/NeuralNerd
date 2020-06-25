@@ -228,6 +228,7 @@ namespace NeuralNerdApp
             NetworkContext.Learner = new ImageLearner(network.Network);
             DrawNetwork();
             await Calculate();
+            SetIdleMode();
         }
 
 
@@ -267,11 +268,14 @@ namespace NeuralNerdApp
             {
                 neurons[new NeuronCoordinate(layerIndex, row)].SetLearningActivationState(snapshot.Pass.State.OutputLayerActivations[row]);
             }
-            
         }
 
+        internal void LoadSingleStimulus(string path)
+        {
+            NetworkContext.Learner.LoadSingleStimulus(path);
+        }
 
-        private void SetIdleMode()
+        public void SetIdleMode()
         {
             foreach(var neuron in neurons.Values)
             {

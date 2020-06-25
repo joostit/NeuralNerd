@@ -60,10 +60,16 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
         }
 
 
+        public void LoadSingleStimulus(string path)
+        {
+            Stimuli.AddNewStimulus(path, new double[outcomeArrayLength]);
+        }
+
+
         private double[] CreateOutcomeList(int correctOutcomeIndex)
         {
             double[] retVal = new double[outcomeArrayLength];
-            retVal[correctOutcomeIndex] = 0;
+            retVal[correctOutcomeIndex] = 1;
             return retVal;
         }
 

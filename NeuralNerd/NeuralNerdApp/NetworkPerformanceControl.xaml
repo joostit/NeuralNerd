@@ -15,7 +15,9 @@
         </GroupBox>
 
         <GroupBox Header="Input image">
-            <Image x:Name="imageBox" Stretch="UniformToFill" Width="250" Height="250" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            <Border BorderThickness="2" Padding="2" Margin="2" BorderBrush="Black">
+                <Image x:Name="imageBox" Stretch="UniformToFill" Width="250" Height="250" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </Border>
         </GroupBox>
 
         <GroupBox x:Name="performanceGroup" Header="Performance">
