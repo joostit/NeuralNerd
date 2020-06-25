@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Imaging
@@ -7,8 +8,9 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
     public class StimulusCache
     {
 
-
         public List<ImageStimulus> Cache { get; private set; } = new List<ImageStimulus>();
+
+        private object cacheLock = new object();
 
         public void AddNewStimulus(string filePath, double[] expectedOutcome)
         {
@@ -16,7 +18,10 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 
             stimulus.ExpectedOutcomes = expectedOutcome;
 
-            Cache.Add(stimulus);
+            lock (cacheLock)
+            {
+                Cache.Add(stimulus);
+            }
         }
 
     }

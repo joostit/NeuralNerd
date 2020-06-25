@@ -1,6 +1,7 @@
 ﻿using Joostit.NeuralNerd.NnLib.Configuration;
 using Joostit.NeuralNerd.NnLib.Construction;
 using Joostit.NeuralNerd.NnLib.Imaging;
+using Joostit.NeuralNerd.NnLib.Learning;
 using Joostit.NeuralNerd.NnLib.Networking;
 using Microsoft.Win32;
 using NeuralNerdApp.Windows;
@@ -22,6 +23,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace NeuralNerdApp
 {
@@ -30,12 +32,15 @@ namespace NeuralNerdApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DispatcherTimer updateTimer = new DispatcherTimer();
+        private TimeSpan updateInterval = new TimeSpan(0, 0, 0, 0, 200);
+
+        private NetworkUiContext networkContext;
 
         private const string FileFilter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
 
         public MainWindow()
         {
-
             //var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
             //var ci = new CultureInfo(currentCulture) { NumberFormat = { NumberDecimalSeparator = "." } };
             //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
@@ -43,10 +48,18 @@ namespace NeuralNerdApp
             //FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
             InitializeComponent();
+
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Interval = updateInterval;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
+            networkContext = new NetworkUiContext();
+            networkPerformanceControl.SetNetworkContext(networkContext);
+            networkCanvas.NetworkContext = networkContext;
+
             NewNetworkBuilder builder = new NewNetworkBuilder();
 
             NeuralNetwork network = builder.BuildNetwork(new NetworkParameters()
@@ -133,7 +146,7 @@ namespace NeuralNerdApp
             try
             {
                 ConfigurationFileHandler fileHandler = new ConfigurationFileHandler();
-                fileHandler.Save(networkCanvas.Network, path);
+                fileHandler.Save(networkCanvas.NetworkContext.NetworkConfig, path);
             }
             catch (Exception e)
             {
@@ -190,14 +203,31 @@ namespace NeuralNerdApp
             await networkCanvas.InitializeLearning();
         }
 
-        private void Learn_Click(object sender, RoutedEventArgs e)
+        private async void Learn_Click(object sender, RoutedEventArgs e)
         {
             var diag = new VistaFolderBrowserDialog();
             diag.Description = "Select stimuli root folder";
             if (diag.ShowDialog() == true)
             {
-                networkCanvas.Learn(diag.SelectedPath);
+                updateTimer.Start();
+                await networkCanvas.Learn(diag.SelectedPath);
+                updateTimer.Stop();
+
+                networkPerformanceControl.UpdateLearningState(null);
+                networkCanvas.UpdateLearningState(null);
             }
         }
+
+
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            if (networkContext.Learner != null)
+            {
+                NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
+                networkPerformanceControl.UpdateLearningState(pass);
+                networkCanvas.UpdateLearningState(pass);
+            }
+        }
+
     }
 }

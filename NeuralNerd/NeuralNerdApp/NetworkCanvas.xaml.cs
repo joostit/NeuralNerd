@@ -34,13 +34,11 @@ namespace NeuralNerdApp
 
         private const int MaxDendritesPerLayer = 512;
 
-        public NetworkConfiguration Network { get; private set; }
+        public NetworkUiContext NetworkContext { get; set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
 
         private double maxX = 0;
         private double maxY = 0;
-
-        public ImageLearner Learner { get; private set; }
 
         public NetworkCanvas()
         {
@@ -199,29 +197,35 @@ namespace NeuralNerdApp
             }
             neurons.Clear();
             canvas.Children.Clear();
-            Network = null;
+            NetworkContext.NetworkConfig = null;
         }
 
         public async Task InitializeLearning()
         {
-            Learner.RandomizeNeuronParameters();
+            NetworkContext.Learner.RandomizeNeuronParameters();
             await Calculate();
         }
 
-        internal void Learn(string stimulibasePath)
+        internal async Task Learn(string stimulibasePath)
         {
-            Learner.LoadStimuli(stimulibasePath);
+            NetworkContext.State = OperationalStates.LoadingStimuli;
+            await NetworkContext.Learner.LoadStimuliAsync(stimulibasePath);
+
+            NetworkContext.State = OperationalStates.Learning;
+            await NetworkContext.Learner.LearnAsync();
+
+            NetworkContext.State = OperationalStates.Idle;
         }
 
         public async void SetNetwork(NetworkConfiguration network)
         {
-            if(this.Network != null)
+            if(this.NetworkContext.NetworkConfig != null)
             {
                 Clear();
             }
 
-            this.Network = network;
-            Learner = new ImageLearner(network.Network);
+            this.NetworkContext.NetworkConfig = network;
+            NetworkContext.Learner = new ImageLearner(network.Network);
             DrawNetwork();
             await Calculate();
         }
@@ -230,11 +234,11 @@ namespace NeuralNerdApp
         {
             maxX = 0;
             maxY = 0;
-            INeuronLayer leftLayer = Network.Network.InputLayer;
+            INeuronLayer leftLayer = NetworkContext.NetworkConfig.Network.InputLayer;
             double x = 10;
-            DrawInputColumn(Network.Network.InputLayer, ref x);
+            DrawInputColumn(NetworkContext.NetworkConfig.Network.InputLayer, ref x);
 
-            foreach (var hiddenLayer in Network.Network.HiddenLayers)
+            foreach (var hiddenLayer in NetworkContext.NetworkConfig.Network.HiddenLayers)
             {
                 DendriteDrawModes dendriteMode = (GetDendriteCount(hiddenLayer) <= MaxDendritesPerLayer) ? DendriteDrawModes.All : DendriteDrawModes.None;
 
@@ -247,10 +251,15 @@ namespace NeuralNerdApp
                 leftLayer = hiddenLayer;
             }
 
-            DrawOutputLayer(Network.Network.OutputLayer, ref x);
+            DrawOutputLayer(NetworkContext.NetworkConfig.Network.OutputLayer, ref x);
             MoveDendritesBehindNeurons();
 
             ResizeCanvas();
+        }
+
+        internal void UpdateLearningState(NetworkSnapshot pass)
+        {
+
         }
 
         private void ResizeCanvas()
@@ -286,7 +295,7 @@ namespace NeuralNerdApp
 
             if (dendriteMode != DendriteDrawModes.All)
             {
-                INeuronLayer lastHiddenLayer = Network.Network.HiddenLayers[Network.Network.HiddenLayers.Count - 1];
+                INeuronLayer lastHiddenLayer = NetworkContext.NetworkConfig.Network.HiddenLayers[NetworkContext.NetworkConfig.Network.HiddenLayers.Count - 1];
                 DrawCommonDendriteIndicator(lastHiddenLayer, outputLayer);
             }
         }
@@ -415,7 +424,7 @@ namespace NeuralNerdApp
         {
             await Task.Run(() =>
             {
-                Network.Network.Calculate();
+                NetworkContext.NetworkConfig.Network.Calculate();
             });
 
             UpdateView();

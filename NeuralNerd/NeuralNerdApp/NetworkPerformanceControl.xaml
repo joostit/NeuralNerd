@@ -8,12 +8,17 @@
              d:DesignHeight="450" d:DesignWidth="300"
              Width="300">
     <StackPanel>
-        
-        <GroupBox Header="Input image">
-            <Image x:Name="imageBox" Stretch="UniformToFill" Width="250" Height="250"/>
+
+
+        <GroupBox Header="Status" Height="60">
+            <Label Name="statusLabel"/>
         </GroupBox>
 
-        <GroupBox Header="Performance">
+        <GroupBox Header="Input image">
+            <Image x:Name="imageBox" Stretch="UniformToFill" Width="250" Height="250" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        </GroupBox>
+
+        <GroupBox x:Name="performanceGroup" Header="Performance">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
