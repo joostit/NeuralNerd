@@ -33,12 +33,27 @@ namespace NeuralNerdApp
             :base(neuron)
         {
             neuronIcon.MouseDown += NeuronIcon_MouseDown;
+            neuronIcon.MouseWheel += NeuronIcon_MouseWheel;
+
             this.Width = InputNeuronWidth;
 
             Canvas.SetRight(neuronIcon, 0);
 
             CreateNameLabel();
             contentCanvas.Width = InputNeuronWidth;
+        }
+
+        private void NeuronIcon_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            double newActivation = Neuron.Activation - Math.Sign(e.Delta) / 10.0;
+            e.Handled = true;
+
+            newActivation = newActivation > 1 ? 1 : newActivation;
+            newActivation = newActivation < 0 ? 0 : newActivation;
+
+            Neuron.Activation = newActivation;
+
+            RaiseActivationChanged();
         }
 
         private void CreateNameLabel()
