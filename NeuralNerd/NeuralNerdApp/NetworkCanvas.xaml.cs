@@ -38,7 +38,6 @@ namespace NeuralNerdApp
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
 
         private double maxX = 0;
-        private double maxY = 0;
 
         public NetworkCanvas()
         {
@@ -286,7 +285,6 @@ namespace NeuralNerdApp
         private void DrawNetwork()
         {
             maxX = 0;
-            maxY = 0;
             INeuronLayer leftLayer = NetworkContext.NetworkConfig.Network.InputLayer;
             double x = 10;
             DrawInputColumn(NetworkContext.NetworkConfig.Network.InputLayer, ref x);
@@ -311,10 +309,35 @@ namespace NeuralNerdApp
         }
 
 
+        private double GetMaxY()
+        {
+            int largestColumnCount = NetworkContext.NetworkConfig.Network.InputLayer.Count;
+
+            foreach (var hiddenLayer in NetworkContext.NetworkConfig.Network.HiddenLayers)
+            {
+                largestColumnCount = hiddenLayer.Count > largestColumnCount ? hiddenLayer.Count : largestColumnCount;
+            }
+
+            largestColumnCount = NetworkContext.NetworkConfig.Network.OutputLayer.Count > largestColumnCount ? NetworkContext.NetworkConfig.Network.OutputLayer.Count : largestColumnCount;
+
+            double maxY = largestColumnCount * (NeuronControl.Size + NeuronSpacing);
+            return maxY;
+        }
+
+
+        private double GetColumnStartY(int columnCount)
+        {
+            double singleNeuronYSize = NeuronControl.Size + NeuronSpacing;
+            double totalNeuronYSize = singleNeuronYSize * columnCount;
+            double yStart = (GetMaxY() - totalNeuronYSize) / 2.5;
+            return yStart;
+        }
+
+
         private void ResizeCanvas()
         {
             canvas.Width = maxX + 50;
-            canvas.Height = maxY + 50;
+            canvas.Height = GetMaxY() + 50;
         }
 
         private void MoveDendritesBehindNeurons()
@@ -332,7 +355,7 @@ namespace NeuralNerdApp
         private void DrawOutputLayer(OutputLayer outputLayer, ref double x)
         {
             DendriteDrawModes dendriteMode = (GetDendriteCount(outputLayer) <= MaxDendritesPerLayer) ? DendriteDrawModes.All : DendriteDrawModes.None;
-            double y = 10;
+            double y = 10 + GetColumnStartY(outputLayer.Count);
             foreach (OutputNeuron outputNeuron in outputLayer.Neurons)
             {
                 DrawOutputNeuron(outputNeuron, x, y, dendriteMode);
@@ -340,7 +363,7 @@ namespace NeuralNerdApp
             }
             x += OutputLayerWidth + OutputNeuronControl.OutputNeuronWidth;
 
-            UpdateMaxSize(x,y);
+            UpdateMaxSize(x);
 
             if (dendriteMode != DendriteDrawModes.All)
             {
@@ -351,7 +374,7 @@ namespace NeuralNerdApp
 
         private void DrawHiddenLayer(HiddenLayer hiddenLayer, ref double x, DendriteDrawModes dendriteMode)
         {
-            double y = 10;
+            double y = 10 + GetColumnStartY(hiddenLayer.Count);
             for(int i = 0; i < hiddenLayer.Neurons.Length; i++)
             {
                 CalculatedNeuron neuron = hiddenLayer.Neurons[i];
@@ -361,7 +384,7 @@ namespace NeuralNerdApp
 
             x += HiddenLayerWidth;
 
-            UpdateMaxSize(x, y);
+            UpdateMaxSize(x);
         }
 
 
@@ -416,7 +439,7 @@ namespace NeuralNerdApp
 
         private void DrawInputColumn(InputLayer layer, ref double x)
         {
-            double y = 10;
+            double y = 10 + GetColumnStartY(layer.Count);
             foreach(InputNeuron neuron in layer.Neurons)
             {
                 InputNeuronControl ctrl = new InputNeuronControl(neuron);
@@ -429,7 +452,7 @@ namespace NeuralNerdApp
             }
             x += InputLayerWidth;
 
-            UpdateMaxSize(x, y);
+            UpdateMaxSize(x);
         }
 
 
@@ -445,16 +468,11 @@ namespace NeuralNerdApp
             return count;
         }
 
-        private void UpdateMaxSize(double x, double y)
+        private void UpdateMaxSize(double x)
         {
             if (x > maxX)
             {
                 maxX = x;
-            }
-
-            if(y > maxY)
-            {
-                maxY = y;
             }
         }
 
