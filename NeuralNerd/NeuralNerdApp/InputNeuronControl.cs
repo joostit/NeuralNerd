@@ -45,7 +45,7 @@ namespace NeuralNerdApp
 
         private void NeuronIcon_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            double newActivation = Neuron.Activation - Math.Sign(e.Delta) / 10.0;
+            double newActivation = Neuron.Activation + Math.Sign(e.Delta) / 10.0;
             e.Handled = true;
 
             newActivation = newActivation > 1 ? 1 : newActivation;
