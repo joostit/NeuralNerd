@@ -18,16 +18,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public NeuralNetwork Network { get; private set; }
 
-        public double AverageCost
-        {
-            get
-            {
-                lock (learningPassesLock)
-                {
-                    return costSum / learningPassesIndex;
-                }
-            }
-        }
+        public double LowestCostSoFar { get; private set; }
+
+        public double LastCost { get; private set; }
 
         public NetworkLearningPass LastPass
         {
@@ -39,10 +32,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
 
         private volatile NetworkLearningPass[] learningPasses;
-        private volatile int learningPassesIndex = 0;
         private volatile object learningPassesLock = new object();
-
-        private double costSum = 0;
 
         public ImageLearner(NeuralNetwork Network)
         {
@@ -76,15 +66,47 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public void Learn()
         {
-            learningPasses = new NetworkLearningPass[Stimuli.Cache.Count];
-            learningPassesIndex = 0;
-            costSum = 0;
+            learningPasses = new NetworkLearningPass[Stimuli.Cache.Count];           
 
             ImageNetworkConnector connector = new ImageNetworkConnector();
             connector.Network = Network;
 
+            LearningCycle lowestCycle = new LearningCycle();
+            LowestCostSoFar = double.MaxValue;
+
+            for (int i = 0; i < 10000000; i++)
+            {
+                LastCost = RunLearningCycle(connector);
+
+                // If the current run is an omprovement over the previous one
+                if (LastCost < LowestCostSoFar)
+                {
+                    // Continue from the current parameters
+                    lowestCycle = new LearningCycle(LastCost, connector.Network);
+                    LowestCostSoFar = LastCost;
+                }
+                else
+                {
+                    // Revert to the previous set of more effective parameters
+                    lowestCycle.ApplyParameters(connector.Network);
+                }
+
+                // Randomize some parameters
+                // ToDo: Fine tune this
+                RandomizeParameters(200);
+            }
+        }
+
+
+
+        private double RunLearningCycle(ImageNetworkConnector connector)
+        {
             // Cannot go parallel because we're working in the same Network object. Fix this!
             //Parallel.ForEach(Stimuli.Cache, (stimulus) =>
+
+            double costSum = 0;
+            int learningPassesIndex = 0;
+
             foreach (var stimulus in Stimuli.Cache)
             {
                 connector.SetInputNeurons(stimulus);
@@ -97,62 +119,60 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     Cost = passCost,
                 };
 
-                AddLearningPassInfo(passInfo);
-            }
-        }
+                lock (learningPassesLock)
+                {
+                    costSum += passInfo.Cost;
 
-        private void AddLearningPassInfo(NetworkLearningPass passInfo)
-        {
-            lock (learningPassesLock)
-            {
-                costSum += passInfo.Cost;
-
-                learningPasses[learningPassesIndex] = passInfo;
-                learningPassesIndex++;
+                    learningPasses[learningPassesIndex] = passInfo;
+                    learningPassesIndex++;
+                }
             }
+
+            return costSum;
+
         }
 
 
         private NetworkLearningPass GetLastLearningPass()
         {
-            lock (learningPassesLock)
+            return new NetworkLearningPass(Network)
             {
-                if (learningPassesIndex == 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    return learningPasses[learningPassesIndex - 1];
-                }
-            }
+                Cost = LastCost,
+            };
         }
 
         public void RandomizeNeuronParameters()
         {
-            RandomizeParameters();
+            RandomizeParameters(1);
         }
 
 
-        private void RandomizeParameters()
+        private void RandomizeParameters(int oneInHowMany)
         {
             foreach (var hiddenLayer in Network.HiddenLayers)
             {
-                RandomizeLayer(hiddenLayer);
+                RandomizeLayer(hiddenLayer, oneInHowMany);
             }
 
-            RandomizeLayer(Network.OutputLayer);
+            RandomizeLayer(Network.OutputLayer, oneInHowMany);
         }
 
 
-        private void RandomizeLayer(ICalculatableNeuronLayer layer)
+        private void RandomizeLayer(ICalculatableNeuronLayer layer, int oneInHowMany)
         {
             foreach (CalculatedNeuron neuron in layer.Neurons)
             {
-                neuron.Bias = GetRandomBias();
+                if (RandomChance(oneInHowMany))
+                {
+                    neuron.Bias = GetRandomBias();
+                }
+
                 foreach (var dendrite in neuron.Dendrites)
                 {
-                    dendrite.Weight = GetRandomWeight();
+                    if (RandomChance(oneInHowMany))
+                    {
+                        dendrite.Weight = GetRandomWeight();
+                    }
                 }
             }
         }
@@ -169,6 +189,11 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
+        private bool RandomChance(int oneInHowMany)
+        {
+            return randomizer.Next(oneInHowMany) == 0;
+        }
+
 
         private double CalculateCost(ImageStimulus currentStimulus)
         {
@@ -180,12 +205,12 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 double realOutcome = Network.OutputLayer.Neurons[rowIndex].Activation;
                 double expected = currentStimulus.ExpectedOutcomes[rowIndex];
 
-                distance = realOutcome - expected;
+                distance = Math.Abs(realOutcome - expected) + 1;
                 currentCost = distance * distance;
                 total += currentCost;
             }
 
-            return total;// / Network.OutputLayer.Neurons.Length;
+            return total;
         }
 
 

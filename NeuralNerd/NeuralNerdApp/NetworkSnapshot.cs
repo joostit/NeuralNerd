@@ -11,12 +11,12 @@ namespace NeuralNerdApp
 
         public NetworkLearningPass Pass { get; private set; }
 
-        public double AverageCostSoFar { get; private set; }
+        public double LowestCostSoFar { get; private set; }
 
         public NetworkSnapshot(ImageLearner learner)
         {
             // Race condition here, but for now we're fine with that
-            AverageCostSoFar = learner.AverageCost;
+            LowestCostSoFar = learner.LowestCostSoFar;
             Pass = learner.LastPass;
         }
     }

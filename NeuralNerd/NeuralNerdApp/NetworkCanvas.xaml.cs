@@ -233,6 +233,7 @@ namespace NeuralNerdApp
 
         internal void UpdateLearningState(NetworkSnapshot snapshot)
         {
+
             if(snapshot != null && snapshot.Pass != null)
             {
                 UpdateNeuronLearningState(snapshot);

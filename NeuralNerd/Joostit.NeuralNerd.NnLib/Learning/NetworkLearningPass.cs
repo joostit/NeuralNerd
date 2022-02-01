@@ -17,7 +17,6 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public double Cost { get; set; }
 
-
         public NetworkLearningPass(NeuralNetwork network)
         {
             CopyStateFromNetwork(network);

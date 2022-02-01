@@ -34,8 +34,8 @@
                 <Label Grid.Row="0" Grid.Column="0" Content="Current cost:"/>
                 <TextBox Grid.Row="0" Grid.Column="1" x:Name="currentCostBox" Text="1.000" IsReadOnly="true"/>
                 
-                <Label Grid.Row="1" Grid.Column="0" Content="Average cost:"/>
-                <TextBox Grid.Row="1" Grid.Column="1" x:Name="averageCostBox" Text="1.000" IsReadOnly="true"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="Lowest cost:"/>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="LowestCostBox" Text="1.000" IsReadOnly="true"/>
             </Grid>
            
         </GroupBox>

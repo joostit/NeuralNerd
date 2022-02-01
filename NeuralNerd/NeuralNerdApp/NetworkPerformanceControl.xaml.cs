@@ -39,14 +39,14 @@ namespace NeuralNerdApp
         {
             if(NetworkContext.State == OperationalStates.Learning)
             {
-                averageCostBox.IsEnabled = true;
-                currentCostBox.IsEnabled = true;
+                LowestCostBox.IsEnabled = true;
+                LowestCostBox.IsEnabled = true;
                 performanceGroup.IsEnabled = true;
             }
             else
             {
-                averageCostBox.Text = "";
-                averageCostBox.IsEnabled = false;
+                LowestCostBox.Text = "";
+                LowestCostBox.IsEnabled = false;
                 currentCostBox.Text = "";
                 currentCostBox.IsEnabled = false;
                 performanceGroup.IsEnabled = false;
@@ -74,7 +74,10 @@ namespace NeuralNerdApp
 
             if (snapshot?.Pass != null)
             {
-                ShowImage(snapshot);
+                if (snapshot.Pass.Stimulus != null)
+                {
+                    ShowImage(snapshot);
+                }
                 UpdateValues(snapshot);
             }
             else
@@ -85,16 +88,16 @@ namespace NeuralNerdApp
 
         private void UpdateValues(NetworkSnapshot snapshot)
         {
-            averageCostBox.Text = Math.Round(snapshot.AverageCostSoFar, 3).ToString();
+            LowestCostBox.Text = Math.Round(snapshot.LowestCostSoFar, 3).ToString();
             currentCostBox.Text = Math.Round(snapshot.Pass.Cost, 3).ToString();
         }
 
         private void ClearImageAndValues()
         {
-            imageBox.Source = null;
+            //imageBox.Source = null;
 
-            averageCostBox.Text = "";
-            currentCostBox.Text = "";
+            //averageCostBox.Text = "";
+            //currentCostBox.Text = "";
         }
 
         private void ShowImage(NetworkSnapshot snapshot)
