@@ -115,9 +115,55 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 // ToDo: Fine tune this
                 if((learningPassIndex + 1) < passes)
                 {
-                    RandomizeParameters(totalNeurons);
+                    NudgeParameters(totalNeurons);
                 }
             }
+        }
+
+        private void NudgeParameters(int oneInHowMany)
+        {
+            foreach (var hiddenLayer in Network.GetAllCalculatableLayers())
+            {
+                NudgeLayer(hiddenLayer, oneInHowMany);
+            }
+        }
+
+
+        private void NudgeLayer(ICalculatableNeuronLayer layer, int oneInHowMany)
+        {
+            foreach (CalculatedNeuron neuron in layer.Neurons)
+            {
+                if (RandomChance(oneInHowMany))
+                {
+                    neuron.Bias = GetRandomNudge(neuron.Bias);
+                }
+
+                foreach (var dendrite in neuron.Dendrites)
+                {
+                    if (RandomChance(oneInHowMany))
+                    {
+                        dendrite.Weight = GetRandomNudge(dendrite.Weight);
+                    }
+                }
+            }
+        }
+
+
+        private double GetRandomNudge(double original)
+        {
+            double nudgePercentage = randomizer.NextDouble() * 2 - 1;
+
+            nudgePercentage = nudgePercentage * 2;
+
+            if (original < 0.01)
+            {
+                return nudgePercentage;
+            }
+            else
+            {
+                return original + (nudgePercentage * original);
+            }
+
         }
 
 
@@ -220,7 +266,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private double GetRandomWeight()
         {
-            return randomizer.Next(-3000, 3000) / 1000.0;
+            return randomizer.Next(-2000, 2000) / 1000.0;
         }
 
         private double GetRandomBias()

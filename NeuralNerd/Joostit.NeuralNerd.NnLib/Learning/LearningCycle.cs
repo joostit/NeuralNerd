@@ -78,7 +78,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 ApplyLayerParameters(currentLayer, networkParameters.HiddenLayerBiases[hiddenLayerIndex], networkParameters.HiddenLayerWeights[hiddenLayerIndex]);
             }
 
-            ExtractLayerParameters(network.OutputLayer, networkParameters.OutputLayerBiases, networkParameters.OutputLayerWeights);
+            ApplyLayerParameters(network.OutputLayer, networkParameters.OutputLayerBiases, networkParameters.OutputLayerWeights);
         }
 
         private void ApplyLayerParameters(ICalculatableNeuronLayer targetLayer, double[] biasesSource, double[][] weightsSource)
