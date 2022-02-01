@@ -22,6 +22,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public double LastCost { get; private set; }
 
+        public ImageStimulus LastStimulus { get; set; }
+
         public NetworkLearningPass LastPass
         {
             get
@@ -59,13 +61,19 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         {
             await Task.Run(() =>
             {
-                Learn();
+                Learn(100000000);
             });
         }
 
 
-        public void Learn()
+        public void Learn(int passes)
         {
+
+            if(Stimuli == null)
+            {
+                return;
+            }
+
             learningPasses = new NetworkLearningPass[Stimuli.Cache.Count];           
 
             ImageNetworkConnector connector = new ImageNetworkConnector();
@@ -74,7 +82,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             LearningCycle lowestCycle = new LearningCycle();
             LowestCostSoFar = double.MaxValue;
 
-            for (int i = 0; i < 10000000; i++)
+            for (int i = 0; i < passes; i++)
             {
                 LastCost = RunLearningCycle(connector);
 
@@ -93,7 +101,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
                 // Randomize some parameters
                 // ToDo: Fine tune this
-                RandomizeParameters(200);
+                if((i + 1) < passes)
+                {
+                    RandomizeParameters(200);
+                }
             }
         }
 
@@ -125,6 +136,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
                     learningPasses[learningPassesIndex] = passInfo;
                     learningPassesIndex++;
+                    LastStimulus = stimulus;
                 }
             }
 
@@ -138,6 +150,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             return new NetworkLearningPass(Network)
             {
                 Cost = LastCost,
+                Stimulus = LastStimulus
             };
         }
 
@@ -180,12 +193,12 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private double GetRandomWeight()
         {
-            return randomizer.Next(-3000, 3000) / 1000.0;
+            return randomizer.Next(-2000, 2000) / 1000.0;
         }
 
         private double GetRandomBias()
         {
-            return randomizer.Next(-10000, 10000) / 1000.0;
+            return randomizer.Next(-1000, 1000) / 1000.0;
         }
 
 
@@ -220,7 +233,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             loader.LoadSingleStimulus(path);
             Stimuli = loader.Stimuli;
 
-            Learn();
+            Learn(1);
         }
     }
 }

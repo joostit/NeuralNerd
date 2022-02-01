@@ -493,6 +493,7 @@ namespace NeuralNerdApp
             await Task.Run(() =>
             {
                 NetworkContext.NetworkConfig.Network.Calculate();
+                NetworkContext.Learner.Learn(1);
             });
 
             UpdateView();
