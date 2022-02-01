@@ -111,15 +111,14 @@ namespace NeuralNerdApp
             neuronIcon.BorderThickness = new Thickness(1);
         }
 
-        internal void SetEditMode()
+        internal void SetEditable(bool isEditable)
         {
-            IsEditable = true;
+            IsEditable = isEditable;
             UpdateActivation(Neuron.Activation);
         }
 
         public void SetLearningActivationState(double activation)
         {
-            IsEditable = false;
             UpdateActivation(activation);
         }
     }

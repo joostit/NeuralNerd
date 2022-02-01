@@ -26,6 +26,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private volatile int learningPassIndex;
 
+        private volatile bool learningInterruptFlag;
+
         public int LearningPassIndex
         {
             get
@@ -78,7 +80,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public void Learn(int passes)
         {
-
+            learningInterruptFlag = false;
             if(Stimuli == null)
             {
                 return;
@@ -111,11 +113,19 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     lowestCycle.ApplyParameters(connector.Network);
                 }
 
-                // Randomize some parameters
-                // ToDo: Fine tune this
-                if((learningPassIndex + 1) < passes)
+
+                if (learningInterruptFlag)
                 {
-                    NudgeParameters(totalNeurons);
+                    break;
+                }
+                else
+                {
+                    // Randomize some parameters
+                    // ToDo: Fine tune this
+                    if ((learningPassIndex + 1) < passes)
+                    {
+                        NudgeParameters(totalNeurons);
+                    }
                 }
             }
         }
@@ -128,6 +138,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             }
         }
 
+        public void StopLearning()
+        {
+            learningInterruptFlag = true;
+        }
 
         private void NudgeLayer(ICalculatableNeuronLayer layer, int oneInHowMany)
         {

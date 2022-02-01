@@ -68,7 +68,7 @@ namespace NeuralNerdApp
             }
         }
 
-        public void UpdateLearningState(NetworkSnapshot snapshot)
+        public void UpdateLearningState(NetworkSnapshot snapshot, bool isLearning)
         {
             SetOperationalState();
 
@@ -80,6 +80,8 @@ namespace NeuralNerdApp
                 }
                 UpdateValues(snapshot);
             }
+
+            stopLearningutton.IsEnabled = isLearning;
 
         }
 
@@ -108,6 +110,9 @@ namespace NeuralNerdApp
             imageBox.Source = image;
         }
 
-
+        private void stopLearningutton_Click(object sender, RoutedEventArgs e)
+        {
+            NetworkContext.Learner.StopLearning();
+        }
     }
 }

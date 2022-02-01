@@ -209,8 +209,11 @@ namespace NeuralNerdApp
                 await networkCanvas.Learn(diag.SelectedPath);
                 updateTimer.Stop();
 
-                networkPerformanceControl.UpdateLearningState(null);
+                networkPerformanceControl.UpdateLearningState(null, false);
                 networkCanvas.UpdateLearningState(null);
+
+                // Manually update the learning state once
+                UpdateTimer_Tick(this, null);
             }
         }
 
@@ -220,7 +223,7 @@ namespace NeuralNerdApp
             if (networkContext.Learner != null)
             {
                 NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
-                networkPerformanceControl.UpdateLearningState(pass);
+                networkPerformanceControl.UpdateLearningState(pass, true);
                 networkCanvas.UpdateLearningState(pass);
             }
         }
@@ -234,7 +237,7 @@ namespace NeuralNerdApp
                 networkCanvas.LoadSingleStimulus(path);
 
                 NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
-                networkPerformanceControl.UpdateLearningState(pass);
+                networkPerformanceControl.UpdateLearningState(pass, false);
                 networkCanvas.UpdateLearningState(pass);
                 networkCanvas.SetIdleMode();
             }

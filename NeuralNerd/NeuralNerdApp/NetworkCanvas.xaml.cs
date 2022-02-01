@@ -207,6 +207,7 @@ namespace NeuralNerdApp
 
         internal async Task Learn(string stimulibasePath)
         {
+            SetLearnMode();
             NetworkContext.State = OperationalStates.LoadingStimuli;
             await NetworkContext.Learner.LoadStimuliAsync(stimulibasePath);
 
@@ -279,7 +280,15 @@ namespace NeuralNerdApp
         {
             foreach(var neuron in neurons.Values)
             {
-                neuron.SetEditMode();
+                neuron.SetEditable(true);
+            }
+        }
+
+        public void SetLearnMode()
+        {
+            foreach (var neuron in neurons.Values)
+            {
+                neuron.SetEditable(false);
             }
         }
 
