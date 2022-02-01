@@ -34,7 +34,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 
             weightedSum += Bias;
 
-            Activation = (2 * Calc.Sigmoid(weightedSum)) - 1;
+            Activation = Calc.Sigmoid(weightedSum);
         }
 
     }
