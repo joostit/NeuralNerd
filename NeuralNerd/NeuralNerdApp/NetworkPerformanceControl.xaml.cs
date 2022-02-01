@@ -80,13 +80,10 @@ namespace NeuralNerdApp
                 }
                 UpdateValues(snapshot);
             }
-            else
-            {
-                ClearImageAndValues();
-            }
+
         }
 
-        private void UpdateValues(NetworkSnapshot snapshot)
+        public void UpdateValues(NetworkSnapshot snapshot)
         {
             LowestCostBox.Text = Math.Round(snapshot.LowestCostSoFar, 3).ToString();
             currentCostBox.Text = Math.Round(snapshot.Pass.Cost, 3).ToString();
@@ -94,10 +91,10 @@ namespace NeuralNerdApp
 
         private void ClearImageAndValues()
         {
-            //imageBox.Source = null;
+            imageBox.Source = null;
 
-            //averageCostBox.Text = "";
-            //currentCostBox.Text = "";
+            LowestCostBox.Text = "";
+            currentCostBox.Text = "";
         }
 
         private void ShowImage(NetworkSnapshot snapshot)
@@ -110,5 +107,7 @@ namespace NeuralNerdApp
 
             imageBox.Source = image;
         }
+
+
     }
 }

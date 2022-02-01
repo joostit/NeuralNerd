@@ -24,6 +24,16 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public ImageStimulus LastStimulus { get; set; }
 
+        private volatile int learningPassIndex;
+
+        public int LearningPassIndex
+        {
+            get
+            {
+                return learningPassIndex;
+            }
+        }
+
         public NetworkLearningPass LastPass
         {
             get
@@ -82,7 +92,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             LearningCycle lowestCycle = new LearningCycle();
             LowestCostSoFar = double.MaxValue;
 
-            for (int i = 0; i < passes; i++)
+            int totalNeurons = GetParameterCount(Network);
+
+            for (learningPassIndex = 0; learningPassIndex < passes; learningPassIndex++)
             {
                 LastCost = RunLearningCycle(connector);
 
@@ -101,20 +113,34 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
                 // Randomize some parameters
                 // ToDo: Fine tune this
-                if((i + 1) < passes)
+                if((learningPassIndex + 1) < passes)
                 {
-                    RandomizeParameters(200);
+                    RandomizeParameters(totalNeurons);
                 }
             }
+        }
+
+
+        private int GetParameterCount(NeuralNetwork network)
+        {
+            int total = 0;
+
+            foreach(var layer in network.GetAllCalculatableLayers())
+            {
+                foreach(var neuron in layer.Neurons)
+                {
+                    total += 1;     // For the bias
+                    total += neuron.Dendrites.Count;
+                }
+            }
+
+            return total;
         }
 
 
 
         private double RunLearningCycle(ImageNetworkConnector connector)
         {
-            // Cannot go parallel because we're working in the same Network object. Fix this!
-            //Parallel.ForEach(Stimuli.Cache, (stimulus) =>
-
             double costSum = 0;
             int learningPassesIndex = 0;
 
@@ -150,7 +176,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             return new NetworkLearningPass(Network)
             {
                 Cost = LastCost,
-                Stimulus = LastStimulus
+                Stimulus = LastStimulus,
+                PassIndex = LearningPassIndex
             };
         }
 
@@ -193,7 +220,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private double GetRandomWeight()
         {
-            return randomizer.Next(-2000, 2000) / 1000.0;
+            return randomizer.Next(-3000, 3000) / 1000.0;
         }
 
         private double GetRandomBias()

@@ -42,12 +42,7 @@ namespace NeuralNerdApp
 
         public MainWindow()
         {
-            //var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-            //var ci = new CultureInfo(currentCulture) { NumberFormat = { NumberDecimalSeparator = "." } };
-            //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
-            //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
-            //FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-
+            
             InitializeComponent();
 
             updateTimer.Tick += UpdateTimer_Tick;
@@ -261,6 +256,12 @@ namespace NeuralNerdApp
             }
 
             return result;
+        }
+
+        private void networkCanvas_NetworkStatusChanged(object sender, EventArgs e)
+        {
+            NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
+            networkPerformanceControl.UpdateValues(pass);
         }
     }
 }

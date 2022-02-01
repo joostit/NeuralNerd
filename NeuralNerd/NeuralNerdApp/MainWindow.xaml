@@ -24,7 +24,7 @@
             </MenuItem>
         </Menu>
         <local:NetworkPerformanceControl x:Name="networkPerformanceControl"/>
-        <local:NetworkCanvas x:Name="networkCanvas"/>
+        <local:NetworkCanvas x:Name="networkCanvas" NetworkStatusChanged="networkCanvas_NetworkStatusChanged"/>
         
     </DockPanel>
 </Window>

@@ -29,10 +29,10 @@ namespace NeuralNerdApp
         private const double InputLayerWidth = InputNeuronControl.InputNeuronWidth + NeuronControl.Size * 3;
         private const double HiddenLayerWidth = NeuronControl.Size * 4;
         private const double OutputLayerWidth = OutputNeuronControl.OutputNeuronWidth + NeuronControl.Size * 4;
-        private const int PartialDendriteSpread = 11;
         private const double NeuronSpacing = 10;
 
         private const int MaxDendritesPerLayer = 512;
+        public event EventHandler NetworkStatusChanged;
 
         public NetworkUiContext NetworkContext { get; set; }
         private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
@@ -496,9 +496,12 @@ namespace NeuralNerdApp
                 NetworkContext.Learner.Learn(1);
             });
 
+            NetworkStatusChanged.Invoke(this, EventArgs.Empty);
+
             UpdateView();
         }
 
+        
 
         public void UpdateView()
         {

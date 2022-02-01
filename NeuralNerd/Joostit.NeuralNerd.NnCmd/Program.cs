@@ -49,7 +49,7 @@ namespace Joostit.NeuralNerd.NnCmd
 
             Console.WriteLine("Running the learn method...");
             sw.Start();
-            learner.Learn();
+            learner.Learn(1000000);
             sw.Stop();
             Console.WriteLine($"Took: {sw.ElapsedMilliseconds}ms");
             Console.WriteLine("");

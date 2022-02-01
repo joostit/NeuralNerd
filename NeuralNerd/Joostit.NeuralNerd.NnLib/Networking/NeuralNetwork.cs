@@ -26,6 +26,15 @@ namespace Joostit.NeuralNerd.NnLib.Networking
         }
 
 
+        public List<ICalculatableNeuronLayer> GetAllCalculatableLayers()
+        {
+            List<ICalculatableNeuronLayer> retVal = new List<ICalculatableNeuronLayer>();
+            retVal.AddRange(HiddenLayers);
+            retVal.Add(OutputLayer);
+            return retVal;
+        }
+
+
         public void Calculate()
         {
             HiddenLayers.Calculate();
