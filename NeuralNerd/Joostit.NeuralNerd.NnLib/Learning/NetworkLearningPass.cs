@@ -10,7 +10,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 {
     public class NetworkLearningPass
     {
-        public int PassIndex { get; set; }
+        public long PassIndex { get; set; }
+
+        public int PassesPerSecond { get; set; }
 
         public NetworkState State { get; set; }
 

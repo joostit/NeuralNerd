@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeuralNerdApp"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="300"
+             d:DesignHeight="550" d:DesignWidth="300"
              Width="300">
     <StackPanel>
 
@@ -38,6 +38,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Content="Current cost:"/>
@@ -45,6 +47,12 @@
                 
                 <Label Grid.Row="1" Grid.Column="0" Content="Lowest cost:"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="LowestCostBox" Text="1.000" IsReadOnly="true"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Passes per second:"/>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="passesPerSecBox" Text="13253" IsReadOnly="true"/>
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Pass index:"/>
+                <TextBox Grid.Row="3" Grid.Column="1" x:Name="passIndexBox" Text="13253" IsReadOnly="true"/>
             </Grid>
            
         </GroupBox>

@@ -82,13 +82,14 @@ namespace NeuralNerdApp
             }
 
             stopLearningutton.IsEnabled = isLearning;
-
         }
 
         public void UpdateValues(NetworkSnapshot snapshot)
         {
             LowestCostBox.Text = Math.Round(snapshot.LowestCostSoFar, 3).ToString();
             currentCostBox.Text = Math.Round(snapshot.Pass.Cost, 3).ToString();
+            passesPerSecBox.Text = snapshot.Pass.PassesPerSecond.ToString("N0");
+            passIndexBox.Text = snapshot.Pass.PassIndex.ToString("N0");
         }
 
         private void ClearImageAndValues()

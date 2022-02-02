@@ -4,6 +4,7 @@ using Joostit.NeuralNerd.NnLib.Networking.Elements;
 using Joostit.NeuralNerd.NnLib.Networking.Structure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,11 +25,32 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public ImageStimulus LastStimulus { get; set; }
 
-        private volatile int learningPassIndex;
+        private long learningPassIndex;
 
         private volatile bool learningInterruptFlag;
 
-        public int LearningPassIndex
+        private Stopwatch rateStopwatch = new Stopwatch();
+
+        private long lastPassIndex = 0;
+
+        private long lastMilliseconds = 0;
+
+        public int PassesPerSecond
+        {
+            get
+            {
+                long currentPassIndex = learningPassIndex;
+                long currentMs = rateStopwatch.ElapsedMilliseconds;
+                double rate = ((currentPassIndex - lastPassIndex) / (double) (currentMs - lastMilliseconds)) * 1000;
+
+                lastMilliseconds = currentMs;
+                lastPassIndex = currentPassIndex;
+                return (int) Math.Round(rate);
+            }
+        }
+
+
+        public long LearningPassIndex
         {
             get
             {
@@ -96,6 +118,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
             int totalNeurons = GetParameterCount(Network);
 
+            rateStopwatch.Reset();
+            rateStopwatch.Start();
+            lastMilliseconds = 0;
+
             for (learningPassIndex = 0; learningPassIndex < passes; learningPassIndex++)
             {
                 LastCost = RunLearningCycle(connector);
@@ -128,6 +154,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     }
                 }
             }
+
+            rateStopwatch.Stop();
         }
 
         private void NudgeParameters(int oneInHowMany)
@@ -237,7 +265,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             {
                 Cost = LastCost,
                 Stimulus = LastStimulus,
-                PassIndex = LearningPassIndex
+                PassIndex = LearningPassIndex,
+                PassesPerSecond = PassesPerSecond
             };
         }
 
