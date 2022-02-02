@@ -57,11 +57,11 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             for (int neuronIndex = 0; neuronIndex < sourceLayer.Neurons.Length; neuronIndex++)
             {
                 CalculatedNeuron currentNeuron = sourceLayer.Neurons[neuronIndex];
-                weightsTarget[neuronIndex] = new double[currentNeuron.Dendrites.Count];
+                weightsTarget[neuronIndex] = new double[currentNeuron.Dendrites.Length];
 
                 biasesTarget[neuronIndex] = sourceLayer.Neurons[neuronIndex].Bias;
 
-                for(int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Count; weightIndex++)
+                for(int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
                 {
                     weightsTarget[neuronIndex][weightIndex] = currentNeuron.Dendrites[weightIndex].Weight;
                 }
@@ -89,7 +89,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
                 targetLayer.Neurons[neuronIndex].Bias = biasesSource[neuronIndex];
 
-                for (int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Count; weightIndex++)
+                for (int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
                 {
                     currentNeuron.Dendrites[weightIndex].Weight = weightsSource[neuronIndex][weightIndex];
                 }

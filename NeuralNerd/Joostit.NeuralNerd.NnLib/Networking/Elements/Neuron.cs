@@ -6,10 +6,10 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
     public abstract class Neuron
     {
 
-        public NeuronCoordinate Coordinate { get; set; }
+        public NeuronCoordinate Coordinate;
 
         [XmlIgnore]
-        public double Activation { get; protected set; }
+        public double Activation;
 
         public Neuron()
            : this(-1, -1)

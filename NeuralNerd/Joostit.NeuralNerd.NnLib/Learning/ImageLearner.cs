@@ -174,7 +174,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
             if (doWeightInsteadOfBias)
             {
-                int dentriteIndex = randomizer.Next(0, selectedNeuron.Dendrites.Count);
+                int dentriteIndex = randomizer.Next(0, selectedNeuron.Dendrites.Length);
                 var selectedDendrite = selectedNeuron.Dendrites[dentriteIndex];
 
                 selectedDendrite.Weight = GetRandomNudge(selectedDendrite.Weight);
@@ -245,7 +245,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 foreach(var neuron in layer.Neurons)
                 {
                     total += 1;     // For the bias
-                    total += neuron.Dendrites.Count;
+                    total += neuron.Dendrites.Length;
                 }
             }
 

@@ -429,7 +429,10 @@ namespace NeuralNerdApp
         {
             if (dendriteMode == DendriteDrawModes.All)
             {
-                targetNeuronCtrl.Neuron.Dendrites.ForEach((d) => DrawDendrite(targetNeuronCtrl, d));
+                foreach(var dendrite in targetNeuronCtrl.Neuron.Dendrites)
+                {
+                    DrawDendrite(targetNeuronCtrl, dendrite);
+                }
             }
         }
 
@@ -472,7 +475,7 @@ namespace NeuralNerdApp
 
             foreach (CalculatedNeuron neuron in layer.Neurons)
             {
-                count += neuron.Dendrites.Count;
+                count += neuron.Dendrites.Length;
             }
 
             return count;

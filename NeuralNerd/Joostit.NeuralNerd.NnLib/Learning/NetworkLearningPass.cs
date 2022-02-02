@@ -45,9 +45,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private double[] CopyNeuronActivation(INeuronLayer layer)
         {
-            double[] retVal = new double[layer.Count];
+            double[] retVal = new double[layer.Neurons.Length];
 
-            for(int i = 0; i < layer.Count; i++)
+            for(int i = 0; i < layer.Neurons.Length; i++)
             {
                 retVal[i] = layer.Neurons[i].Activation;
             }

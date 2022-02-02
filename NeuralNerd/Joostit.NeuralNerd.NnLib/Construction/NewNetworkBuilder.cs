@@ -66,12 +66,14 @@ namespace Joostit.NeuralNerd.NnLib.Construction
         {
             foreach(CalculatedNeuron targetNeuron in layer.Neurons)
             {
-                foreach(Neuron inputNeuron in precedingLayer.Neurons)
+                targetNeuron.Dendrites = new Dendrite[precedingLayer.Neurons.Length];
+                for(int i = 0; i < precedingLayer.Neurons.Length; i++)
                 {
                     Dendrite dendrite = new Dendrite();
-                    dendrite.InputNeuronCoordinate = inputNeuron.Coordinate.Clone();
-                    targetNeuron.Dendrites.Add(dendrite);
+                    dendrite.InputNeuronCoordinate = precedingLayer.Neurons[i].Coordinate.Clone();
+                    targetNeuron.Dendrites[i] = dendrite;
                 }
+
             }
         }
 

@@ -13,7 +13,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
     public class HiddenLayer : ICalculatableNeuronLayer
     {
 
-        public HiddenNeuron[] Neurons { get; set; }
+        public HiddenNeuron[] Neurons;
 
         [XmlIgnore]
         public int Count

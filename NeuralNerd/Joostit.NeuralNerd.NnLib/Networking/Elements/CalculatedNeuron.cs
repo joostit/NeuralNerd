@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 { 
     public abstract class CalculatedNeuron : Neuron
     {
 
-        public List<Dendrite> Dendrites { get; set; } = new List<Dendrite>();
+        public Dendrite[] Dendrites;
 
-        public double Bias { get; set; }
+        public double Bias;
 
         public CalculatedNeuron()
         {
@@ -25,14 +26,14 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 
         public void Calculate()
         {
-            double weightedSum = 0.0;
+            double weightedSum = Bias;
 
-            foreach (var dendrite in Dendrites)
+            Dendrite dendrite;
+            for (int i = 0; i < Dendrites.Length; i++)
             {
+                dendrite = Dendrites[i];
                 weightedSum += dendrite.Weight * dendrite.Input.Activation;
             }
-
-            weightedSum += Bias;
 
             Activation = Calc.Sigmoid(weightedSum);
         }

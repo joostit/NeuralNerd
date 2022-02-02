@@ -10,12 +10,13 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
     public class Dendrite
     {
 
-        public NeuronCoordinate InputNeuronCoordinate { get; set; }
+        public NeuronCoordinate InputNeuronCoordinate;
 
         [XmlIgnore]
-        public Neuron Input { get; set; }
+        public Neuron Input;
 
-        public double Weight { get; set; }
+        public double Weight;
+
 
         public override string ToString()
         {

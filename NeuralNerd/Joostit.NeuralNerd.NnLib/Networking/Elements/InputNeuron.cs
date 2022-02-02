@@ -10,19 +10,6 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
 
         public string Name { get; set; } = "";
 
-        [XmlIgnore]
-        public new double Activation
-        {
-            get
-            {
-                return base.Activation;
-            }
-            set
-            {
-                base.Activation = value;
-            }
-        }
-
         public InputNeuron()
         {
 
