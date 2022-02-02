@@ -32,7 +32,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
             for (int i = 0; i < Dendrites.Length; i++)
             {
                 dendrite = Dendrites[i];
-                weightedSum += dendrite.Weight * dendrite.Input.Activation;
+                weightedSum += dendrite.Weight_Fast * dendrite.Input.Activation;
             }
 
             Activation = Calc.Sigmoid(weightedSum);

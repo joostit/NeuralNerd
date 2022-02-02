@@ -60,7 +60,7 @@ namespace NeuralNerdApp.Windows
             {
                 Dendrite editDendrite = new Dendrite();
                 editDendrite.InputNeuronCoordinate = realDendrite.InputNeuronCoordinate.Clone();
-                editDendrite.Weight = realDendrite.Weight;
+                editDendrite.Weight_Fast = realDendrite.Weight_Fast;
                 dendriteEditList.Add(editDendrite);
             }
 
@@ -105,7 +105,7 @@ namespace NeuralNerdApp.Windows
 
             for(int i = 0; i < dendriteEditList.Count; i++)
             {
-                Neuron.Dendrites[i].Weight = dendriteEditList[i].Weight;
+                Neuron.Dendrites[i].Weight_Fast = dendriteEditList[i].Weight_Fast;
             }
 
             Neuron.Bias = double.Parse(biasBox.Text);

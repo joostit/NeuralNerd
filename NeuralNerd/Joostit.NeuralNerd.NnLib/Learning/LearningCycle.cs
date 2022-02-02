@@ -63,7 +63,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
                 for(int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
                 {
-                    weightsTarget[neuronIndex][weightIndex] = currentNeuron.Dendrites[weightIndex].Weight;
+                    weightsTarget[neuronIndex][weightIndex] = currentNeuron.Dendrites[weightIndex].Weight_Fast;
                 }
 
             }
@@ -91,7 +91,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
                 for (int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
                 {
-                    currentNeuron.Dendrites[weightIndex].Weight = weightsSource[neuronIndex][weightIndex];
+                    currentNeuron.Dendrites[weightIndex].Weight_Fast = weightsSource[neuronIndex][weightIndex];
                 }
 
             }

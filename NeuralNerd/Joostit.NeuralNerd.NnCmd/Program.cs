@@ -81,74 +81,74 @@ namespace Joostit.NeuralNerd.NnCmd
             network.InputLayer.Neurons[3].Name = "Pixel [1, 1]";
 
             network.HiddenLayers[0].Neurons[0].Bias = -3;
-            network.HiddenLayers[0].Neurons[0].Dendrites[0].Weight = 2;
-            network.HiddenLayers[0].Neurons[0].Dendrites[1].Weight = 2;
-            network.HiddenLayers[0].Neurons[0].Dendrites[2].Weight = -1;
-            network.HiddenLayers[0].Neurons[0].Dendrites[3].Weight = 1;
+            network.HiddenLayers[0].Neurons[0].Dendrites[0].Weight_Fast = 2;
+            network.HiddenLayers[0].Neurons[0].Dendrites[1].Weight_Fast = 2;
+            network.HiddenLayers[0].Neurons[0].Dendrites[2].Weight_Fast = -1;
+            network.HiddenLayers[0].Neurons[0].Dendrites[3].Weight_Fast = 1;
 
             network.HiddenLayers[0].Neurons[1].Bias = -3;
-            network.HiddenLayers[0].Neurons[1].Dendrites[0].Weight = 2;
-            network.HiddenLayers[0].Neurons[1].Dendrites[1].Weight = -1;
-            network.HiddenLayers[0].Neurons[1].Dendrites[2].Weight = 2;
-            network.HiddenLayers[0].Neurons[1].Dendrites[3].Weight = -1;
+            network.HiddenLayers[0].Neurons[1].Dendrites[0].Weight_Fast = 2;
+            network.HiddenLayers[0].Neurons[1].Dendrites[1].Weight_Fast = -1;
+            network.HiddenLayers[0].Neurons[1].Dendrites[2].Weight_Fast = 2;
+            network.HiddenLayers[0].Neurons[1].Dendrites[3].Weight_Fast = -1;
 
             network.HiddenLayers[0].Neurons[2].Bias = -3;
-            network.HiddenLayers[0].Neurons[2].Dendrites[0].Weight = -1;
-            network.HiddenLayers[0].Neurons[2].Dendrites[1].Weight = 2;
-            network.HiddenLayers[0].Neurons[2].Dendrites[2].Weight = -1;
-            network.HiddenLayers[0].Neurons[2].Dendrites[3].Weight = 2;
+            network.HiddenLayers[0].Neurons[2].Dendrites[0].Weight_Fast = -1;
+            network.HiddenLayers[0].Neurons[2].Dendrites[1].Weight_Fast = 2;
+            network.HiddenLayers[0].Neurons[2].Dendrites[2].Weight_Fast = -1;
+            network.HiddenLayers[0].Neurons[2].Dendrites[3].Weight_Fast = 2;
 
             network.HiddenLayers[0].Neurons[3].Bias = -3;
-            network.HiddenLayers[0].Neurons[3].Dendrites[0].Weight = -1;
-            network.HiddenLayers[0].Neurons[3].Dendrites[1].Weight = -1;
-            network.HiddenLayers[0].Neurons[3].Dendrites[2].Weight = 2;
-            network.HiddenLayers[0].Neurons[3].Dendrites[3].Weight = 2;
+            network.HiddenLayers[0].Neurons[3].Dendrites[0].Weight_Fast = -1;
+            network.HiddenLayers[0].Neurons[3].Dendrites[1].Weight_Fast = -1;
+            network.HiddenLayers[0].Neurons[3].Dendrites[2].Weight_Fast = 2;
+            network.HiddenLayers[0].Neurons[3].Dendrites[3].Weight_Fast = 2;
 
 
             network.HiddenLayers[1].Neurons[0].Bias = -1;
-            network.HiddenLayers[1].Neurons[0].Dendrites[0].Weight = 1;
-            network.HiddenLayers[1].Neurons[0].Dendrites[1].Weight = 1;
-            network.HiddenLayers[1].Neurons[0].Dendrites[2].Weight = -1;
-            network.HiddenLayers[1].Neurons[0].Dendrites[3].Weight = -1;
+            network.HiddenLayers[1].Neurons[0].Dendrites[0].Weight_Fast = 1;
+            network.HiddenLayers[1].Neurons[0].Dendrites[1].Weight_Fast = 1;
+            network.HiddenLayers[1].Neurons[0].Dendrites[2].Weight_Fast = -1;
+            network.HiddenLayers[1].Neurons[0].Dendrites[3].Weight_Fast = -1;
 
             network.HiddenLayers[1].Neurons[1].Bias = -1;
-            network.HiddenLayers[1].Neurons[1].Dendrites[0].Weight = 1;
-            network.HiddenLayers[1].Neurons[1].Dendrites[1].Weight = -1;
-            network.HiddenLayers[1].Neurons[1].Dendrites[2].Weight = 1;
-            network.HiddenLayers[1].Neurons[1].Dendrites[3].Weight = -1;
+            network.HiddenLayers[1].Neurons[1].Dendrites[0].Weight_Fast = 1;
+            network.HiddenLayers[1].Neurons[1].Dendrites[1].Weight_Fast = -1;
+            network.HiddenLayers[1].Neurons[1].Dendrites[2].Weight_Fast = 1;
+            network.HiddenLayers[1].Neurons[1].Dendrites[3].Weight_Fast = -1;
 
             network.HiddenLayers[1].Neurons[2].Bias = -1;
-            network.HiddenLayers[1].Neurons[2].Dendrites[0].Weight = 1;
-            network.HiddenLayers[1].Neurons[2].Dendrites[1].Weight = -1;
-            network.HiddenLayers[1].Neurons[2].Dendrites[2].Weight = -1;
-            network.HiddenLayers[1].Neurons[2].Dendrites[3].Weight = -2;
+            network.HiddenLayers[1].Neurons[2].Dendrites[0].Weight_Fast = 1;
+            network.HiddenLayers[1].Neurons[2].Dendrites[1].Weight_Fast = -1;
+            network.HiddenLayers[1].Neurons[2].Dendrites[2].Weight_Fast = -1;
+            network.HiddenLayers[1].Neurons[2].Dendrites[3].Weight_Fast = -2;
 
             network.HiddenLayers[1].Neurons[3].Bias = -1;
-            network.HiddenLayers[1].Neurons[3].Dendrites[0].Weight = 0;
-            network.HiddenLayers[1].Neurons[3].Dendrites[1].Weight = 0;
-            network.HiddenLayers[1].Neurons[3].Dendrites[2].Weight = 0;
-            network.HiddenLayers[1].Neurons[3].Dendrites[3].Weight = 2;
+            network.HiddenLayers[1].Neurons[3].Dendrites[0].Weight_Fast = 0;
+            network.HiddenLayers[1].Neurons[3].Dendrites[1].Weight_Fast = 0;
+            network.HiddenLayers[1].Neurons[3].Dendrites[2].Weight_Fast = 0;
+            network.HiddenLayers[1].Neurons[3].Dendrites[3].Weight_Fast = 2;
 
             network.OutputLayer.Neurons[0].Bias = -2;
             network.OutputLayer.Neurons[0].Name = "Go right";
-            network.OutputLayer.Neurons[0].Dendrites[0].Weight = 2;
-            network.OutputLayer.Neurons[0].Dendrites[1].Weight = 1;
-            network.OutputLayer.Neurons[0].Dendrites[2].Weight = 1;
-            network.OutputLayer.Neurons[0].Dendrites[3].Weight = 1;
+            network.OutputLayer.Neurons[0].Dendrites[0].Weight_Fast = 2;
+            network.OutputLayer.Neurons[0].Dendrites[1].Weight_Fast = 1;
+            network.OutputLayer.Neurons[0].Dendrites[2].Weight_Fast = 1;
+            network.OutputLayer.Neurons[0].Dendrites[3].Weight_Fast = 1;
 
             network.OutputLayer.Neurons[1].Bias = -2;
             network.OutputLayer.Neurons[1].Name = "Go left";
-            network.OutputLayer.Neurons[1].Dendrites[0].Weight = 1;
-            network.OutputLayer.Neurons[1].Dendrites[1].Weight = 2;
-            network.OutputLayer.Neurons[1].Dendrites[2].Weight = 1;
-            network.OutputLayer.Neurons[1].Dendrites[3].Weight = 1;
+            network.OutputLayer.Neurons[1].Dendrites[0].Weight_Fast = 1;
+            network.OutputLayer.Neurons[1].Dendrites[1].Weight_Fast = 2;
+            network.OutputLayer.Neurons[1].Dendrites[2].Weight_Fast = 1;
+            network.OutputLayer.Neurons[1].Dendrites[3].Weight_Fast = 1;
 
             network.OutputLayer.Neurons[2].Bias = -2;
             network.OutputLayer.Neurons[2].Name = "Stop";
-            network.OutputLayer.Neurons[2].Dendrites[0].Weight = 1;
-            network.OutputLayer.Neurons[2].Dendrites[1].Weight = 1;
-            network.OutputLayer.Neurons[2].Dendrites[2].Weight = 2;
-            network.OutputLayer.Neurons[2].Dendrites[3].Weight = -1;
+            network.OutputLayer.Neurons[2].Dendrites[0].Weight_Fast = 1;
+            network.OutputLayer.Neurons[2].Dendrites[1].Weight_Fast = 1;
+            network.OutputLayer.Neurons[2].Dendrites[2].Weight_Fast = 2;
+            network.OutputLayer.Neurons[2].Dendrites[3].Weight_Fast = -1;
 
 
             ConfigurationFileHandler handler = new ConfigurationFileHandler();

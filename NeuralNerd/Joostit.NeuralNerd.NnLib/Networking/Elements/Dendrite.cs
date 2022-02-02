@@ -10,19 +10,30 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Elements
     public class Dendrite
     {
 
-        public NeuronCoordinate InputNeuronCoordinate;
+        public NeuronCoordinate InputNeuronCoordinate { get; set; }
 
         [XmlIgnore]
         public Neuron Input;
 
-        public double Weight;
+        public double Weight_Fast;
 
+        public double Weight
+        {
+            get
+            {
+                return Weight_Fast;
+            }
+            set
+            {
+                Weight_Fast = value;
+            }
+        }
 
         public override string ToString()
         {
             if (InputNeuronCoordinate != null)
             {
-                return $"{this.GetType().Name} to [{InputNeuronCoordinate}]. Weight: {this.Weight}";
+                return $"{this.GetType().Name} to [{InputNeuronCoordinate}]. Weight: {this.Weight_Fast}";
             }
             else
             {

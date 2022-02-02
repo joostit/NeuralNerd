@@ -177,7 +177,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 int dentriteIndex = randomizer.Next(0, selectedNeuron.Dendrites.Length);
                 var selectedDendrite = selectedNeuron.Dendrites[dentriteIndex];
 
-                selectedDendrite.Weight = GetRandomNudge(selectedDendrite.Weight);
+                selectedDendrite.Weight_Fast = GetRandomNudge(selectedDendrite.Weight_Fast);
             }
             else
             {
@@ -185,36 +185,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             }
         }
 
-        private void NudgeParameters(int oneInHowMany)
-        {
-            foreach (var hiddenLayer in Network.GetAllCalculatableLayers())
-            {
-                NudgeLayer(hiddenLayer, oneInHowMany);
-            }
-        }
 
         public void StopLearning()
         {
             learningInterruptFlag = true;
-        }
-
-        private void NudgeLayer(ICalculatableNeuronLayer layer, int oneInHowMany)
-        {
-            foreach (CalculatedNeuron neuron in layer.Neurons)
-            {
-                if (RandomChance(oneInHowMany))
-                {
-                    neuron.Bias = GetRandomNudge(neuron.Bias);
-                }
-
-                foreach (var dendrite in neuron.Dendrites)
-                {
-                    if (RandomChance(oneInHowMany))
-                    {
-                        dendrite.Weight = GetRandomNudge(dendrite.Weight);
-                    }
-                }
-            }
         }
 
 
@@ -285,36 +259,30 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public void RandomizeNeuronParameters()
         {
-            RandomizeParameters(1);
+            RandomizeParameters();
         }
 
 
-        private void RandomizeParameters(int oneInHowMany)
+        private void RandomizeParameters()
         {
             foreach (var hiddenLayer in Network.HiddenLayers)
             {
-                RandomizeLayer(hiddenLayer, oneInHowMany);
+                RandomizeLayer(hiddenLayer);
             }
 
-            RandomizeLayer(Network.OutputLayer, oneInHowMany);
+            RandomizeLayer(Network.OutputLayer);
         }
 
 
-        private void RandomizeLayer(ICalculatableNeuronLayer layer, int oneInHowMany)
+        private void RandomizeLayer(ICalculatableNeuronLayer layer)
         {
             foreach (CalculatedNeuron neuron in layer.Neurons)
             {
-                if (RandomChance(oneInHowMany))
-                {
-                    neuron.Bias = GetRandomBias();
-                }
+                neuron.Bias = GetRandomBias();
 
                 foreach (var dendrite in neuron.Dendrites)
                 {
-                    if (RandomChance(oneInHowMany))
-                    {
-                        dendrite.Weight = GetRandomWeight();
-                    }
+                    dendrite.Weight_Fast = GetRandomWeight();
                 }
             }
         }
@@ -325,15 +293,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             return randomizer.Next(-2000, 2000) / 1000.0;
         }
 
+
         private double GetRandomBias()
         {
             return randomizer.Next(-1000, 1000) / 1000.0;
-        }
-
-
-        private bool RandomChance(int oneInHowMany)
-        {
-            return randomizer.Next(oneInHowMany) == 0;
         }
 
 
