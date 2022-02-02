@@ -33,7 +33,7 @@ namespace NeuralNerdApp
     public partial class MainWindow : Window
     {
         private DispatcherTimer updateTimer = new DispatcherTimer();
-        private TimeSpan updateInterval = new TimeSpan(0, 0, 0, 0, 200);
+        private TimeSpan updateInterval = new TimeSpan(0, 0, 0, 0, 500);
 
         private NetworkUiContext networkContext;
 
