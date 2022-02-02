@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30128.74
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.5
+MinimumVisualStudioVersion = 17.0.5
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joostit.NeuralNerd.NnLib", "Joostit.NeuralNerd.NnLib\Joostit.NeuralNerd.NnLib.csproj", "{C9043818-208B-4677-8160-55D04D39A3C3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joostit.NeuralNerd.NnCmd", "Joostit.NeuralNerd.NnCmd\Joostit.NeuralNerd.NnCmd.csproj", "{AE9FE978-B239-419B-AAFC-093D4FBBB120}"
