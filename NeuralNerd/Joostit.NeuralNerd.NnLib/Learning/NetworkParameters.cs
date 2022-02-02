@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Joostit.NeuralNerd.NnLib.Networking;
+using Joostit.NeuralNerd.NnLib.Networking.Elements;
+using Joostit.NeuralNerd.NnLib.Networking.Structure;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -26,6 +29,79 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         /// [NeuronIndex] [InputIndex]
         /// </summary>
         public double[][] OutputLayerWeights;
+
+        public NetworkParameters(NeuralNetwork network)
+        {
+            ExtractNetworkParameters(network);
+        }
+
+        public void ExtractNetworkParameters(NeuralNetwork network)
+        {
+
+            HiddenLayerBiases = new double[network.HiddenLayers.Count][];
+            HiddenLayerWeights = new double[network.HiddenLayers.Count][][];
+
+            for (int hiddenLayerIndex = 0; hiddenLayerIndex < network.HiddenLayers.Count; hiddenLayerIndex++)
+            {
+                ICalculatableNeuronLayer currentLayer = network.HiddenLayers[hiddenLayerIndex];
+                HiddenLayerBiases[hiddenLayerIndex] = new double[currentLayer.Neurons.Length];
+                HiddenLayerWeights[hiddenLayerIndex] = new double[currentLayer.Neurons.Length][];
+
+                ExtractLayerParameters(currentLayer, HiddenLayerBiases[hiddenLayerIndex], HiddenLayerWeights[hiddenLayerIndex]);
+            }
+
+            OutputLayerBiases = new double[network.OutputLayer.Neurons.Length];
+            OutputLayerWeights = new double[network.OutputLayer.Neurons.Length][];
+
+            ExtractLayerParameters(network.OutputLayer, OutputLayerBiases, OutputLayerWeights);
+
+        }
+
+
+        private void ExtractLayerParameters(ICalculatableNeuronLayer sourceLayer, double[] biasesTarget, double[][] weightsTarget)
+        {
+            for (int neuronIndex = 0; neuronIndex < sourceLayer.Neurons.Length; neuronIndex++)
+            {
+                CalculatedNeuron currentNeuron = sourceLayer.Neurons[neuronIndex];
+                weightsTarget[neuronIndex] = new double[currentNeuron.Dendrites.Length];
+
+                biasesTarget[neuronIndex] = sourceLayer.Neurons[neuronIndex].Bias;
+
+                for (int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
+                {
+                    weightsTarget[neuronIndex][weightIndex] = currentNeuron.Dendrites[weightIndex].Weight_Fast;
+                }
+
+            }
+        }
+
+
+        public void ApplyParameters(NeuralNetwork network)
+        {
+            for (int hiddenLayerIndex = 0; hiddenLayerIndex < network.HiddenLayers.Count; hiddenLayerIndex++)
+            {
+                ICalculatableNeuronLayer currentLayer = network.HiddenLayers[hiddenLayerIndex];
+                ApplyLayerParameters(currentLayer, HiddenLayerBiases[hiddenLayerIndex], HiddenLayerWeights[hiddenLayerIndex]);
+            }
+
+            ApplyLayerParameters(network.OutputLayer, OutputLayerBiases, OutputLayerWeights);
+        }
+
+        private void ApplyLayerParameters(ICalculatableNeuronLayer targetLayer, double[] biasesSource, double[][] weightsSource)
+        {
+            for (int neuronIndex = 0; neuronIndex < targetLayer.Neurons.Length; neuronIndex++)
+            {
+                CalculatedNeuron currentNeuron = targetLayer.Neurons[neuronIndex];
+
+                targetLayer.Neurons[neuronIndex].Bias = biasesSource[neuronIndex];
+
+                for (int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
+                {
+                    currentNeuron.Dendrites[weightIndex].Weight_Fast = weightsSource[neuronIndex][weightIndex];
+                }
+
+            }
+        }
 
     }
 }

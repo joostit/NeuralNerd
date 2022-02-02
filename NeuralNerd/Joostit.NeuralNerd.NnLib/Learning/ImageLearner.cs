@@ -23,7 +23,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public double LastCost { get; private set; }
 
-        public ImageStimulus LastStimulus { get; set; }
+        private ImageStimulus LastStimulus;
 
         private long learningPassIndex;
 
@@ -108,8 +108,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             ImageNetworkConnector connector = new ImageNetworkConnector();
             connector.Network = Network;
 
-            LearningCycle lowestCycle = new LearningCycle();
             LowestCostSoFar = double.MaxValue;
+            LearningCycle lowestCycle = new LearningCycle(double.MaxValue, connector.Network);
 
             int totalNeurons = GetParameterCount(Network);
 
@@ -122,7 +122,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 LastCost = RunLearningCycle(connector);
 
                 // If the current run is an omprovement over the previous one
-                if (LastCost < LowestCostSoFar)
+                if (LastCost < lowestCycle.Cost)
                 {
                     // Continue from the current parameters
                     lowestCycle = new LearningCycle(LastCost, connector.Network);
@@ -131,9 +131,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 else
                 {
                     // Revert to the previous set of more effective parameters
-                    lowestCycle.ApplyParameters(connector.Network);
+                    lowestCycle.networkParameters.ApplyParameters(connector.Network);
                 }
-
 
                 if (learningInterruptFlag)
                 {
@@ -237,7 +236,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 connector.SetInputNeurons(stimulus);
                 Network.Calculate();
                 double passCost = CalculateCost(stimulus);
-
+                LastStimulus = stimulus;
                 costSum += passCost;
             }
 

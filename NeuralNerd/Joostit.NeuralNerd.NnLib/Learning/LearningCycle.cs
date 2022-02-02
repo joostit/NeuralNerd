@@ -12,89 +12,21 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public double Cost { get; set; }
 
-        private NetworkParameters networkParameters;
+        public NetworkParameters networkParameters { get; set; }
 
 
-        public LearningCycle()
+        public LearningCycle(double costSum, NetworkParameters parameters)
         {
-            Cost = double.MaxValue;
+            networkParameters = parameters;
         }
 
         public LearningCycle(double costSum, NeuralNetwork network)
         {
             Cost = costSum;
-            networkParameters = ExtractNetworkParameters(network);
+            networkParameters = new NetworkParameters(network);
         }
 
 
-        private NetworkParameters ExtractNetworkParameters(NeuralNetwork network)
-        {
-            NetworkParameters parameters = new NetworkParameters();
-
-            parameters.HiddenLayerBiases = new double[network.HiddenLayers.Count][];
-            parameters.HiddenLayerWeights = new double[network.HiddenLayers.Count][][];
-
-            for(int hiddenLayerIndex = 0; hiddenLayerIndex < network.HiddenLayers.Count; hiddenLayerIndex++)
-            {
-                ICalculatableNeuronLayer currentLayer = network.HiddenLayers[hiddenLayerIndex];
-                parameters.HiddenLayerBiases[hiddenLayerIndex] = new double[currentLayer.Neurons.Length];
-                parameters.HiddenLayerWeights[hiddenLayerIndex] = new double[currentLayer.Neurons.Length][];
-
-                ExtractLayerParameters(currentLayer, parameters.HiddenLayerBiases[hiddenLayerIndex], parameters.HiddenLayerWeights[hiddenLayerIndex]);
-            }
-
-            parameters.OutputLayerBiases = new double[network.OutputLayer.Neurons.Length];
-            parameters.OutputLayerWeights = new double[network.OutputLayer.Neurons.Length][];
-
-            ExtractLayerParameters(network.OutputLayer, parameters.OutputLayerBiases, parameters.OutputLayerWeights);
-
-            return parameters;
-        }
-
-
-        private void ExtractLayerParameters(ICalculatableNeuronLayer sourceLayer, double[] biasesTarget, double[][] weightsTarget)
-        {
-            for (int neuronIndex = 0; neuronIndex < sourceLayer.Neurons.Length; neuronIndex++)
-            {
-                CalculatedNeuron currentNeuron = sourceLayer.Neurons[neuronIndex];
-                weightsTarget[neuronIndex] = new double[currentNeuron.Dendrites.Length];
-
-                biasesTarget[neuronIndex] = sourceLayer.Neurons[neuronIndex].Bias;
-
-                for(int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
-                {
-                    weightsTarget[neuronIndex][weightIndex] = currentNeuron.Dendrites[weightIndex].Weight_Fast;
-                }
-
-            }
-        }
-
-
-        public void ApplyParameters(NeuralNetwork network)
-        {
-            for (int hiddenLayerIndex = 0; hiddenLayerIndex < network.HiddenLayers.Count; hiddenLayerIndex++)
-            {
-                ICalculatableNeuronLayer currentLayer = network.HiddenLayers[hiddenLayerIndex];
-                ApplyLayerParameters(currentLayer, networkParameters.HiddenLayerBiases[hiddenLayerIndex], networkParameters.HiddenLayerWeights[hiddenLayerIndex]);
-            }
-
-            ApplyLayerParameters(network.OutputLayer, networkParameters.OutputLayerBiases, networkParameters.OutputLayerWeights);
-        }
-
-        private void ApplyLayerParameters(ICalculatableNeuronLayer targetLayer, double[] biasesSource, double[][] weightsSource)
-        {
-            for (int neuronIndex = 0; neuronIndex < targetLayer.Neurons.Length; neuronIndex++)
-            {
-                CalculatedNeuron currentNeuron = targetLayer.Neurons[neuronIndex];
-
-                targetLayer.Neurons[neuronIndex].Bias = biasesSource[neuronIndex];
-
-                for (int weightIndex = 0; weightIndex < currentNeuron.Dendrites.Length; weightIndex++)
-                {
-                    currentNeuron.Dendrites[weightIndex].Weight_Fast = weightsSource[neuronIndex][weightIndex];
-                }
-
-            }
-        }
+        
     }
 }
