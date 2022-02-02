@@ -305,8 +305,25 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 double realOutcome = Network.OutputLayer.Neurons[rowIndex].Activation;
                 double expected = currentStimulus.ExpectedOutcomes[rowIndex];
 
-                distance = Math.Abs(realOutcome - expected) + 1;
-                currentCost = distance * distance;
+                distance = Math.Abs(realOutcome - expected);
+                
+
+                if(distance > .8)
+                {
+                    distance += 3;
+                }
+                else
+                {
+                    distance += 1;
+                }
+
+
+                if (realOutcome < expected)
+                {
+                    distance += 2;
+                }
+
+                currentCost = distance * distance * distance;
                 total += currentCost;
             }
 
