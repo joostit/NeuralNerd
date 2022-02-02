@@ -67,9 +67,6 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        private volatile NetworkLearningPass[] learningPasses;
-        private volatile object learningPassesLock = new object();
-
         public ImageLearner(NeuralNetwork Network)
         {
             this.Network = Network;
@@ -95,20 +92,18 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         {
             await Task.Run(() =>
             {
-                Learn(100000000);
+                Learn(1000000000000);
             });
         }
 
 
-        public void Learn(int passes)
+        public void Learn(long passes)
         {
             learningInterruptFlag = false;
             if(Stimuli == null)
             {
                 return;
-            }
-
-            learningPasses = new NetworkLearningPass[Stimuli.Cache.Count];           
+            }         
 
             ImageNetworkConnector connector = new ImageNetworkConnector();
             connector.Network = Network;
@@ -150,12 +145,44 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     // ToDo: Fine tune this
                     if ((learningPassIndex + 1) < passes)
                     {
-                        NudgeParameters(totalNeurons);
+                        NudgeRandomParameter(1);
                     }
                 }
             }
 
             rateStopwatch.Stop();
+        }
+
+
+
+        private void NudgeRandomParameter(int howMany)
+        {
+            for(int i = 0; i < howMany; i++)
+            {
+                NudgeSingleRandomParameter(randomizer.Next(0,2) == 0);
+            }
+        }
+
+        private void NudgeSingleRandomParameter(bool doWeightInsteadOfBias)
+        {
+            var layers = Network.GetAllCalculatableLayers();
+            int layerIndex = randomizer.Next(0, layers.Count);
+            var selectedLayer = layers[layerIndex];
+
+            int neuronIndex = randomizer.Next(0, selectedLayer.Neurons.Length);
+            var selectedNeuron = selectedLayer.Neurons[neuronIndex];
+
+            if (doWeightInsteadOfBias)
+            {
+                int dentriteIndex = randomizer.Next(0, selectedNeuron.Dendrites.Count);
+                var selectedDendrite = selectedNeuron.Dendrites[dentriteIndex];
+
+                selectedDendrite.Weight = GetRandomNudge(selectedDendrite.Weight);
+            }
+            else
+            {
+                selectedNeuron.Bias = GetRandomNudge(selectedNeuron.Bias);
+            }
         }
 
         private void NudgeParameters(int oneInHowMany)
@@ -230,7 +257,6 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         private double RunLearningCycle(ImageNetworkConnector connector)
         {
             double costSum = 0;
-            int learningPassesIndex = 0;
 
             foreach (var stimulus in Stimuli.Cache)
             {
@@ -238,20 +264,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 Network.Calculate();
                 double passCost = CalculateCost(stimulus);
 
-                NetworkLearningPass passInfo = new NetworkLearningPass(Network)
-                {
-                    Stimulus = stimulus,
-                    Cost = passCost,
-                };
-
-                lock (learningPassesLock)
-                {
-                    costSum += passInfo.Cost;
-
-                    learningPasses[learningPassesIndex] = passInfo;
-                    learningPassesIndex++;
-                    LastStimulus = stimulus;
-                }
+                costSum += passCost;
             }
 
             return costSum;
