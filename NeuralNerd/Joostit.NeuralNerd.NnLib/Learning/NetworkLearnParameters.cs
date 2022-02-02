@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Joostit.NeuralNerd.NnLib.Learning
 {
-    internal class NetworkParameters
+    public class NetworkLearnParameters
     {
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         /// </summary>
         public double[][] OutputLayerWeights;
 
-        public NetworkParameters(NeuralNetwork network)
+        public NetworkLearnParameters(NeuralNetwork network)
         {
             ExtractNetworkParameters(network);
         }

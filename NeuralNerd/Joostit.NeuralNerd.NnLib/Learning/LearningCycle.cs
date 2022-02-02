@@ -12,10 +12,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public double Cost { get; set; }
 
-        public NetworkParameters networkParameters { get; set; }
+        public NetworkLearnParameters networkParameters { get; set; }
 
 
-        public LearningCycle(double costSum, NetworkParameters parameters)
+        public LearningCycle(double costSum, NetworkLearnParameters parameters)
         {
             networkParameters = parameters;
         }
@@ -23,7 +23,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public LearningCycle(double costSum, NeuralNetwork network)
         {
             Cost = costSum;
-            networkParameters = new NetworkParameters(network);
+            networkParameters = new NetworkLearnParameters(network);
         }
 
 

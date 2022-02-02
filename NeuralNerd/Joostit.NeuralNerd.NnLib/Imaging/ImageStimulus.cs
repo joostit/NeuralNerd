@@ -8,13 +8,13 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 {
     public class ImageStimulus
     {
-          
-        public double[] ExpectedOutcomes { get; set; }
+
+        public double[] ExpectedOutcomes;
 
         public LockBitmap Image { get; private set; }
 
 
-        public double[] inputStimuli { get; private set; }
+        public double[] inputStimuli;
 
 
         public ImageStimulus(string imagePath)

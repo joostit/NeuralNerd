@@ -13,24 +13,24 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
     public class ImageNetworkConnector
     {
 
-        public NeuralNetwork Network { get; set; }
+        public NeuralNetwork network;
 
-        public ImageNetworkConnector()
+        public ImageNetworkConnector(NeuralNetwork network)
         {
-
+            this.network = network;
         }
 
 
         public void SetInputNeurons(ImageStimulus stimulus)
         {
-            if (stimulus.inputStimuli.Length != Network.InputLayer.Count)
+            if (stimulus.inputStimuli.Length != network.InputLayer.Count)
             {
                 throw new InvalidOperationException("The number of input stimuli should be equal to the input layer neuron count");
             }
 
-            for (int i = 0; i < Network.InputLayer.Count; i++)
+            for (int i = 0; i < network.InputLayer.Count; i++)
             {
-                Network.InputLayer.Neurons[i].Activation = stimulus.inputStimuli[i];
+                network.InputLayer.Neurons[i].Activation = stimulus.inputStimuli[i];
             }
         }
 

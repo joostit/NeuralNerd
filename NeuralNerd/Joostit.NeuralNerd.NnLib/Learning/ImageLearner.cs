@@ -1,4 +1,5 @@
-﻿using Joostit.NeuralNerd.NnLib.Imaging;
+﻿using Joostit.NeuralNerd.NnLib.Construction;
+using Joostit.NeuralNerd.NnLib.Imaging;
 using Joostit.NeuralNerd.NnLib.Networking;
 using Joostit.NeuralNerd.NnLib.Networking.Elements;
 using Joostit.NeuralNerd.NnLib.Networking.Structure;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Joostit.NeuralNerd.NnLib.Learning
 {
-    public class ImageLearner
+    public class ImageLearner : ILearnTaskDispatcher
     {
 
         private Random randomizer = new Random();
@@ -22,6 +23,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public double LowestCostSoFar { get; private set; }
 
         public double LastCost { get; private set; }
+
+        public int TotalParameters { get; private set; }
 
         private ImageStimulus LastStimulus;
 
@@ -72,30 +75,92 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             this.Network = Network;
         }
 
-        public void LoadStimuli(string imagePath)
+        public StimulusCache LoadStimuli(string imagePath)
         {
+            this.imagePath = imagePath;
             LearningStimuliLoader loader = new LearningStimuliLoader(Network);
             loader.LoadImages(imagePath);
             Stimuli = loader.Stimuli;
+            return Stimuli;
         }
 
-        public async Task LoadStimuliAsync(string imagePath)
+        public async Task<StimulusCache> LoadStimuliAsync(string imagePath)
         {
+            StimulusCache cache = null;
+
             await Task.Run(() =>
             {
-                LoadStimuli(imagePath);
+                cache = LoadStimuli(imagePath);
             });
+
+            return cache;
         }
 
 
         public async Task LearnAsync()
         {
+
+            await StartAsyncLearningTasks(1);
+
             await Task.Run(() =>
             {
                 Learn(1000000000000);
             });
         }
 
+        // <summary>
+        // //
+        // ///
+        // //
+        // </summary>
+
+
+        private List<LearnerTask> learners = new List<LearnerTask>();
+        private object TaskDispatchLock = new object();
+        private const int parametersToChangePerCycle = 1;
+        private string imagePath;
+
+        public async Task StartAsyncLearningTasks(int count)
+        {
+
+            StimulusCache stimuli = await LoadStimuliAsync(imagePath);
+
+            NetworkParameters parameters = new NetworkParameters()
+            {
+                InputNeuronCount = Network.InputLayer.Neurons.Length,
+                HiddenLayerCount = Network.HiddenLayers.Count,
+                HiddenLayerNeuronCount = Network.HiddenLayers[0].Neurons.Length,
+                OutputNeuronCount = Network.OutputLayer.Neurons.Length
+            };
+
+            learners.Clear();
+            for(int i = 0; i < count; i++)
+            {
+                learners.Add(new LearnerTask(this, parameters, stimuli, parametersToChangePerCycle));
+            }
+
+            learners.ForEach(task => task.Start());
+        }
+
+
+        public NetworkLearnParameters GetNextTask(double lastCost, NetworkLearnParameters lastParameters)
+        {
+
+            lock (TaskDispatchLock)
+            {
+
+            }
+
+
+            return null;
+        }
+
+
+
+        // <summary>
+        // ////////////////
+        // </summary>
+        // <param name="passes"></param>
 
         public void Learn(long passes)
         {
@@ -105,13 +170,12 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 return;
             }         
 
-            ImageNetworkConnector connector = new ImageNetworkConnector();
-            connector.Network = Network;
+            ImageNetworkConnector connector = new ImageNetworkConnector(Network);
 
             LowestCostSoFar = double.MaxValue;
-            LearningCycle lowestCycle = new LearningCycle(double.MaxValue, connector.Network);
+            LearningCycle lowestCycle = new LearningCycle(double.MaxValue, connector.network);
 
-            int totalNeurons = GetParameterCount(Network);
+            TotalParameters = GetParameterCount(Network);
 
             rateStopwatch.Reset();
             rateStopwatch.Start();
@@ -125,13 +189,13 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 if (LastCost < lowestCycle.Cost)
                 {
                     // Continue from the current parameters
-                    lowestCycle = new LearningCycle(LastCost, connector.Network);
+                    lowestCycle = new LearningCycle(LastCost, connector.network);
                     LowestCostSoFar = LastCost;
                 }
                 else
                 {
                     // Revert to the previous set of more effective parameters
-                    lowestCycle.networkParameters.ApplyParameters(connector.Network);
+                    lowestCycle.networkParameters.ApplyParameters(connector.network);
                 }
 
                 if (learningInterruptFlag)
@@ -343,5 +407,6 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
             Learn(1);
         }
+
     }
 }

@@ -11,7 +11,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
     public class InputLayer : INeuronLayer
     {
 
-        public InputNeuron[] Neurons { get; set; }
+        public InputNeuron[] Neurons;
 
         [XmlIgnore]
         public int Count
