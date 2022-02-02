@@ -110,18 +110,22 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         // <summary>
         // //
-        // ///
+        // ///   TODO: Clean this up!!!!
         // //
         // </summary>
 
 
         private List<LearnerTask> learners = new List<LearnerTask>();
-        private object TaskDispatchLock = new object();
+        private object taskDispatchLock = new object();
         private const int parametersToChangePerCycle = 1;
         private string imagePath;
+        private long currentLearnIndex;
+        private LearningCycle lowestCostCycle;
 
         public async Task StartAsyncLearningTasks(int count)
         {
+            currentLearnIndex = 0;
+            lowestCostCycle = new LearningCycle(double.MaxValue, Network);
 
             StimulusCache stimuli = await LoadStimuliAsync(imagePath);
 
@@ -146,9 +150,37 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public NetworkLearnParameters GetNextTask(double lastCost, NetworkLearnParameters lastParameters)
         {
 
-            lock (TaskDispatchLock)
+            lock (taskDispatchLock)
             {
+                currentLearnIndex++;
 
+                if(lastParameters == null)
+                {
+                    // If this is the first run, we always return a fresh set of parameters
+                    return lowestCostCycle.networkParameters;
+                }
+
+
+                //
+                //
+                //
+                //  Copied this from the existing Learner. ToDo Continue here. Just implemented the clone
+                //
+                //
+                //
+
+                // If the current run is an improvement over the previous one
+                if (lastCost < lowestCostCycle.Cost)
+                {
+                    // Continue from the current parameters
+                    lowestCostCycle.Cost = lastCost;
+                    lowestCostCycle.networkParameters = lastParameters.Clone();
+                }
+                else
+                {
+                    // Revert to the previous set of more effective parameters
+                    lowestCycle.networkParameters.ApplyParameters(connector.network);
+                }
             }
 
 
@@ -204,12 +236,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 }
                 else
                 {
-                    // Randomize some parameters
-                    // ToDo: Fine tune this
-                    if ((learningPassIndex + 1) < passes)
-                    {
-                        NudgeRandomParameter(1);
-                    }
+                    NudgeRandomParameter(1);
                 }
             }
 
