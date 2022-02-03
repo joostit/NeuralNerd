@@ -50,15 +50,6 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        public NetworkLearningPass LastPass
-        {
-            get
-            {
-                return GetLastLearningPass();
-            }
-        }
-
-
         public ImageLearner(NeuralNetwork Network)
         {
             this.Network = Network;
@@ -88,7 +79,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public async Task LearnAsync(string stimuliPath)
         {
-            await StartAsyncLearningTasks(1, stimuliPath);
+            await StartAsyncLearningTasks(10, stimuliPath);
         }
 
 
@@ -178,10 +169,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        private NetworkLearningPass GetLastLearningPass()
+        public NetworkLearningPass GetLastLearningPass()
         {
-            double stimulusCost = 0;
-
             if (lowestCostCycle != null)
             {
                 lowestCostCycle.networkParameters.ApplyParameters(Network);

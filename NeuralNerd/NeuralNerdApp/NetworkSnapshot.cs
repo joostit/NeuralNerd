@@ -17,7 +17,7 @@ namespace NeuralNerdApp
         {
             // Race condition here, but for now we're fine with that
             LowestCostSoFar = learner.LowestCostSoFar;
-            Pass = learner.LastPass;
+            Pass = learner.GetLastLearningPass();
         }
     }
 }
