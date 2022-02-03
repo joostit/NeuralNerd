@@ -64,13 +64,12 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     break;
                 }
 
-                // If we got a new set of parameters, we need to apply them to our neural network
+                NudgeRandomParameter(parameters, parametersToChangePerCycle);
+
                 if (parameters != lastParams)
                 {
                     parameters.ApplyParameters(connector.network);
                 }
-
-                NudgeRandomParameter(parametersToChangePerCycle);
 
                 lastCost = RunSingleLearningCycle();
 
@@ -100,16 +99,17 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        private void NudgeRandomParameter(int howMany)
+        private void NudgeRandomParameter(NetworkLearnParameters parameters, int howMany)
         {
             for (int i = 0; i < howMany; i++)
             {
-                NudgeSingleRandomParameter(randomizer.Next(0, 2) == 0);
+                NudgeSingleRandomParameter(parameters, randomizer.Next(0, 2) == 0);
             }
         }
 
-        private void NudgeSingleRandomParameter(bool doWeightInsteadOfBias)
+        private void NudgeSingleRandomParameter(NetworkLearnParameters parameters, bool doWeightInsteadOfBias)
         {
+
             var layers = network.GetAllCalculatableLayers();
             int layerIndex = randomizer.Next(0, layers.Count);
             var selectedLayer = layers[layerIndex];
@@ -123,10 +123,37 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 var selectedDendrite = selectedNeuron.Dendrites[dentriteIndex];
 
                 selectedDendrite.Weight_Fast = GetRandomNudge(selectedDendrite.Weight_Fast);
+                applyWeightToParameter(parameters, layerIndex, neuronIndex, dentriteIndex, selectedDendrite.Weight_Fast);
             }
             else
             {
                 selectedNeuron.Bias = GetRandomNudge(selectedNeuron.Bias);
+                applyBiasToParameter(parameters, layerIndex, neuronIndex, selectedNeuron.Bias);
+            }
+        }
+
+        private void applyBiasToParameter(NetworkLearnParameters parameters, int layerIndex, int neuronIndex, double value)
+        {
+            if(layerIndex < network.HiddenLayers.Count)
+            {
+                parameters.HiddenLayerBiases[layerIndex][neuronIndex] = value;
+            }
+            else
+            {
+                parameters.OutputLayerBiases[neuronIndex] = value;
+            }
+        }
+
+
+        private void applyWeightToParameter(NetworkLearnParameters parameters, int layerIndex, int neuronIndex, int dendriteIndex, double value)
+        {
+            if (layerIndex < network.HiddenLayers.Count)
+            {
+                parameters.HiddenLayerWeights[layerIndex][neuronIndex][dendriteIndex] = value;
+            }
+            else
+            {
+                parameters.OutputLayerWeights[neuronIndex][dendriteIndex] = value;
             }
         }
 

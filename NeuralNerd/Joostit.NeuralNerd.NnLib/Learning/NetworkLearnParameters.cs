@@ -1,6 +1,7 @@
 ﻿using Joostit.NeuralNerd.NnLib.Networking;
 using Joostit.NeuralNerd.NnLib.Networking.Elements;
 using Joostit.NeuralNerd.NnLib.Networking.Structure;
+using Joostit.NeuralNerd.NnLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -113,9 +114,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         {
             NetworkLearnParameters retVal = new NetworkLearnParameters()
             {
-                HiddenLayerBiases = CopyDoubleArray(HiddenLayerBiases),
-                HiddenLayerWeights = CopyTripleArray(HiddenLayerWeights),
-                OutputLayerWeights = CopyDoubleArray(OutputLayerWeights)
+                HiddenLayerBiases = ArrayUtil.CloneDoubleArray(HiddenLayerBiases),
+                HiddenLayerWeights = ArrayUtil.CloneTripleArray(HiddenLayerWeights),
+                OutputLayerWeights = ArrayUtil.CloneDoubleArray(OutputLayerWeights)
             };
 
             retVal.OutputLayerBiases = new double[OutputLayerBiases.Length];
@@ -126,33 +127,6 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
 
 
-        private double[][] CopyDoubleArray(double[][] source)
-        {
-            var len = source.Length;
-            var dest = new double[len][];
-
-            for (var x = 0; x < len; x++)
-            {
-                var inner = source[x];
-                var ilen = inner.Length;
-                var newer = new double[ilen];
-                Array.Copy(inner, newer, ilen);
-                dest[x] = newer;
-            }
-
-            return dest;
-        }
-
-
-        private double[][][] CopyTripleArray(double[][][] source)
-        {
-            double[][][] dest = new double[source.Length][][];
-            for(int i = 0; i < source.Length; i++)
-            {
-                dest[i] = CopyDoubleArray(source[i]);
-            }   
-
-            return dest;
-        }
+        
     }
 }

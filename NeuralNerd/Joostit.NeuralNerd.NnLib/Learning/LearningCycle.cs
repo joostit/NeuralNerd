@@ -9,6 +9,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 {
     internal class LearningCycle
     {
+        public long CycleId { get; set; }
 
         public double Cost { get; set; }
 

@@ -182,6 +182,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                         // Take the last run parameters as the new starting point for others,
                         // and let all other tasks start with this one from now on.
                         lowestCostCycle.Cost = lastCost;
+                        lowestCostCycle.CycleId = currentLearnIndex;
                         lowestCostCycle.networkParameters = lastParameters.Clone();
 
                         // START To hook up with the existing visualization
