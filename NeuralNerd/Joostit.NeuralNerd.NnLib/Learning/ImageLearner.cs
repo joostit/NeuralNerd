@@ -22,6 +22,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public int TotalParameters { get; private set; }
         public long LearningPassIndex { get; private set; }
 
+        private Random stimulusRandomizer = new Random();
         private ImageStimulus LastStimulus;
         private Random randomizer = new Random();
         private volatile bool learningInterruptFlag;
@@ -150,11 +151,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                         lowestCostCycle.Cost = lastCost;
                         lowestCostCycle.CycleId = LearningPassIndex;
                         lowestCostCycle.networkParameters = lastParameters.Clone();
-
-                        // START To hook up with the existing visualization
-                        lastParameters.ApplyParameters(Network);
+                        
                         LowestCostSoFar = lastCost;
-                        //END HOOK UP
 
                         // Give back the same set of parameters, since this is the most successfull
                         nextParametersToUse = lastParameters;
@@ -182,13 +180,32 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private NetworkLearningPass GetLastLearningPass()
         {
+            if (lowestCostCycle != null)
+            {
+                lowestCostCycle.networkParameters.ApplyParameters(Network);
+            }
+
             return new NetworkLearningPass(Network)
             {
                 Cost = LastCost,
-                Stimulus = LastStimulus,
+                Stimulus = GetRandomStimulus(),
                 PassIndex = LearningPassIndex,
                 PassesPerSecond = PassesPerSecond
             };
+        }
+
+        
+
+        private ImageStimulus GetRandomStimulus()
+        {
+            if(Stimuli != null)
+            {
+                return Stimuli.Cache[stimulusRandomizer.Next(Stimuli.Cache.Count)];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void RandomizeNeuronParameters()
