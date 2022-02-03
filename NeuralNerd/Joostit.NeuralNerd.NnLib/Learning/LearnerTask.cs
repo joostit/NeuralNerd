@@ -11,7 +11,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 {
     internal class LearnerTask
     {
-        private Random randomizer = new Random();
+        
 
         private bool keepRunning = true;
 
@@ -21,6 +21,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         private readonly StimulusCache stimuli;
         private readonly ImageNetworkConnector connector;
         private readonly int parametersToChangePerCycle;
+
+        private NetworkRandomizer randomizer = new NetworkRandomizer();
 
         public LearnerTask(ILearnTaskDispatcher dispatcher, NetworkParameters parameters, StimulusCache stimuli, int parametersToChangePerCycle)
         {
@@ -35,7 +37,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        public void Start()
+        public void StartCycles()
         {
             keepRunning = true;
             Task.Run(() =>
@@ -64,7 +66,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     break;
                 }
 
-                NudgeRandomParameter(parameters, parametersToChangePerCycle);
+                randomizer.NudgeRandomParameter(network, parameters, parametersToChangePerCycle);
 
                 if (parameters != lastParams)
                 {
@@ -85,7 +87,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             {
                 connector.SetInputNeurons(stimulus);
                 network.Calculate();
-                double passCost = CalculateCost(stimulus);
+                double passCost = CostCalculator.Calculate(network, stimulus);
                 costSum += passCost;
             }
 
@@ -99,117 +101,9 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        private void NudgeRandomParameter(NetworkLearnParameters parameters, int howMany)
-        {
-            for (int i = 0; i < howMany; i++)
-            {
-                NudgeSingleRandomParameter(parameters, randomizer.Next(0, 2) == 0);
-            }
-        }
+        
 
-        private void NudgeSingleRandomParameter(NetworkLearnParameters parameters, bool doWeightInsteadOfBias)
-        {
-
-            var layers = network.GetAllCalculatableLayers();
-            int layerIndex = randomizer.Next(0, layers.Count);
-            var selectedLayer = layers[layerIndex];
-
-            int neuronIndex = randomizer.Next(0, selectedLayer.Neurons.Length);
-            var selectedNeuron = selectedLayer.Neurons[neuronIndex];
-
-            if (doWeightInsteadOfBias)
-            {
-                int dentriteIndex = randomizer.Next(0, selectedNeuron.Dendrites.Length);
-                var selectedDendrite = selectedNeuron.Dendrites[dentriteIndex];
-
-                selectedDendrite.Weight_Fast = GetRandomNudge(selectedDendrite.Weight_Fast);
-                applyWeightToParameter(parameters, layerIndex, neuronIndex, dentriteIndex, selectedDendrite.Weight_Fast);
-            }
-            else
-            {
-                selectedNeuron.Bias = GetRandomNudge(selectedNeuron.Bias);
-                applyBiasToParameter(parameters, layerIndex, neuronIndex, selectedNeuron.Bias);
-            }
-        }
-
-        private void applyBiasToParameter(NetworkLearnParameters parameters, int layerIndex, int neuronIndex, double value)
-        {
-            if(layerIndex < network.HiddenLayers.Count)
-            {
-                parameters.HiddenLayerBiases[layerIndex][neuronIndex] = value;
-            }
-            else
-            {
-                parameters.OutputLayerBiases[neuronIndex] = value;
-            }
-        }
-
-
-        private void applyWeightToParameter(NetworkLearnParameters parameters, int layerIndex, int neuronIndex, int dendriteIndex, double value)
-        {
-            if (layerIndex < network.HiddenLayers.Count)
-            {
-                parameters.HiddenLayerWeights[layerIndex][neuronIndex][dendriteIndex] = value;
-            }
-            else
-            {
-                parameters.OutputLayerWeights[neuronIndex][dendriteIndex] = value;
-            }
-        }
-
-
-        private double GetRandomNudge(double original)
-        {
-            double nudgePercentage = randomizer.NextDouble() * 2 - 1;
-
-            nudgePercentage = nudgePercentage * 2;
-
-            if (original < 0.01)
-            {
-                return nudgePercentage;
-            }
-            else
-            {
-                return original + (nudgePercentage * original);
-            }
-
-        }
-
-
-        private double CalculateCost(ImageStimulus currentStimulus)
-        {
-            double total = 0;
-            double currentCost;
-            double distance;
-            for (int rowIndex = 0; rowIndex < network.OutputLayer.Neurons.Length; rowIndex++)
-            {
-                double realOutcome = network.OutputLayer.Neurons[rowIndex].Activation;
-                double expected = currentStimulus.ExpectedOutcomes[rowIndex];
-
-                distance = Math.Abs(realOutcome - expected);
-
-                if (distance > .8)
-                {
-                    distance += 3;
-                }
-                else
-                {
-                    // Need at least a value of 1 for the Power multiplication to work
-                    distance += 1;
-                }
-
-                // This prevents the algorithm from settling with all outcomes 0.0.
-                if (realOutcome < expected)
-                {
-                    distance += 2;
-                }
-
-                currentCost = distance * distance * distance;
-                total += currentCost;
-            }
-
-            return total;
-        }
+        
 
     }
 }

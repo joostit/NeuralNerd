@@ -208,11 +208,9 @@ namespace NeuralNerdApp
         internal async Task Learn(string stimulibasePath)
         {
             SetLearnMode();
-            NetworkContext.State = OperationalStates.LoadingStimuli;
-            await NetworkContext.Learner.LoadStimuliAsync(stimulibasePath);
-
+ 
             NetworkContext.State = OperationalStates.Learning;
-            await NetworkContext.Learner.LearnAsync();
+            await NetworkContext.Learner.LearnAsync(stimulibasePath);
         }
 
         public async void SetNetwork(NetworkConfiguration network)
@@ -503,7 +501,7 @@ namespace NeuralNerdApp
             await Task.Run(() =>
             {
                 NetworkContext.NetworkConfig.Network.Calculate();
-                NetworkContext.Learner.Learn(1);
+                NetworkContext.Learner.CalculateCosts();
             });
 
             NetworkStatusChanged.Invoke(this, EventArgs.Empty);
