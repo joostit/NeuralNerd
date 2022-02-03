@@ -14,7 +14,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
     public class ImageLearner : ILearnTaskDispatcher
     {
 
-        
+
         public StimulusCache Stimuli { get; set; }
         public NeuralNetwork Network { get; private set; }
         public double LowestCostSoFar { get; private set; }
@@ -41,15 +41,15 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             {
                 long currentPassIndex = LearningPassIndex;
                 long currentMs = rateStopwatch.ElapsedMilliseconds;
-                double rate = ((currentPassIndex - lastPassIndex) / (double) (currentMs - lastMilliseconds)) * 1000;
+                double rate = ((currentPassIndex - lastPassIndex) / (double)(currentMs - lastMilliseconds)) * 1000;
 
                 lastMilliseconds = currentMs;
                 lastPassIndex = currentPassIndex;
-                return (int) Math.Round(rate);
+                return (int)Math.Round(rate);
             }
         }
 
-        
+
         public NetworkLearningPass LastPass
         {
             get
@@ -112,7 +112,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             lastMilliseconds = 0;
 
             learners.Clear();
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 learners.Add(new LearnerTask(this, parameters, stimuli, parametersToChangePerCycle));
             }
@@ -151,7 +151,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                         lowestCostCycle.Cost = lastCost;
                         lowestCostCycle.CycleId = LearningPassIndex;
                         lowestCostCycle.networkParameters = lastParameters.Clone();
-                        
+
                         LowestCostSoFar = lastCost;
 
                         // Give back the same set of parameters, since this is the most successfull
@@ -180,25 +180,32 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private NetworkLearningPass GetLastLearningPass()
         {
+            double stimulusCost = 0;
+
             if (lowestCostCycle != null)
             {
                 lowestCostCycle.networkParameters.ApplyParameters(Network);
+
+                ImageNetworkConnector connector = new ImageNetworkConnector(Network);
+
+                LastStimulus = GetRandomStimulus();
+                connector.SetInputNeurons(LastStimulus);
+                Network.Calculate();
             }
 
             return new NetworkLearningPass(Network)
             {
                 Cost = LastCost,
-                Stimulus = GetRandomStimulus(),
+                Stimulus = LastStimulus,
                 PassIndex = LearningPassIndex,
                 PassesPerSecond = PassesPerSecond
             };
         }
 
-        
 
         private ImageStimulus GetRandomStimulus()
         {
-            if(Stimuli != null)
+            if (Stimuli != null)
             {
                 return Stimuli.Cache[stimulusRandomizer.Next(Stimuli.Cache.Count)];
             }
@@ -207,6 +214,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 return null;
             }
         }
+
 
         public void RandomizeNeuronParameters()
         {
@@ -253,7 +261,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public void CalculateCosts()
         {
-            if(LastStimulus != null)
+            if (LastStimulus != null)
             {
                 Network.Calculate();
                 LastCost = CostCalculator.Calculate(Network, LastStimulus);
