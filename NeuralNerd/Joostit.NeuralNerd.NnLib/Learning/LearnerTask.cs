@@ -19,7 +19,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private readonly NeuralNetwork network;
         private readonly StimulusCache stimuli;
-        private readonly ImageNetworkConnnector connector;
+        private readonly ImageNetworkConnector connector;
         private readonly int parametersToChangePerCycle;
 
         public LearnerTask(ILearnTaskDispatcher dispatcher, NetworkParameters parameters, StimulusCache stimuli, int parametersToChangePerCycle)
@@ -31,7 +31,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             NewNetworkBuilder builder = new NewNetworkBuilder();
             network = builder.BuildNetwork(parameters);
 
-            connector = new ImageNetworkConnnector(network);
+            connector = new ImageNetworkConnector(network);
         }
 
 

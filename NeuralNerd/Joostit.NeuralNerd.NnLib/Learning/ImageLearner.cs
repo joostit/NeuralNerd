@@ -223,7 +223,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 return;
             }         
 
-            ImageNetworkConnnector connector = new ImageNetworkConnnector(Network);
+            ImageNetworkConnector connector = new ImageNetworkConnector(Network);
 
             LowestCostSoFar = double.MaxValue;
             LearningCycle lowestCycle = new LearningCycle(double.MaxValue, connector.network);
@@ -341,7 +341,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
 
 
-        private double RunLearningCycle(ImageNetworkConnnector connector)
+        private double RunLearningCycle(ImageNetworkConnector connector)
         {
             double costSum = 0;
 
