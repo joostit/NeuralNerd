@@ -99,13 +99,12 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public async Task LearnAsync()
         {
-
             await StartAsyncLearningTasks(1);
 
-            await Task.Run(() =>
-            {
-                Learn(1000000000000);
-            });
+            //await Task.Run(() =>
+            //{
+            //    Learn(1000000000000);
+            //});
         }
 
         // <summary>
@@ -137,54 +136,72 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 OutputNeuronCount = Network.OutputLayer.Neurons.Length
             };
 
+            rateStopwatch.Reset();
+            rateStopwatch.Start();
+            lastMilliseconds = 0;
+
             learners.Clear();
             for(int i = 0; i < count; i++)
             {
                 learners.Add(new LearnerTask(this, parameters, stimuli, parametersToChangePerCycle));
             }
 
+            learningInterruptFlag = false;
             learners.ForEach(task => task.Start());
         }
 
 
         public NetworkLearnParameters GetNextTask(double lastCost, NetworkLearnParameters lastParameters)
         {
+            NetworkLearnParameters nextParametersToUse;
+
+            if (learningInterruptFlag)
+            {
+                return null;
+            }
 
             lock (taskDispatchLock)
             {
                 currentLearnIndex++;
 
-                if(lastParameters == null)
+                // HOOK UP LEGACY
+                learningPassIndex = currentLearnIndex;
+                LastCost = lastCost;
+                // END LEGACY
+
+                // If this is the first run for the task, we always return a fresh set of parameters to start with
+                if (lastParameters == null)
                 {
-                    // If this is the first run, we always return a fresh set of parameters
-                    return lowestCostCycle.networkParameters;
-                }
-
-
-                //
-                //
-                //
-                //  Copied this from the existing Learner. ToDo Continue here. Just implemented the clone
-                //
-                //
-                //
-
-                // If the current run is an improvement over the previous one
-                if (lastCost < lowestCostCycle.Cost)
-                {
-                    // Continue from the current parameters
-                    lowestCostCycle.Cost = lastCost;
-                    lowestCostCycle.networkParameters = lastParameters.Clone();
+                    nextParametersToUse = lowestCostCycle.networkParameters;
                 }
                 else
                 {
-                    // Revert to the previous set of more effective parameters
-                    lowestCycle.networkParameters.ApplyParameters(connector.network);
+                    // If the current run is an improvement over the previous one
+                    if (lastCost < lowestCostCycle.Cost)
+                    {
+                        // Take the last run parameters as the new starting point for others,
+                        // and let all other tasks start with this one from now on.
+                        lowestCostCycle.Cost = lastCost;
+                        lowestCostCycle.networkParameters = lastParameters.Clone();
+
+                        // START To hook up with the existing visualization
+                        lastParameters.ApplyParameters(Network);
+                        LowestCostSoFar = lastCost;
+                        //END HOOK UP
+
+                        // Give back the same set of parameters, since this is the most successfull
+                        nextParametersToUse = lastParameters;
+                    }
+                    else
+                    {
+                        // This last run was not the most successfull. Return the current most succcessfull parameters
+                        nextParametersToUse = lowestCostCycle.networkParameters.Clone();
+                    }
                 }
+
+                return nextParametersToUse;
             }
 
-
-            return null;
         }
 
 
@@ -194,6 +211,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         // </summary>
         // <param name="passes"></param>
 
+
+
+
+
         public void Learn(long passes)
         {
             learningInterruptFlag = false;
@@ -202,7 +223,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 return;
             }         
 
-            ImageNetworkConnector connector = new ImageNetworkConnector(Network);
+            ImageNetworkConnnector connector = new ImageNetworkConnnector(Network);
 
             LowestCostSoFar = double.MaxValue;
             LearningCycle lowestCycle = new LearningCycle(double.MaxValue, connector.network);
@@ -223,7 +244,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                     // Continue from the current parameters
                     lowestCycle = new LearningCycle(LastCost, connector.network);
                     LowestCostSoFar = LastCost;
-                }
+                 }
                 else
                 {
                     // Revert to the previous set of more effective parameters
@@ -279,6 +300,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public void StopLearning()
         {
             learningInterruptFlag = true;
+
+            learners.ForEach(learner => learner.Stop());
         }
 
 
@@ -318,7 +341,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
 
 
-        private double RunLearningCycle(ImageNetworkConnector connector)
+        private double RunLearningCycle(ImageNetworkConnnector connector)
         {
             double costSum = 0;
 

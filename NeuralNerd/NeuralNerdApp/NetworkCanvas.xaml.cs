@@ -213,8 +213,6 @@ namespace NeuralNerdApp
 
             NetworkContext.State = OperationalStates.Learning;
             await NetworkContext.Learner.LearnAsync();
-
-            NetworkContext.State = OperationalStates.Idle;
         }
 
         public async void SetNetwork(NetworkConfiguration network)

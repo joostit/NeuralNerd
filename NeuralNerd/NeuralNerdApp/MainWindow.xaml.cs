@@ -207,13 +207,13 @@ namespace NeuralNerdApp
             {
                 updateTimer.Start();
                 await networkCanvas.Learn(diag.SelectedPath);
-                updateTimer.Stop();
+                //updateTimer.Stop();
 
-                networkPerformanceControl.UpdateLearningState(null, false);
-                networkCanvas.UpdateLearningState(null);
+                //networkPerformanceControl.UpdateLearningState(null, false);
+                //networkCanvas.UpdateLearningState(null);
 
-                // Manually update the learning state once
-                UpdateTimer_Tick(this, null);
+                //// Manually update the learning state once
+                //UpdateTimer_Tick(this, null);
             }
         }
 

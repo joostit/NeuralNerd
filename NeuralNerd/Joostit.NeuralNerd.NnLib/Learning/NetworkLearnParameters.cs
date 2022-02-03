@@ -117,6 +117,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
                 HiddenLayerWeights = CopyTripleArray(HiddenLayerWeights),
                 OutputLayerWeights = CopyDoubleArray(OutputLayerWeights)
             };
+
+            retVal.OutputLayerBiases = new double[OutputLayerBiases.Length];
             Array.Copy(OutputLayerBiases, retVal.OutputLayerBiases, OutputLayerBiases.Length);
 
             return retVal;

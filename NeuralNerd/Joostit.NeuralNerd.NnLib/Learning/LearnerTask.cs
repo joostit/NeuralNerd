@@ -19,8 +19,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private readonly NeuralNetwork network;
         private readonly StimulusCache stimuli;
-        private readonly ImageNetworkConnector connector;
-        private readonly int parametersToChangePerCycle = 1;
+        private readonly ImageNetworkConnnector connector;
+        private readonly int parametersToChangePerCycle;
 
         public LearnerTask(ILearnTaskDispatcher dispatcher, NetworkParameters parameters, StimulusCache stimuli, int parametersToChangePerCycle)
         {
@@ -31,7 +31,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             NewNetworkBuilder builder = new NewNetworkBuilder();
             network = builder.BuildNetwork(parameters);
 
-            connector = new ImageNetworkConnector(network);
+            connector = new ImageNetworkConnnector(network);
         }
 
 
@@ -47,24 +47,33 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private void DoLearningCycles()
         {
-            double cost = 0;
+            double lastCost = double.MaxValue;
 
-            NetworkLearnParameters parameters = dispatcher.GetNextTask(double.MaxValue, null);
+            NetworkLearnParameters parameters = null;
+            NetworkLearnParameters lastParams;
 
             while (keepRunning)
             {
-                cost = RunSingleLearningCycle();
+                lastParams = parameters;
 
-                parameters = dispatcher.GetNextTask(cost, parameters);
+                parameters = dispatcher.GetNextTask(lastCost, lastParams);
 
-                if(parameters != null)
-                {
-                    NudgeRandomParameter(1);
-                }
-                else
+                if(parameters == null)
                 {
                     keepRunning = false;
+                    break;
                 }
+
+                // If we got a new set of parameters, we need to apply them to our neural network
+                if (parameters != lastParams)
+                {
+                    parameters.ApplyParameters(connector.network);
+                }
+
+                NudgeRandomParameter(parametersToChangePerCycle);
+
+                lastCost = RunSingleLearningCycle();
+
             }
         }
 

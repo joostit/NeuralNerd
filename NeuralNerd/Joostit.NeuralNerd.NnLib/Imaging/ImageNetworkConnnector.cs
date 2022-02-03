@@ -10,12 +10,12 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
     /// <summary>
     /// Connects an image source to the network input neurons
     /// </summary>
-    public class ImageNetworkConnector
+    public class ImageNetworkConnnector
     {
 
         public NeuralNetwork network;
 
-        public ImageNetworkConnector(NeuralNetwork network)
+        public ImageNetworkConnnector(NeuralNetwork network)
         {
             this.network = network;
         }
