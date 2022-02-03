@@ -3,6 +3,7 @@ using Joostit.NeuralNerd.NnLib.Learning;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NeuralNerdApp
 {
@@ -13,11 +14,17 @@ namespace NeuralNerdApp
 
         public double LowestCostSoFar { get; private set; }
 
-        public NetworkSnapshot(ImageLearner learner)
+        public NetworkSnapshot()
+        {
+            
+        }
+
+        public async Task Load(ImageLearner learner)
         {
             // Race condition here, but for now we're fine with that
             LowestCostSoFar = learner.LowestCostSoFar;
-            Pass = learner.GetLastLearningPass();
+            Pass = await learner.GetLastLearningPass();
         }
+
     }
 }

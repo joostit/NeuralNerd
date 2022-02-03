@@ -169,26 +169,33 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        public NetworkLearningPass GetLastLearningPass()
+        public async Task<NetworkLearningPass> GetLastLearningPass()
         {
-            if (lowestCostCycle != null)
+            NetworkLearningPass retVal = null;
+
+            await Task.Run(() =>
             {
-                lowestCostCycle.networkParameters.ApplyParameters(Network);
+                if (lowestCostCycle != null)
+                {
+                    lowestCostCycle.networkParameters.ApplyParameters(Network);
 
-                ImageNetworkConnector connector = new ImageNetworkConnector(Network);
+                    ImageNetworkConnector connector = new ImageNetworkConnector(Network);
 
-                LastStimulus = GetRandomStimulus();
-                connector.SetInputNeurons(LastStimulus);
-                Network.Calculate();
-            }
+                    LastStimulus = GetRandomStimulus();
+                    connector.SetInputNeurons(LastStimulus);
+                    Network.Calculate();
+                }
 
-            return new NetworkLearningPass(Network)
-            {
-                Cost = LastCost,
-                Stimulus = LastStimulus,
-                PassIndex = LearningPassIndex,
-                PassesPerSecond = PassesPerSecond
-            };
+                retVal = new NetworkLearningPass(Network)
+                {
+                    Cost = LastCost,
+                    Stimulus = LastStimulus,
+                    PassIndex = LearningPassIndex,
+                    PassesPerSecond = PassesPerSecond
+                };
+            });
+
+            return retVal;
         }
 
 

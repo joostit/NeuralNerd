@@ -8,6 +8,7 @@ using NeuralNerdApp.Windows;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -217,15 +218,34 @@ namespace NeuralNerdApp
             }
         }
 
+        BackgroundWorker worker;
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
+            worker = new BackgroundWorker();
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerAsync();
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
             if (networkContext.Learner != null)
             {
-                NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
-                networkPerformanceControl.UpdateLearningState(pass, true);
-                networkCanvas.UpdateLearningState(pass);
+                NetworkSnapshot pass = new NetworkSnapshot();
+
+                var task = Task.Run(async () => { await pass.Load(networkContext.Learner); });
+                task.Wait();
+
+                e.Result = pass;
             }
+        }
+
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            NetworkSnapshot pass = e.Result as NetworkSnapshot;
+            networkPerformanceControl.UpdateLearningState(pass, true);
+            networkCanvas.UpdateLearningState(pass);
         }
 
         private void OpenStimulus_Click(object sender, RoutedEventArgs e)
@@ -236,7 +256,11 @@ namespace NeuralNerdApp
             {
                 networkCanvas.LoadSingleStimulus(path);
 
-                NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
+                NetworkSnapshot pass = new NetworkSnapshot();
+
+                var task = Task.Run(async () => { await pass.Load(networkContext.Learner); });
+                task.Wait();
+
                 networkPerformanceControl.UpdateLearningState(pass, false);
                 networkCanvas.UpdateLearningState(pass);
                 networkCanvas.SetIdleMode();
@@ -263,8 +287,13 @@ namespace NeuralNerdApp
 
         private void networkCanvas_NetworkStatusChanged(object sender, EventArgs e)
         {
-            NetworkSnapshot pass = new NetworkSnapshot(networkContext.Learner);
+            NetworkSnapshot pass = new NetworkSnapshot();
+
+            var task = Task.Run(async () => { await pass.Load(networkContext.Learner); });
+            task.Wait();
+
             networkPerformanceControl.UpdateValues(pass);
         }
+
     }
 }
