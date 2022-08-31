@@ -34,7 +34,7 @@ namespace NeuralNerdApp
     public partial class MainWindow : Window
     {
         private DispatcherTimer updateTimer = new DispatcherTimer();
-        private TimeSpan updateInterval = new TimeSpan(0, 0, 0, 0, 500);
+        private TimeSpan updateInterval = new TimeSpan(0, 0, 0, 1, 0);
 
         private NetworkUiContext networkContext;
 
@@ -83,6 +83,25 @@ namespace NeuralNerdApp
             network.InputLayer.Neurons[10].Activation = 1;
 
             networkCanvas.SetNetwork(config);
+            networkContext.Learner.LearnerStateChanged += Learner_LearnerStateChanged;
+        }
+
+        private void Learner_LearnerStateChanged(object sender, EventArgs e)
+        {
+            if (networkContext.Learner.IsLearningActive)
+            {
+                updateTimer.Start();
+            }
+            else
+            {
+                updateTimer.Stop();
+
+                networkPerformanceControl.UpdateLearningState(null, false);
+                networkCanvas.UpdateLearningState(null);
+
+                // Manually update the learning state once
+                UpdateTimer_Tick(this, null);
+            }
         }
 
         private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
@@ -104,8 +123,10 @@ namespace NeuralNerdApp
                 NeuralNetworkLinker linker = new NeuralNetworkLinker();
                 linker.Link(config.Network);
                 networkCanvas.SetNetwork(config);
+                networkContext.Learner.LearnerStateChanged += Learner_LearnerStateChanged;
 
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 MessageBox.Show($"Error while loading neural network.\n\n{e}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -192,6 +213,7 @@ namespace NeuralNerdApp
                     Network = network
                 };
                 networkCanvas.SetNetwork(config);
+                networkContext.Learner.LearnerStateChanged += Learner_LearnerStateChanged;
             }
         }
 
@@ -206,15 +228,7 @@ namespace NeuralNerdApp
             diag.Description = "Select stimuli root folder";
             if (diag.ShowDialog() == true)
             {
-                updateTimer.Start();
                 await networkCanvas.Learn(diag.SelectedPath);
-                //updateTimer.Stop();
-
-                //networkPerformanceControl.UpdateLearningState(null, false);
-                //networkCanvas.UpdateLearningState(null);
-
-                //// Manually update the learning state once
-                //UpdateTimer_Tick(this, null);
             }
         }
 

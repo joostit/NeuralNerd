@@ -14,6 +14,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
     public class ImageLearner : ILearnTaskDispatcher
     {
 
+        public event EventHandler LearnerStateChanged;
 
         public StimulusCache Stimuli { get; set; }
         public NeuralNetwork Network { get; private set; }
@@ -21,6 +22,25 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public double LastCost { get; private set; }
         public int TotalParameters { get; private set; }
         public long LearningPassIndex { get; private set; }
+
+        private bool _isLEaringActive;
+
+        public bool IsLearningActive
+        {
+            get
+            {
+                return _isLEaringActive;
+            }
+            set
+            {
+                if (value != _isLEaringActive)
+                {
+                    _isLEaringActive = value;
+                    RaiseLearnerStateChanged();
+                }
+            }
+        }
+
 
         private Random stimulusRandomizer = new Random();
         private ImageStimulus LastStimulus;
@@ -55,6 +75,10 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             this.Network = Network;
         }
 
+        private void RaiseLearnerStateChanged()
+        {
+            LearnerStateChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         public StimulusCache LoadStimuli(string imagePath)
         {
@@ -83,7 +107,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        public async Task StartAsyncLearningTasks(int count, string stimuliPath)
+        private async Task StartAsyncLearningTasks(int count, string stimuliPath)
         {
             LearningPassIndex = 0;
             lowestCostCycle = new LearningCycle(double.MaxValue, Network);
@@ -109,6 +133,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             }
 
             learningInterruptFlag = false;
+            IsLearningActive = true;
             learners.ForEach(task => task.StartCycles());
         }
 
@@ -166,6 +191,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
             learningInterruptFlag = true;
 
             learners.ForEach(learner => learner.Stop());
+            IsLearningActive = false;
         }
 
 
