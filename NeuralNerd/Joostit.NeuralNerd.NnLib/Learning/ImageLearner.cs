@@ -14,6 +14,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
     public class ImageLearner : ILearnTaskDispatcher
     {
 
+        private int learningThreadCount = 0;
+
         public event EventHandler LearnerStateChanged;
 
         public StimulusCache Stimuli { get; set; }
@@ -73,6 +75,18 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         public ImageLearner(NeuralNetwork Network)
         {
             this.Network = Network;
+            DetermineLearningThreadCount();
+        }
+
+        private void DetermineLearningThreadCount()
+        {
+            if(learningThreadCount == 0)
+            {
+                learningThreadCount = Environment.ProcessorCount - 2;
+
+                // cap to a minimum of 1 thread
+                learningThreadCount = (learningThreadCount < 1) ? 1 : learningThreadCount;
+            }
         }
 
         private void RaiseLearnerStateChanged()
@@ -103,7 +117,7 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         public async Task LearnAsync(string stimuliPath)
         {
-            await StartAsyncLearningTasks(10, stimuliPath);
+            await StartAsyncLearningTasks(learningThreadCount, stimuliPath);
         }
 
 
@@ -201,24 +215,27 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
             await Task.Run(() =>
             {
-                if (lowestCostCycle != null)
+                lock (taskDispatchLock)
                 {
-                    lowestCostCycle.networkParameters.ApplyParameters(Network);
+                    if (lowestCostCycle != null)
+                    {
+                        lowestCostCycle.networkParameters.ApplyParameters(Network);
 
-                    ImageNetworkConnector connector = new ImageNetworkConnector(Network);
+                        ImageNetworkConnector connector = new ImageNetworkConnector(Network);
 
-                    LastStimulus = GetRandomStimulus();
-                    connector.SetInputNeurons(LastStimulus);
-                    Network.Calculate();
+                        LastStimulus = GetRandomStimulus();
+                        connector.SetInputNeurons(LastStimulus);
+                        Network.Calculate();
+                    }
+
+                    retVal = new NetworkLearningPass(Network)
+                    {
+                        Cost = LastCost,
+                        Stimulus = LastStimulus,
+                        PassIndex = LearningPassIndex,
+                        PassesPerSecond = PassesPerSecond
+                    };
                 }
-
-                retVal = new NetworkLearningPass(Network)
-                {
-                    Cost = LastCost,
-                    Stimulus = LastStimulus,
-                    PassIndex = LearningPassIndex,
-                    PassesPerSecond = PassesPerSecond
-                };
             });
 
             return retVal;
