@@ -21,6 +21,7 @@ namespace Joostit.NeuralNerd.NnLib.Imaging.Utils
             }
         }
 
+
         public byte[] Pixels { get; set; }
         public int Depth { get; private set; }
         public int Width { get; private set; }
@@ -169,6 +170,12 @@ namespace Joostit.NeuralNerd.NnLib.Imaging.Utils
             {
                 Pixels[i] = color.B;
             }
+        }
+
+
+        internal void SaveAsPng(string filename)
+        {
+            source.Save(filename, ImageFormat.Png);
         }
     }
 }

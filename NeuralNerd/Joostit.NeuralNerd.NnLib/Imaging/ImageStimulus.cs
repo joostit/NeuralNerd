@@ -17,15 +17,39 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
         public double[] inputStimuli;
 
 
+        /// <summary>
+        /// Creates a deep clone
+        /// </summary>
+        /// <param name="originalToClone"></param>
+        public ImageStimulus(ImageStimulus originalToClone)
+        {
+            Bitmap originalBitmap = originalToClone.Image.Source;
+            var bitmap = originalBitmap.Clone(new Rectangle(0, 0, originalBitmap.Width, originalBitmap.Height), originalBitmap.PixelFormat);
+            Image = new LockBitmap(bitmap);
+
+            ExpectedOutcomes = new double[originalToClone.ExpectedOutcomes.Length];
+            Array.Copy(originalToClone.ExpectedOutcomes, ExpectedOutcomes, originalToClone.ExpectedOutcomes.Length);
+
+            UpdateInputStimuli();
+        }
+
+
+        public ImageStimulus(int width, int height)
+        {
+            var bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            Image = new LockBitmap(bitmap);
+            UpdateInputStimuli();
+        }
+
         public ImageStimulus(string imagePath)
         {
             var bitmap = new Bitmap(imagePath);
             Image = new LockBitmap(bitmap);
-            DefineInputStimuli();
+            UpdateInputStimuli();
         }
 
 
-        private void DefineInputStimuli()
+        public void UpdateInputStimuli()
         {
             Image.LockBits();
             inputStimuli = new double[Image.Width * Image.Height];
@@ -48,5 +72,9 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
             Image.UnlockBits();
         }
 
+        internal ImageStimulus DeepClone()
+        {
+            return new ImageStimulus(this);
+        }
     }
 }

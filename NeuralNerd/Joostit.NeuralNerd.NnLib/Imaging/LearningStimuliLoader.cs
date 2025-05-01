@@ -13,6 +13,8 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
 
         private const string pngExtension = ".png";
 
+        private const string badOutcomeDirName = "x";
+
         public StimulusCache Stimuli { get; private set; }  = new StimulusCache();
 
         private Dictionary<string, int> neuronRowsForOutcomeNames = new Dictionary<string, int>();
@@ -43,20 +45,35 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
             {
                 LoadFilesFromOutcomeDir(outcomeDir);
             }
+
         }
 
         private void LoadFilesFromOutcomeDir(DirectoryInfo outcomeDir)
         {
-            int expectedOutcomeIndex = neuronRowsForOutcomeNames[outcomeDir.Name];
-
-            // Load images parallel
-            Parallel.ForEach(outcomeDir.GetFiles(), (file) =>
+            if (outcomeDir.Name != badOutcomeDirName)
             {
-                if (pngExtension.Equals(file.Extension.ToLower()))
+                int expectedOutcomeIndex = neuronRowsForOutcomeNames[outcomeDir.Name];
+
+                // Load images parallel
+                Parallel.ForEach(outcomeDir.GetFiles(), (file) =>
                 {
-                    Stimuli.AddNewStimulus(file.FullName, CreateOutcomeList(expectedOutcomeIndex));
-                }
-            });
+                    if (pngExtension.Equals(file.Extension.ToLower()))
+                    {
+                        Stimuli.AddNewStimulus(file.FullName, CreateOutcomeList(expectedOutcomeIndex));
+                    }
+                });
+            }
+            else
+            {
+                // Load bad images parallel
+                Parallel.ForEach(outcomeDir.GetFiles(), (file) =>
+                {
+                    if (pngExtension.Equals(file.Extension.ToLower()))
+                    {
+                        Stimuli.AddNewStimulus(file.FullName, CreateBadOutcomeList());
+                    }
+                });
+            }
         }
 
 
@@ -70,6 +87,12 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
         {
             double[] retVal = new double[outcomeArrayLength];
             retVal[correctOutcomeIndex] = 1;
+            return retVal;
+        }
+
+        private double[] CreateBadOutcomeList()
+        {
+            double[] retVal = new double[outcomeArrayLength];
             return retVal;
         }
 

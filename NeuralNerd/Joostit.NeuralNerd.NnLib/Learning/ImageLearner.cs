@@ -6,6 +6,7 @@ using Joostit.NeuralNerd.NnLib.Networking.Structure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -298,16 +299,28 @@ namespace Joostit.NeuralNerd.NnLib.Learning
         }
 
 
-        public void CalculateCosts()
+        public double CalculateCosts()
         {
+            double cost = -1;
             if (LastStimulus != null)
             {
                 Network.Calculate();
-                LastCost = CostCalculator.Calculate(Network, LastStimulus);
+                cost = CostCalculator.Calculate(Network, LastStimulus);
                 LowestCostSoFar = LastCost;
+                LastCost = cost; ;
             }
+            return cost;
         }
 
+        public double LoadSingleStimulus(ImageStimulus stimulus)
+        {
+            ImageNetworkConnector connector = new ImageNetworkConnector(Network);
+
+            LastStimulus = stimulus;
+            connector.SetInputNeurons(LastStimulus);
+
+            return CalculateCosts();
+        }
 
         public void LoadSingleStimulus(string path)
         {

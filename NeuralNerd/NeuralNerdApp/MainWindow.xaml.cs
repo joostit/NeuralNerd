@@ -1,5 +1,6 @@
 ﻿using Joostit.NeuralNerd.NnLib.Configuration;
 using Joostit.NeuralNerd.NnLib.Construction;
+using Joostit.NeuralNerd.NnLib.ImageGeneration;
 using Joostit.NeuralNerd.NnLib.Imaging;
 using Joostit.NeuralNerd.NnLib.Learning;
 using Joostit.NeuralNerd.NnLib.Networking;
@@ -35,7 +36,7 @@ namespace NeuralNerdApp
     {
         private DispatcherTimer updateTimer = new DispatcherTimer();
         private TimeSpan updateInterval = new TimeSpan(0, 0, 0, 1, 0);
-
+        private BackgroundWorker learningWorker;
         private NetworkUiContext networkContext;
 
         private const string NeuralNetworkFileFilter = "NeuralNet Files (.nn.xml)|*.nn.xml|All files (*.*)|*.*";
@@ -232,17 +233,17 @@ namespace NeuralNerdApp
             }
         }
 
-        BackgroundWorker worker;
+        
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            worker = new BackgroundWorker();
-            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            worker.DoWork += Worker_DoWork;
-            worker.RunWorkerAsync();
+            learningWorker = new BackgroundWorker();
+            learningWorker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            learningWorker.DoWork += Learningworker_DoWork;
+            learningWorker.RunWorkerAsync();
         }
 
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        private void Learningworker_DoWork(object sender, DoWorkEventArgs e)
         {
             if (networkContext.Learner != null)
             {
@@ -309,5 +310,12 @@ namespace NeuralNerdApp
             networkPerformanceControl.UpdateValues(pass);
         }
 
+
+        private void GenerateDigit_Click(object sender, RoutedEventArgs e)
+        {
+            ImageGenerator generator = new ImageGenerator();
+
+            generator.Initialize(networkContext.NetworkConfig, networkContext.Learner);
+        }
     }
 }
