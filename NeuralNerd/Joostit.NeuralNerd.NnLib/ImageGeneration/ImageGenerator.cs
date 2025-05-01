@@ -54,7 +54,7 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
             lowestCost = learner.LoadSingleStimulus(currentimage);
 
             // Iterate until cost is low enough or for a maximum number of cycles
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 2000000; i++)
             {
                 // Make a copy of the image
                 nextAttemptImage = currentimage.DeepClone();
@@ -72,7 +72,7 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
                     lowestCost = newCost;
                 }
 
-                if(i % 5000 == 0)
+                if(i % 10000 == 0)
                 {
                     saveImage(nextAttemptImage, $"step_{i}.png");   // For debug
                 }
