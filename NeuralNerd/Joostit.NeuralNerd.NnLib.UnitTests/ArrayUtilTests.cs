@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Joostit.NeuralNerd.NnLib.Utils;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Joostit.NeuralNerd.NnLib.UnitTests
 {
@@ -19,11 +20,11 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
 
             int[] clone = ArrayUtil.CloneArray(orig);
 
-            Assert.AreEqual(orig.Length, clone.Length);
+            ClassicAssert.AreEqual(orig.Length, clone.Length);
 
-            Assert.AreEqual(orig[0], clone[0]);
-            Assert.AreEqual(orig[3], clone[3]);
-            Assert.AreEqual(orig[5], clone[5]);
+            ClassicAssert.AreEqual(orig[0], clone[0]);
+            ClassicAssert.AreEqual(orig[3], clone[3]);
+            ClassicAssert.AreEqual(orig[5], clone[5]);
 
         }
 
@@ -39,22 +40,22 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
 
             int[][] clone = ArrayUtil.CloneDoubleArray(orig);
 
-            Assert.AreEqual(orig.Length, clone.Length);
+            ClassicAssert.AreEqual(orig.Length, clone.Length);
 
-            Assert.AreEqual(orig[0].Length, clone[0].Length);
-            Assert.AreEqual(orig[0][0], clone[0][0]);
-            Assert.AreEqual(orig[0][3], clone[0][3]);
-            Assert.AreEqual(orig[0][5], clone[0][5]);
+            ClassicAssert.AreEqual(orig[0].Length, clone[0].Length);
+            ClassicAssert.AreEqual(orig[0][0], clone[0][0]);
+            ClassicAssert.AreEqual(orig[0][3], clone[0][3]);
+            ClassicAssert.AreEqual(orig[0][5], clone[0][5]);
 
-            Assert.AreEqual(orig[1].Length, clone[1].Length);
-            Assert.AreEqual(orig[1][0], clone[1][0]);
-            Assert.AreEqual(orig[1][3], clone[1][3]);
-            Assert.AreEqual(orig[1][5], clone[1][5]);
+            ClassicAssert.AreEqual(orig[1].Length, clone[1].Length);
+            ClassicAssert.AreEqual(orig[1][0], clone[1][0]);
+            ClassicAssert.AreEqual(orig[1][3], clone[1][3]);
+            ClassicAssert.AreEqual(orig[1][5], clone[1][5]);
 
-            Assert.AreEqual(orig[1].Length, clone[1].Length);
-            Assert.AreEqual(orig[2][0], clone[2][0]);
-            Assert.AreEqual(orig[2][3], clone[2][3]);
-            Assert.AreEqual(orig[2][5], clone[2][5]);
+            ClassicAssert.AreEqual(orig[1].Length, clone[1].Length);
+            ClassicAssert.AreEqual(orig[2][0], clone[2][0]);
+            ClassicAssert.AreEqual(orig[2][3], clone[2][3]);
+            ClassicAssert.AreEqual(orig[2][5], clone[2][5]);
 
 
         }
@@ -82,60 +83,60 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
 
             int[][][] clone = ArrayUtil.CloneTripleArray(orig);
 
-            Assert.AreEqual(orig.Length, clone.Length);
+            ClassicAssert.AreEqual(orig.Length, clone.Length);
 
-            Assert.AreEqual(orig[0].Length, clone[0].Length);
+            ClassicAssert.AreEqual(orig[0].Length, clone[0].Length);
 
-            Assert.AreEqual(orig[0][0].Length, clone[0][0].Length);
-            Assert.AreEqual(orig[0][0][0], clone[0][0][0]);
-            Assert.AreEqual(orig[0][0][3], clone[0][0][3]);
-            Assert.AreEqual(orig[0][0][5], clone[0][0][5]);
+            ClassicAssert.AreEqual(orig[0][0].Length, clone[0][0].Length);
+            ClassicAssert.AreEqual(orig[0][0][0], clone[0][0][0]);
+            ClassicAssert.AreEqual(orig[0][0][3], clone[0][0][3]);
+            ClassicAssert.AreEqual(orig[0][0][5], clone[0][0][5]);
 
-            Assert.AreEqual(orig[0][1].Length, clone[0][1].Length);
-            Assert.AreEqual(orig[0][1][0], clone[0][1][0]);
-            Assert.AreEqual(orig[0][1][3], clone[0][1][3]);
-            Assert.AreEqual(orig[0][1][5], clone[0][1][5]);
+            ClassicAssert.AreEqual(orig[0][1].Length, clone[0][1].Length);
+            ClassicAssert.AreEqual(orig[0][1][0], clone[0][1][0]);
+            ClassicAssert.AreEqual(orig[0][1][3], clone[0][1][3]);
+            ClassicAssert.AreEqual(orig[0][1][5], clone[0][1][5]);
 
-            Assert.AreEqual(orig[0][2].Length, clone[0][2].Length);
-            Assert.AreEqual(orig[0][2][0], clone[0][2][0]);
-            Assert.AreEqual(orig[0][2][3], clone[0][2][3]);
-            Assert.AreEqual(orig[0][2][5], clone[0][2][5]);
-
-
-            Assert.AreEqual(orig[1].Length, clone[1].Length);
-
-            Assert.AreEqual(orig[1][0].Length, clone[1][0].Length);
-            Assert.AreEqual(orig[1][0][0], clone[1][0][0]);
-            Assert.AreEqual(orig[1][0][3], clone[1][0][3]);
-            Assert.AreEqual(orig[1][0][5], clone[1][0][5]);
-
-            Assert.AreEqual(orig[1][1].Length, clone[1][1].Length);
-            Assert.AreEqual(orig[1][1][0], clone[1][1][0]);
-            Assert.AreEqual(orig[1][1][3], clone[1][1][3]);
-            Assert.AreEqual(orig[1][1][5], clone[1][1][5]);
-
-            Assert.AreEqual(orig[1][2].Length, clone[1][2].Length);
-            Assert.AreEqual(orig[1][2][0], clone[1][2][0]);
-            Assert.AreEqual(orig[1][2][3], clone[1][2][3]);
-            Assert.AreEqual(orig[1][2][5], clone[1][2][5]);
+            ClassicAssert.AreEqual(orig[0][2].Length, clone[0][2].Length);
+            ClassicAssert.AreEqual(orig[0][2][0], clone[0][2][0]);
+            ClassicAssert.AreEqual(orig[0][2][3], clone[0][2][3]);
+            ClassicAssert.AreEqual(orig[0][2][5], clone[0][2][5]);
 
 
-            Assert.AreEqual(orig[2].Length, clone[2].Length);
+            ClassicAssert.AreEqual(orig[1].Length, clone[1].Length);
 
-            Assert.AreEqual(orig[2][0].Length, clone[2][0].Length);
-            Assert.AreEqual(orig[2][0][0], clone[2][0][0]);
-            Assert.AreEqual(orig[2][0][3], clone[2][0][3]);
-            Assert.AreEqual(orig[2][0][5], clone[2][0][5]);
+            ClassicAssert.AreEqual(orig[1][0].Length, clone[1][0].Length);
+            ClassicAssert.AreEqual(orig[1][0][0], clone[1][0][0]);
+            ClassicAssert.AreEqual(orig[1][0][3], clone[1][0][3]);
+            ClassicAssert.AreEqual(orig[1][0][5], clone[1][0][5]);
 
-            Assert.AreEqual(orig[2][1].Length, clone[2][1].Length);
-            Assert.AreEqual(orig[2][1][0], clone[2][1][0]);
-            Assert.AreEqual(orig[2][1][3], clone[2][1][3]);
-            Assert.AreEqual(orig[2][1][5], clone[2][1][5]);
+            ClassicAssert.AreEqual(orig[1][1].Length, clone[1][1].Length);
+            ClassicAssert.AreEqual(orig[1][1][0], clone[1][1][0]);
+            ClassicAssert.AreEqual(orig[1][1][3], clone[1][1][3]);
+            ClassicAssert.AreEqual(orig[1][1][5], clone[1][1][5]);
 
-            Assert.AreEqual(orig[2][2].Length, clone[2][2].Length);
-            Assert.AreEqual(orig[2][2][0], clone[2][2][0]);
-            Assert.AreEqual(orig[2][2][3], clone[2][2][3]);
-            Assert.AreEqual(orig[2][2][5], clone[2][2][5]);
+            ClassicAssert.AreEqual(orig[1][2].Length, clone[1][2].Length);
+            ClassicAssert.AreEqual(orig[1][2][0], clone[1][2][0]);
+            ClassicAssert.AreEqual(orig[1][2][3], clone[1][2][3]);
+            ClassicAssert.AreEqual(orig[1][2][5], clone[1][2][5]);
+
+
+            ClassicAssert.AreEqual(orig[2].Length, clone[2].Length);
+
+            ClassicAssert.AreEqual(orig[2][0].Length, clone[2][0].Length);
+            ClassicAssert.AreEqual(orig[2][0][0], clone[2][0][0]);
+            ClassicAssert.AreEqual(orig[2][0][3], clone[2][0][3]);
+            ClassicAssert.AreEqual(orig[2][0][5], clone[2][0][5]);
+
+            ClassicAssert.AreEqual(orig[2][1].Length, clone[2][1].Length);
+            ClassicAssert.AreEqual(orig[2][1][0], clone[2][1][0]);
+            ClassicAssert.AreEqual(orig[2][1][3], clone[2][1][3]);
+            ClassicAssert.AreEqual(orig[2][1][5], clone[2][1][5]);
+
+            ClassicAssert.AreEqual(orig[2][2].Length, clone[2][2].Length);
+            ClassicAssert.AreEqual(orig[2][2][0], clone[2][2][0]);
+            ClassicAssert.AreEqual(orig[2][2][3], clone[2][2][3]);
+            ClassicAssert.AreEqual(orig[2][2][5], clone[2][2][5]);
 
 
 

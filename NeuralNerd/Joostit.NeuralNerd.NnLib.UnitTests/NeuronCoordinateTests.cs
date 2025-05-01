@@ -1,5 +1,6 @@
 using Joostit.NeuralNerd.NnLib.Networking.Elements;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Joostit.NeuralNerd.NnLib.UnitTests
 {
@@ -10,8 +11,8 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
         public void TestConstructor()
         {
             NeuronCoordinate coord = new NeuronCoordinate(2, 3);
-            Assert.AreEqual(2, coord.Layer, coord.Row);
-            Assert.AreNotEqual(0, coord.GetHashCode());
+            ClassicAssert.AreEqual(2, coord.Layer, coord.Row);
+            ClassicAssert.AreNotEqual(0, coord.GetHashCode());
         }
 
         [Test]
@@ -23,12 +24,12 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
             coord.Layer = 5;
 
             int secondHash = coord.GetHashCode();
-            Assert.AreNotEqual(firstHash, secondHash);
+            ClassicAssert.AreNotEqual(firstHash, secondHash);
 
             coord.Row = 12;
 
             int thirdHash = coord.GetHashCode();
-            Assert.AreNotEqual(secondHash, thirdHash);
+            ClassicAssert.AreNotEqual(secondHash, thirdHash);
         }
 
         [Test]
@@ -37,9 +38,9 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
             NeuronCoordinate coordA = new NeuronCoordinate(2, 3);
             NeuronCoordinate coordB = new NeuronCoordinate(2, 3);
 
-            Assert.IsTrue(coordA.Equals(coordB));
-            Assert.AreEqual(coordA.GetHashCode(), coordB.GetHashCode());
-            Assert.AreEqual(coordA, coordB);
+            ClassicAssert.IsTrue(coordA.Equals(coordB));
+            ClassicAssert.AreEqual(coordA.GetHashCode(), coordB.GetHashCode());
+            ClassicAssert.AreEqual(coordA, coordB);
         }
 
         [Test]
@@ -48,11 +49,11 @@ namespace Joostit.NeuralNerd.NnLib.UnitTests
             NeuronCoordinate coordA = new NeuronCoordinate(2, 3);
             NeuronCoordinate coordB = new NeuronCoordinate(4, 5);
 
-            Assert.IsFalse(coordA.Equals(coordB));
-            Assert.AreNotEqual(coordA.GetHashCode(), coordB.GetHashCode());
-            Assert.AreNotEqual(coordA, coordB);
+            ClassicAssert.IsFalse(coordA.Equals(coordB));
+            ClassicAssert.AreNotEqual(coordA.GetHashCode(), coordB.GetHashCode());
+            ClassicAssert.AreNotEqual(coordA, coordB);
 
-            Assert.IsFalse(coordA.Equals(null));
+            ClassicAssert.IsFalse(coordA.Equals(null));
         }
     }
 }
