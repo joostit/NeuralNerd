@@ -44,17 +44,17 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
             }
 
             // Create image
-            currentimage.ExpectedOutcomes = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0];
+            currentimage.ExpectedOutcomes = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0];
 
             // Fill image with noise
-            //fillImageWithNoise(currentimage);
+            fillImageWithNoise(currentimage);
             //saveImage(currentimage, "step_0_noise.png");   // For debug
 
             // Calculate cost
             lowestCost = learner.LoadSingleStimulus(currentimage);
 
             // Iterate until cost is low enough or for a maximum number of cycles
-            for (int i = 0; i < 2000000; i++)
+            for (int i = 0; i <= 1000000; i++)
             {
                 // Make a copy of the image
                 nextAttemptImage = currentimage.DeepClone();
@@ -72,7 +72,7 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
                     lowestCost = newCost;
                 }
 
-                if(i % 10000 == 0)
+                if(i % 50000 == 0)
                 {
                     saveImage(nextAttemptImage, $"step_{i}.png");   // For debug
                 }
@@ -126,6 +126,12 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
                 SafeSetPixel(image, x - 2, y, color);
                 SafeSetPixel(image, x - 2, y + 1, color);
                 SafeSetPixel(image, x - 2, y + 2, color);
+
+                SafeSetPixel(image, x + 2, y - 2, color);
+                SafeSetPixel(image, x + 2, y - 1, color);
+                SafeSetPixel(image, x + 2, y, color);
+                SafeSetPixel(image, x + 2, y + 1, color);
+                SafeSetPixel(image, x + 2, y + 2, color);
             }
 
             if (size >= 2)
@@ -135,6 +141,12 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
                 SafeSetPixel(image, x - 1, y, color);
                 SafeSetPixel(image, x - 1, y + 1, color);
                 SafeSetPixel(image, x - 1, y + 2, color);
+
+                SafeSetPixel(image, x + 1, y - 2, color);
+                SafeSetPixel(image, x + 1, y - 1, color);
+                SafeSetPixel(image, x + 1, y, color);
+                SafeSetPixel(image, x + 1, y + 1, color);
+                SafeSetPixel(image, x + 1, y + 2, color);
             }
 
             SafeSetPixel(image, x, y - 2, color);
@@ -143,23 +155,6 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
             SafeSetPixel(image, x, y + 1, color);
             SafeSetPixel(image, x, y + 2, color);
 
-            if (size >= 2)
-            {
-                SafeSetPixel(image, x + 1, y - 2, color);
-                SafeSetPixel(image, x + 1, y - 1, color);
-                SafeSetPixel(image, x + 1, y, color);
-                SafeSetPixel(image, x + 1, y + 1, color);
-                SafeSetPixel(image, x + 1, y + 2, color);
-            }
-
-            if (size >= 4)
-            {
-                SafeSetPixel(image, x + 2, y - 2, color);
-                SafeSetPixel(image, x + 2, y - 1, color);
-                SafeSetPixel(image, x + 2, y, color);
-                SafeSetPixel(image, x + 2, y + 1, color);
-                SafeSetPixel(image, x + 2, y + 2, color);
-            }
         }
 
         private void SafeSetPixel(ImageStimulus image, int x, int y, Color color)
@@ -193,16 +188,18 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
 
         private Color getRandomColor(int odds)
         {
-            Color color;
-            bool blackPixel = random.Next(odds) < 1;
-            if (blackPixel)
-            {
-                color = Color.Black;
-            }
-            else
-            {
-                color = Color.White;
-            }
+
+            int val = random.Next(256);
+            Color color = Color.FromArgb(val, val, val);
+            //bool blackPixel = random.Next(odds) < 1;
+            //if (blackPixel)
+            //{
+            //    color = Color.Black;
+            //}
+            //else
+            //{
+            //    color = Color.White;
+            //}
             return color;
         }
 

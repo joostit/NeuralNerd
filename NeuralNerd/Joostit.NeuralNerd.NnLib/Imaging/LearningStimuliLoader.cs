@@ -11,8 +11,6 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
     public class LearningStimuliLoader
     {
 
-        private const string pngExtension = ".png";
-
         private const string badOutcomeDirName = "x";
 
         public StimulusCache Stimuli { get; private set; }  = new StimulusCache();
@@ -57,10 +55,7 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
                 // Load images parallel
                 Parallel.ForEach(outcomeDir.GetFiles(), (file) =>
                 {
-                    if (pngExtension.Equals(file.Extension.ToLower()))
-                    {
-                        Stimuli.AddNewStimulus(file.FullName, CreateOutcomeList(expectedOutcomeIndex));
-                    }
+                    Stimuli.AddNewStimulus(file.FullName, CreateOutcomeList(expectedOutcomeIndex));
                 });
             }
             else
@@ -68,10 +63,7 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
                 // Load bad images parallel
                 Parallel.ForEach(outcomeDir.GetFiles(), (file) =>
                 {
-                    if (pngExtension.Equals(file.Extension.ToLower()))
-                    {
-                        Stimuli.AddNewStimulus(file.FullName, CreateBadOutcomeList());
-                    }
+                    Stimuli.AddNewStimulus(file.FullName, CreateBadOutcomeList());
                 });
             }
         }
