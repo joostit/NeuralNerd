@@ -13,6 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2CD37009
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNerdApp", "NeuralNerdApp\NeuralNerdApp.csproj", "{AA454026-2573-4690-87A1-537FA74A0394}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGenerator", "ImageGenerator\ImageGenerator.csproj", "{DCE7C904-9037-4E25-BA33-1DD18C75466F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +38,10 @@ Global
 		{AA454026-2573-4690-87A1-537FA74A0394}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA454026-2573-4690-87A1-537FA74A0394}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA454026-2573-4690-87A1-537FA74A0394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCE7C904-9037-4E25-BA33-1DD18C75466F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCE7C904-9037-4E25-BA33-1DD18C75466F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCE7C904-9037-4E25-BA33-1DD18C75466F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCE7C904-9037-4E25-BA33-1DD18C75466F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +50,7 @@ Global
 		{C9043818-208B-4677-8160-55D04D39A3C3} = {1A016B22-0D6F-4944-84CF-7714FE4B6378}
 		{9E981D0F-8AB6-46C6-A032-60E6DDBDAD58} = {2CD37009-3387-4C4A-A401-D54520D03085}
 		{AA454026-2573-4690-87A1-537FA74A0394} = {1A016B22-0D6F-4944-84CF-7714FE4B6378}
+		{DCE7C904-9037-4E25-BA33-1DD18C75466F} = {1A016B22-0D6F-4944-84CF-7714FE4B6378}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89056EDD-A241-4539-AF89-F552AE751E03}
