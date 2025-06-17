@@ -3,13 +3,14 @@ using Joostit.NeuralNerd.NnLib.Networking.Structure;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
-    public class OutputLayer : ICalculatableNeuronLayer
+    public class OutputLayer : MatrixCalculatableLayer, ICalculatableNeuronLayer
     {
 
         public OutputNeuron[] Neurons { get; set; }
@@ -66,11 +67,24 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
             {
                 Neurons[i].Calculate();
             }
+        }
 
-            //Parallel.ForEach<CalculatedNeuron>(this, (neuron) =>
-            //{
-            //    neuron.Calculate();
-            //});
+
+        public void CreateMatrixes(int previousLayerNeuronCount)
+        {
+            weightMatrix = new double[Neurons.Length, previousLayerNeuronCount];
+            biasMatrix = new double[Neurons.Length];
+
+            for (int neuronIndex = 0; neuronIndex < Neurons.Count(); neuronIndex++)
+            {
+                OutputNeuron neuron = Neurons[neuronIndex];
+                for(int weightIndex = 0; weightIndex < neuron.Dendrites.Length; weightIndex++)
+                {
+                    weightMatrix[neuronIndex, weightIndex] = neuron.Dendrites[weightIndex].Weight;
+                }
+
+                biasMatrix[neuronIndex] = neuron.Bias;
+            }
         }
 
     }

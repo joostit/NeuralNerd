@@ -24,6 +24,8 @@ namespace Joostit.NeuralNerd.NnLib.Learning
 
         private NetworkRandomizer randomizer = new NetworkRandomizer();
 
+        private const int maxStimuliPerCycle = 400;
+
         public LearnerTask(ILearnTaskDispatcher dispatcher, NetworkParameters parameters, StimulusCache stimuli, int parametersToChangePerCycle)
         {
             this.dispatcher = dispatcher;

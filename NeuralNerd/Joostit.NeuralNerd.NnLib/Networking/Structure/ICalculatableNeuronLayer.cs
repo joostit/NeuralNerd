@@ -9,5 +9,7 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
     {
         void Calculate();
         new CalculatedNeuron[] Neurons { get; }
+
+        void CreateMatrixes(int previousLayerNeuronCount);
     }
 }

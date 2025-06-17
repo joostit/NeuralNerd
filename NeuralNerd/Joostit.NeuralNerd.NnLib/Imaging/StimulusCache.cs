@@ -8,6 +8,8 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
     public class StimulusCache
     {
 
+        private Random random = new Random();
+
         public List<ImageStimulus> Cache { get; private set; } = new List<ImageStimulus>();
 
         private object cacheLock = new object();
@@ -22,6 +24,13 @@ namespace Joostit.NeuralNerd.NnLib.Imaging
             {
                 Cache.Add(stimulus);
             }
+        }
+
+
+        public ImageStimulus GetRandomStimulus()
+        {
+            int index = random.Next(Cache.Count);
+            return Cache[index];
         }
 
     }

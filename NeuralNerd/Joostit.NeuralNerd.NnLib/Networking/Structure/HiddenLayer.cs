@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace Joostit.NeuralNerd.NnLib.Networking.Structure
 {
-    public class HiddenLayer : ICalculatableNeuronLayer
+    public class HiddenLayer : MatrixCalculatableLayer, ICalculatableNeuronLayer
     {
 
         public HiddenNeuron[] Neurons;
@@ -73,6 +73,12 @@ namespace Joostit.NeuralNerd.NnLib.Networking.Structure
             }
 
         }
-      
+
+
+        public void CreateMatrixes(int previousLayerNeuronCount)
+        {
+
+        }
+
     }
 }

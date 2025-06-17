@@ -41,5 +41,28 @@ namespace Joostit.NeuralNerd.NnLib.Networking
             OutputLayer.Calculate();
         }
 
+
+        public void CreateMatrixes()
+        {
+            for(int layerIndex = 0; layerIndex < HiddenLayers.Count; layerIndex++)
+            {
+                int previousLayerNeuronCount;
+
+                if(layerIndex == 0)
+                {
+                    previousLayerNeuronCount = InputLayer.Count;
+                }
+                else 
+                {
+                    previousLayerNeuronCount = HiddenLayers[layerIndex].Count;
+                }
+
+                HiddenLayers[layerIndex].CreateMatrixes(previousLayerNeuronCount);
+            }
+
+            OutputLayer.CreateMatrixes(HiddenLayers[HiddenLayers.Count - 1].Count);
+            
+        }
+
     }
 }
