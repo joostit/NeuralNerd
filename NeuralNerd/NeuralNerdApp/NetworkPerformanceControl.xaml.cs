@@ -102,14 +102,32 @@ namespace NeuralNerdApp
 
         private void ShowImage(NetworkSnapshot snapshot)
         {
-            var image = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-               snapshot.Pass.Stimulus.Image.Source.GetHbitmap(),
-               IntPtr.Zero,
-               System.Windows.Int32Rect.Empty,
-               BitmapSizeOptions.FromWidthAndHeight(snapshot.Pass.Stimulus.Image.Source.Width, snapshot.Pass.Stimulus.Image.Source.Height));
 
-            imageBox.Source = image;
+            // This is a very elaborate way of just showing a in-memory Bitmap in an Image control. Appearently this is how WPF likes it.
+            nint hBitmapPtr = snapshot.Pass.Stimulus.Image.Source.GetHbitmap();
+
+            try
+            {
+                BitmapSource image = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                   hBitmapPtr,
+                   IntPtr.Zero,
+                   System.Windows.Int32Rect.Empty,
+                   BitmapSizeOptions.FromWidthAndHeight(snapshot.Pass.Stimulus.Image.Source.Width, snapshot.Pass.Stimulus.Image.Source.Height));
+
+                imageBox.Source = image;
+            }
+            finally
+            {
+                DeleteObject(hBitmapPtr);
+            }
+
         }
+
+
+        // P/Invoke, needed for freeing the handle to the bitmap, used by the ShowImage method.
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern bool DeleteObject(IntPtr hObject);
+
 
         private void stopLearningutton_Click(object sender, RoutedEventArgs e)
         {
