@@ -23,11 +23,11 @@
                 <MenuItem Header="Open _Stimulus" Click="OpenStimulus_Click"/>
             </MenuItem>
             <MenuItem Header="_Generate">
-                <MenuItem Header="_Generate" Click="GenerateDigit_Click"/>
+                <MenuItem Header="_Generate" Click="GenerateDigit_Click" Name="generateMenuItem" IsEnabled="false"/>
             </MenuItem>
         </Menu>
         <local:NetworkPerformanceControl x:Name="networkPerformanceControl"/>
-        <local:NetworkCanvas x:Name="networkCanvas" NetworkStatusChanged="networkCanvas_NetworkStatusChanged"/>
+        <local:NetworkCanvas x:Name="networkCanvas" NetworkStatusChanged="networkCanvas_NetworkStatusChanged" SelectedNeuronChanged="NetworkCanvas_SelectedNeuronChanged"/>
         
     </DockPanel>
 </Window>

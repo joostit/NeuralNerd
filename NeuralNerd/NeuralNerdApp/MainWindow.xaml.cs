@@ -85,6 +85,19 @@ namespace NeuralNerdApp
 
             networkCanvas.SetNetwork(config);
             networkContext.Learner.LearnerStateChanged += Learner_LearnerStateChanged;
+            
+        }
+
+        private void NetworkCanvas_SelectedNeuronChanged(object sender, EventArgs e)
+        {
+            if(networkCanvas.SelectedNeuronControl != null)
+            {
+                generateMenuItem.IsEnabled = true;
+            }
+            else
+            {
+                generateMenuItem.IsEnabled = false;
+            }
         }
 
         private void Learner_LearnerStateChanged(object sender, EventArgs e)
@@ -313,9 +326,10 @@ namespace NeuralNerdApp
 
         private void GenerateDigit_Click(object sender, RoutedEventArgs e)
         {
+            int neuronIndex = networkCanvas.SelectedNeuronControl.Neuron.Coordinate.Row;
             ImageGenerator generator = new ImageGenerator();
-
-            //generator.Run(networkContext.NetworkConfig, networkContext.Learner);
+            generator.Run(networkContext.NetworkConfig, networkContext.Learner, neuronIndex);
         }
+
     }
 }

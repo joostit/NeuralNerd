@@ -33,10 +33,13 @@ namespace NeuralNerdApp
 
         private const int MaxDendritesPerLayer = 512;
         public event EventHandler NetworkStatusChanged;
+        public event EventHandler SelectedNeuronChanged;
 
         public NetworkUiContext NetworkContext { get; set; }
-        private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
+        public NeuronControl SelectedNeuronControl { get; private set; }
 
+        private Dictionary<NeuronCoordinate, NeuronControl> neurons = new Dictionary<NeuronCoordinate, NeuronControl>();
+        private List<OutputNeuronControl> outputNeuronControls = new List<OutputNeuronControl>();
         private double maxX = 0;
 
         public NetworkCanvas()
@@ -290,6 +293,7 @@ namespace NeuralNerdApp
 
         private void DrawNetwork()
         {
+            outputNeuronControls.Clear();
             maxX = 0;
             INeuronLayer leftLayer = NetworkContext.NetworkConfig.Network.InputLayer;
             double x = 10;
@@ -407,19 +411,47 @@ namespace NeuralNerdApp
 
         }
 
+        
 
         private void DrawOutputNeuron(OutputNeuron neuron, double x, double y, DendriteDrawModes dendriteMode)
         {
             OutputNeuronControl ctrl = new OutputNeuronControl(neuron);
             ctrl.ConfigurationChanged += Ctrl_ConfigurationChanged;
+            ctrl.SelectionChanged += OutputNeuron_SelectionChanged;
             Canvas.SetLeft(ctrl, x);
             Canvas.SetTop(ctrl, y);
             neurons.Add(neuron.Coordinate, ctrl);
             canvas.Children.Add(ctrl);
-
+            outputNeuronControls.Add(ctrl);
             DrawDendrites(ctrl, dendriteMode);
         }
 
+        private void OutputNeuron_SelectionChanged(object sender, EventArgs e)
+        {
+            OutputNeuronControl theSender = (OutputNeuronControl)sender;
+
+            if(theSender.IsSelected)
+            {
+                foreach (var outputNeuronCtrl in outputNeuronControls)
+                {
+                    if (outputNeuronCtrl != theSender)
+                    {
+                        outputNeuronCtrl.IsSelected = false;
+                    }
+                }
+            }
+
+            OutputNeuronControl selected = null;
+            foreach (OutputNeuronControl neuron in outputNeuronControls)
+            {
+                if(neuron.IsSelected)
+                {
+                    selected = neuron;
+                }
+            }
+            SelectedNeuronControl = selected;
+            SelectedNeuronChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         private void DrawDendrites(CalculatedNeuronControl targetNeuronCtrl, DendriteDrawModes dendriteMode)
         {

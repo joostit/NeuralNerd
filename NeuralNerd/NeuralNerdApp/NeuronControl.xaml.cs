@@ -121,5 +121,7 @@ namespace NeuralNerdApp
         {
             UpdateActivation(activation);
         }
+
+      
     }
 }

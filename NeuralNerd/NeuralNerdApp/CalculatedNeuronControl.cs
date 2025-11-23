@@ -31,8 +31,6 @@ namespace NeuralNerdApp
         public CalculatedNeuronControl(CalculatedNeuron neuron)
             : base(neuron)
         {
-            //neuronIcon.MouseDown += NeuronIcon_MouseDown;
-
             // Add InputBinding for mouse double-click
             var doubleClickBinding = new MouseBinding(
                 NeuronIconDoubleClickCommand,
@@ -62,19 +60,6 @@ namespace NeuralNerdApp
             }
         }
 
-        private void NeuronIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (IsEditable)
-            {
-                bool hasChanged = CalculatedNeuronEditWindow.Show(Neuron);
-
-                if (hasChanged)
-                {
-                    Update();
-                    RaiseConfigurationChanged();
-                }
-            }
-        }
 
         private void RaiseConfigurationChanged()
         {
