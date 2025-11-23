@@ -76,7 +76,7 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
 
                 if(i % 50000 == 0)
                 {
-                    saveImage(nextAttemptImage, $"step_{i}.png");   // For debug
+                    saveImage(currentimage, $"step_{i}.png");   // For debug
                 }
                 
             }
