@@ -176,7 +176,7 @@ namespace NeuralNerdApp
         /// </summary>
         private void ZoomOut()
         {
-            zoomAndPanControl.ContentScale -= 0.1;
+            zoomAndPanControl.ContentScale -= 0.05;
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace NeuralNerdApp
         /// </summary>
         private void ZoomIn()
         {
-            zoomAndPanControl.ContentScale += 0.1;
+            zoomAndPanControl.ContentScale += 0.05;
         }
 
         #endregion
