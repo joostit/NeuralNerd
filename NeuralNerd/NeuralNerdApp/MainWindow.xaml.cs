@@ -315,7 +315,7 @@ namespace NeuralNerdApp
         {
             ImageGenerator generator = new ImageGenerator();
 
-            generator.Initialize(networkContext.NetworkConfig, networkContext.Learner);
+            //generator.Run(networkContext.NetworkConfig, networkContext.Learner);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
         // Image size
         // Neural network expected stimuli
 
-        public void Initialize(NetworkConfiguration networkConfig, ImageLearner learner)
+        public void Run(NetworkConfiguration networkConfig, ImageLearner learner, int generatedOutputNeuronIndex)
         {
             ImageStimulus currentimage = new ImageStimulus(imageWidth, imageHeight);
             ImageStimulus nextAttemptImage;
@@ -44,7 +44,9 @@ namespace Joostit.NeuralNerd.NnLib.ImageGeneration
             }
 
             // Create image
-            currentimage.ExpectedOutcomes = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0];
+
+            currentimage.ExpectedOutcomes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            currentimage.ExpectedOutcomes[generatedOutputNeuronIndex] = 1;
 
             // Fill image with noise
             fillImageWithNoise(currentimage);

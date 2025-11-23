@@ -3,6 +3,7 @@ using NeuralNerdApp.Windows;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 
 namespace NeuralNerdApp
 {
@@ -23,10 +24,42 @@ namespace NeuralNerdApp
             }
         }
 
+        // RoutedCommand for double-click
+        private static readonly RoutedCommand NeuronIconDoubleClickCommand = new RoutedCommand();
+
+
         public CalculatedNeuronControl(CalculatedNeuron neuron)
             : base(neuron)
         {
-            neuronIcon.MouseDown += NeuronIcon_MouseDown;
+            //neuronIcon.MouseDown += NeuronIcon_MouseDown;
+
+            // Add InputBinding for mouse double-click
+            var doubleClickBinding = new MouseBinding(
+                NeuronIconDoubleClickCommand,
+                new MouseGesture(MouseAction.LeftDoubleClick)
+            );
+            neuronIcon.InputBindings.Add(doubleClickBinding);
+
+            CommandBindings.Add(new CommandBinding(
+                NeuronIconDoubleClickCommand,
+                NeuronIcon_DoubleClickExecuted
+            ));
+
+        }
+
+        // Handler for double-click command
+        private void NeuronIcon_DoubleClickExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (IsEditable)
+            {
+                bool hasChanged = CalculatedNeuronEditWindow.Show(Neuron);
+
+                if (hasChanged)
+                {
+                    Update();
+                    RaiseConfigurationChanged();
+                }
+            }
         }
 
         private void NeuronIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
